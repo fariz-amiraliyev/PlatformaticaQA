@@ -6,14 +6,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import runner.BaseTest;
+import runner.type.Run;
+import runner.type.RunType;
 
 import java.util.UUID;
 
+@Run(run = RunType.Multiple)
 public class EntityVisibilityEventsTest extends BaseTest {
 
-    private void setUp(WebDriver driver) {
-        driver.get("https://ref.eteam.work");
-        ProjectUtils.login(driver, "user1@tester.com", "ah1QNmgkEO");
+    private void setUp() {
+        WebDriver driver = getDriver();
         WebElement visibilityEventsTab = driver.findElement(
                 By.xpath("//div[@id='menu-list-parent']//li/a[contains(@href,'id=86')]"));
         visibilityEventsTab.click();
@@ -59,17 +61,6 @@ public class EntityVisibilityEventsTest extends BaseTest {
         cancelButton.click();
     }
 
-    private void deleteRecordByTitle(WebDriver driver, String title) throws InterruptedException {
-        WebElement actionButton = findActionButtonByContent(driver, title);
-        actionButton.click();
-
-        Thread.sleep(300); // Wait for CSS animation
-
-        WebElement deleteButton = actionButton.findElement(
-                By.xpath("../ul/li[3]/a[contains(text(), 'delete')]"));
-        deleteButton.click();
-    }
-
     private WebElement findActionButtonByContent(WebDriver driver, String content) {
         WebElement searchField = driver.findElement(
                 By.xpath("//input[@placeholder='Search']"));
@@ -79,18 +70,16 @@ public class EntityVisibilityEventsTest extends BaseTest {
         final int timeoutSec = 2;
         final String selector = "//div[contains(text(), '" + content + "')]/ancestor::tr//button[contains(., 'menu')]";
         new WebDriverWait(driver, timeoutSec).until(
-                ExpectedConditions.presenceOfElementLocated(
-                        By.xpath(selector)));
+                ExpectedConditions.presenceOfElementLocated(By.xpath(selector)));
 
         WebElement actionButton = driver.findElement(By.xpath(selector));
         Assert.assertNotNull(actionButton);
         return actionButton;
     }
-
     @Test
     public void testFieldVisibility() {
         WebDriver driver = getDriver();
-        setUp(driver);
+        setUp();
 
         WebElement createButton = driver.findElement(By.xpath("//div/i[contains(text(), 'create_new_folder')]"));
         createButton.click();
@@ -106,10 +95,10 @@ public class EntityVisibilityEventsTest extends BaseTest {
         Assert.assertTrue(testField.isDisplayed());
     }
 
-    @Test
+    @Test (dependsOnMethods = "testFieldVisibility")
     public void triggerFieldState() throws InterruptedException {
         WebDriver driver = getDriver();
-        setUp(driver);
+        setUp();
 
         final String fieldEnabled = UUID.randomUUID().toString();
         final String fieldDisabled = UUID.randomUUID().toString();
@@ -119,8 +108,5 @@ public class EntityVisibilityEventsTest extends BaseTest {
 
         validateFieldVisibility(driver, fieldEnabled, true);
         validateFieldVisibility(driver, fieldDisabled, false);
-
-        deleteRecordByTitle(driver, fieldEnabled);
-        deleteRecordByTitle(driver, fieldDisabled);
     }
 }
