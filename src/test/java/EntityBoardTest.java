@@ -1,3 +1,4 @@
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9,7 +10,7 @@ import runner.BaseTest;
 import runner.ProjectUtils;
 import runner.type.Run;
 import runner.type.RunType;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +24,11 @@ public class EntityBoardTest extends BaseTest {
     private static final String DONE = "Done";
     private static final String ON_TRACK = "On track";
     private static final String APP_USER = "apptester1@tester.com";
-
+    LocalDate today = LocalDate.now();
+    String output = today.toString();
+    String[] arrOfData = output.split("-", 3);
+    private String currentYear = arrOfData[0];
+    private String currentMonth = arrOfData[1];
 
     private void createRecord(WebDriver driver, String status) {
 
@@ -49,6 +54,18 @@ public class EntityBoardTest extends BaseTest {
         decimalPlaceholder.click();
         decimalPlaceholder.sendKeys(DECIMAL);
         wait.until(ExpectedConditions.attributeContains(decimalPlaceholder, "value", DECIMAL));
+
+        driver.findElement(By.id("datetime")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//div[@class = 'datepicker-days']"))));
+        driver.findElement(By.xpath("//td[@data-day = '" +currentMonth + "/" + "15" + "/" + currentYear +"']")).click();
+        wait.until(ExpectedConditions.textToBe
+                (By.xpath("//td[@data-day = '" +currentMonth + "/" + "15" + "/" + currentYear +"']"), "15"));
+
+        driver.findElement(By.id("date")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//div[@class = 'datepicker']"))));
+        driver.findElement(By.xpath("//td[@data-day = '" +currentMonth + "/" + "15" + "/" + currentYear +"']")).click();
+        wait.until(ExpectedConditions.textToBe
+                (By.xpath("//td[@data-day = '" +currentMonth + "/" + "15" + "/" + currentYear +"']"), "15"));
 
         JavascriptExecutor js = ((JavascriptExecutor) driver);
         WebElement dropdownUser = driver.findElement(By.xpath("//div[contains(text(),'User 1 Demo')]"));
@@ -79,7 +96,8 @@ public class EntityBoardTest extends BaseTest {
 
         driver.findElement(By.xpath("//ul[@role='tablist']/li[1]/a")).click();
 
-        WebElement elementStatus = driver.findElement(By.xpath("//main[@class='kanban-drag']//div[contains(text(),'On track')]"));
+        WebElement elementStatus = driver.findElement
+                (By.xpath("//main[@class='kanban-drag']//div[contains(text(),'On track')]"));
         WebElement from = elementStatus.findElement(By.xpath("./.."));
         WebElement to = driver.findElement(By.xpath("//div[3]/main[@class='kanban-drag']"));
         Actions act = new Actions(driver);
@@ -97,7 +115,8 @@ public class EntityBoardTest extends BaseTest {
 
         driver.findElement(By.xpath("//ul[@role='tablist']/li[1]/a")).click();
 
-        WebElement elementStatus = driver.findElement(By.xpath("//main[@class='kanban-drag']//div[contains(text(),'Done')]"));
+        WebElement elementStatus = driver.findElement
+                (By.xpath("//main[@class='kanban-drag']//div[contains(text(),'Done')]"));
         WebElement from = elementStatus.findElement(By.xpath("./.."));
         WebElement to = driver.findElement(By.xpath("//div[2]/main[@class='kanban-drag']"));
         Actions act = new Actions(driver);
@@ -114,7 +133,8 @@ public class EntityBoardTest extends BaseTest {
 
         driver.findElement(By.xpath("//ul[@role='tablist']/li[1]/a")).click();
 
-        WebElement elementStatus = driver.findElement(By.xpath("//main[@class='kanban-drag']//div[contains(text(),'On track')]"));
+        WebElement elementStatus = driver.findElement
+                (By.xpath("//main[@class='kanban-drag']//div[contains(text(),'On track')]"));
         WebElement from = elementStatus.findElement(By.xpath("./.."));
         WebElement to = driver.findElement(By.xpath("//div[1]/main[@class='kanban-drag']"));
         Actions act = new Actions(driver);
@@ -147,6 +167,10 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(tabListValues.get(2).getText(), TEXT, "Created record text issue");
         Assert.assertEquals(tabListValues.get(3).getText(), NUMBER, "Created record number issue");
         Assert.assertEquals(tabListValues.get(4).getText(), DECIMAL, "Created record decimal issue");
+        Assert.assertEquals(tabListValues.get(5).getText(),
+                "15" + "/" + currentMonth + "/" + currentYear, "Created record date issue");
+        Assert.assertEquals(tabListValues.get(6).getText().substring(0,10),
+                "15" + "/" + currentMonth + "/" + currentYear, "Created record dateTime issue");
         Assert.assertEquals(tabListValues.get(8).getText(), APP_USER, "Created record user issue");
     }
 
@@ -176,7 +200,8 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(record.get(1).getText(), TEXT, "Created record text issue");
         Assert.assertEquals(record.get(2).getText(), NUMBER, "Created record number issue");
         Assert.assertEquals(record.get(3).getText(), DECIMAL, "Created record decimal issue");
-        Assert.assertEquals(driver.findElement(By.xpath("//div[@class = 'form-group']/p")).getText(), APP_USER, "Created record user issue");
+        Assert.assertEquals(driver.findElement
+                (By.xpath("//div[@class = 'form-group']/p")).getText(), APP_USER, "Created record user issue");
     }
 
     @Test (dependsOnMethods = {"inputValidationTest", "viewRecords"})
@@ -290,5 +315,24 @@ public class EntityBoardTest extends BaseTest {
         WebElement emptyRecycleBin = driver.findElement(By.xpath(
                 "//div[contains(text(), 'Good job with housekeeping! Recycle bin is currently empty!')]"));
         Assert.assertNotNull(emptyRecycleBin, "No empty recycle bin message found.");
+    }
+
+    @Test (dependsOnMethods = {"inputValidationTest", "viewRecords", "ManipulateTest", "editBoard", "recordDeletion",
+            "recordDeletionRecBin"})
+
+    public void cancelInputTest() {
+
+        WebDriver driver = getDriver();
+        WebDriverWait wait = new WebDriverWait(driver, 6);
+
+        createRecord(driver, PENDING);
+
+        ProjectUtils.click(driver, driver.findElement(By.xpath("//button[contains(text(), 'Cancel')]")));
+
+        driver.findElement(By.xpath("//a[contains(@href, '31')]/i[text()='list']")).click();
+
+        List<WebElement> tabList = driver.findElements(By.xpath("//tbody/tr"));
+        Assert.assertEquals(tabList.size(), 0, "No records");
+
     }
 }
