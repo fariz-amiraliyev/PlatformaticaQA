@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import runner.ProjectUtils;
+
 import java.time.Duration;
 
 public final class MainPage extends BasePage {
@@ -42,6 +44,7 @@ public final class MainPage extends BasePage {
     }
   
     public Chain2Page clickMenuEventsChain2() {
+        ProjectUtils.scroll(getDriver(), menuEventsChain2);
         menuEventsChain2.click();
         return new Chain2Page(getDriver());
     }
