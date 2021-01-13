@@ -24,6 +24,9 @@ public final class MainPage extends BasePage {
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62")
     private WebElement menuEventsChain2;
 
+    @FindBy(xpath = "//p[contains (text(), 'Default')]")
+    private WebElement menuDefault;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -41,6 +44,11 @@ public final class MainPage extends BasePage {
     public Chain2Page clickMenuEventsChain2() {
         menuEventsChain2.click();
         return new Chain2Page(getDriver());
+    }
+
+    public DefaultPage clickMenuDefault() {
+        menuDefault.click();
+        return new DefaultPage(getDriver());
     }
 
     public ExportPage clickTubExport() {
