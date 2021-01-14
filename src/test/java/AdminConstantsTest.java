@@ -102,7 +102,7 @@ public class AdminConstantsTest extends BaseTest {
         driver.get(String.format("https://%s.eteam.work", app_name));
 
         goToConstantsList();
-        String company_name_1 = ProjectUtils.createRandomString();
+        String company_name_1 = ProjectUtils.createUUID();
         commandInCMD(driver, String.format("create constant \"Company Name\" = \"%s\"", company_name_1));
         commandInCMD(driver, "create constant \"Company Email\" = \"contact@company.com\"");
         getWebDriverWait().until(ExpectedConditions.visibilityOfElementLocated
@@ -118,7 +118,7 @@ public class AdminConstantsTest extends BaseTest {
         driver.get(String.format("https://%s.eteam.work", app_name));
 
         goToConstantsList();
-        String company_name_2 = ProjectUtils.createRandomString();
+        String company_name_2 = ProjectUtils.createUUID();
         getCompany("Name").clear();
         getCompany("Name").sendKeys(company_name_2);
         getWebDriverWait().until(ExpectedConditions.visibilityOfElementLocated
