@@ -1,3 +1,4 @@
+import model.ImportValuesPage;
 import model.MainPage;
 import model.RecycleBinPage;
 import org.openqa.selenium.By;
@@ -19,12 +20,12 @@ public class EntityImportTest extends BaseTest {
 
         final String str = UUID.randomUUID().toString();
 
-        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+        RecycleBinPage recycleBinPage = new ImportValuesPage(getDriver())
                 .clickMenuImportValues()
-                .clickNewButton()
+                .clickNewFolder()
                 .sendKeys(str)
                 .clickSaveButton()
-                .deleteRecord()
+                .deleteRow()
                 .clickRecycleBin();
 
         Assert.assertEquals(recycleBinPage.getDeletedImportValue(), str);
