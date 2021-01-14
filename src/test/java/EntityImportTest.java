@@ -14,6 +14,7 @@ import java.util.UUID;
 
 public class EntityImportTest extends BaseTest {
 
+    @Ignore
     @Test
     public void deleteRecordFromEntityImport() {
 
