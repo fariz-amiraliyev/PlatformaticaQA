@@ -162,7 +162,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "checkStartEndBalanceBeforeSave")
-    public void checkStartEndBalanceInEditMode() throws InterruptedException {
+    public void checkStartEndBalanceInEditMode() {
         WebDriver driver = getDriver();
         goToChildLoop();
         WebElement editFunction = driver.findElement(By.xpath("//a[text() = 'edit']"));
@@ -172,11 +172,5 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         WebElement endBalance = driver.findElement(By.xpath("//input[@id='end_balance']"));
         Assert.assertEquals(startBalanceField.getAttribute("value"), startBalance);
         Assert.assertEquals(endBalance.getAttribute("value"), String.valueOf(endBalanceD));
-
-        deleteRows(1);
-        deleteRows(2);
-
-        WebDriverWait wait = new WebDriverWait(getDriver(), 10);
-        wait.until(d -> endBalance.getAttribute("value").equals(endBalanceD + ""));
     }
 }
