@@ -267,6 +267,25 @@ public class EntityExportTest extends BaseTest {
         Assert.assertEquals(tableDecimalField.getText(), tableDec);
     }
 
+    @Test(dependsOnMethods = {"inputTest"})
+    public void deleteTest() throws InterruptedException {
+        WebDriver driver = getDriver();
+        WebElement export = driver.findElement(By.xpath("//div[@id= 'menu-list-parent']/ul/li[8]/a"));
+        ProjectUtils.click(driver, export);
+        WebElement createdRecord = driver.findElement(By.xpath("//tbody/tr"));
+        clickSandwichAction(createdRecord, "delete");
+
+        Assert.assertEquals(driver.findElement(By.className("card-body")).getText(), "");
+
+        WebElement recycleBin = driver.findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
+        ProjectUtils.click(driver, recycleBin);
+
+        WebElement deletePermanently = driver.findElement(By.xpath("//a[contains (text(), 'delete permanently')]"));
+        deletePermanently.click();
+
+    }
+
+
     @Ignore
     @Test
     public void negativeTestForInt() {
