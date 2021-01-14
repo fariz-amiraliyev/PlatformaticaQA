@@ -39,10 +39,6 @@ public abstract class ProjectUtils {
         wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     }
 
-    public static void jsClick(JavascriptExecutor executor, WebElement element) {
-        executor.executeScript("arguments[0].click();", element);
-    }
-
     public static void click(WebDriver driver, WebElement element) {
         JavascriptExecutor executor = (JavascriptExecutor)driver;
         executor.executeScript("arguments[0].click()", element);

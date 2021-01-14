@@ -5,39 +5,39 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static runner.ProjectUtils.click;
+public abstract class BaseTablePage<TablePage, EditPage> extends MainPage {
 
-public abstract class BaseTablePage<S, E> extends MainPage {
+    private static final String ROW_MENU_ = "//button[@data-toggle='dropdown']/../ul/li/a[text()='%s']";
+
+    private static final By ROW_MENU_VIEW = By.xpath(String.format(ROW_MENU_, "view"));
+    private static final By ROW_MENU_EDIT = By.xpath(String.format(ROW_MENU_, "edit"));
+    private static final By ROW_MENU_DELETE = By.xpath(String.format(ROW_MENU_, "delete"));
 
     @FindBy(xpath = "//i[text() = 'create_new_folder']")
-    protected WebElement buttonNew;
+    private WebElement buttonNew;
 
     @FindBy(className = "card-body")
-    protected WebElement body;
+    private WebElement body;
 
     @FindBy(xpath = "//table[@id='pa-all-entities-table']/tbody/tr")
-    protected List<WebElement> trs;
-
-    @FindBy(xpath = "//button[@data-toggle='dropdown']/../ul/li/a[text()='view']")
-    protected WebElement menuView;
-
-    @FindBy(xpath = "//button[@data-toggle='dropdown']/../ul/li/a[text()='edit']")
-    protected WebElement menuEdit;
-
-    @FindBy(xpath = "//button[@data-toggle='dropdown']/../ul/li/a[text()='delete']")
-    protected WebElement menuDelete;
+    private List<WebElement> trs;
 
     public BaseTablePage(WebDriver driver) {
         super(driver);
     }
 
-    protected abstract E createEditPage();
+    protected abstract EditPage createEditPage();
 
-    public E clickNewFolder() {
+    protected List<WebElement> getRows() {
+        return trs;
+    }
+
+    public EditPage clickNewFolder() {
         buttonNew.click();
         return createEditPage();
     }
@@ -46,57 +46,51 @@ public abstract class BaseTablePage<S, E> extends MainPage {
         if (Strings.isStringEmpty(body.getText())) {
             return 0;
         } else {
-            return trs.size();
+            return getRows().size();
         }
     }
 
     public WebElement getRowEntityIcon(int rowNumber) {
-        return trs.get(rowNumber).findElement(By.cssSelector("td > i"));
+        return getRows().get(rowNumber).findElement(By.cssSelector("td > i"));
     }
 
     public List<String> getRow(int rowNumber) {
-        return trs.get(rowNumber).findElements(By.xpath("//td/a/div")).stream()
+        return getRows().get(rowNumber).findElements(By.xpath("//td/a/div")).stream()
                 .map(WebElement::getText).collect(Collectors.toList());
     }
 
-    private void clickRowMenu(int rowNumber) {
+    private void clickRowMenu(int rowNumber, By menu) {
         trs.get(rowNumber).findElement(By.xpath("//td//div//button")).click();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
+
+        WebElement menuElement = getWait().until(ExpectedConditions.visibilityOfElementLocated(menu));
+        getWait().until(ExpectedConditions.elementToBeClickable(menuElement)).click();
     }
 
     public BaseViewPage viewRow(int rowNumber) {
-        clickRowMenu(rowNumber);
-        click(getWait(), menuView);
-
+        clickRowMenu(rowNumber, ROW_MENU_VIEW);
         return new BaseViewPage(getDriver());
     }
 
     public BaseViewPage viewRow() {
-        return viewRow(trs.size() - 1);
+        return viewRow(getRows().size() - 1);
     }
 
-    public E editRow(int rowNumber) {
-        clickRowMenu(rowNumber);
-        click(getWait(), menuEdit);
-
+    public EditPage editRow(int rowNumber) {
+        clickRowMenu(rowNumber, ROW_MENU_EDIT);
         return createEditPage();
     }
 
-    public E editRow() {
-        return editRow(trs.size() - 1);
+    public EditPage editRow() {
+        return editRow(getRows().size() - 1);
     }
 
-    public S deleteRow(int rowNumber) {
-        clickRowMenu(rowNumber);
-        click(getWait(), menuDelete);
-
-        return (S)this;
+    public TablePage deleteRow(int rowNumber) {
+        clickRowMenu(rowNumber, ROW_MENU_DELETE);
+        return (TablePage)this;
     }
 
-    public S deleteRow() {
-        return deleteRow(trs.size() - 1);
+    public TablePage deleteRow() {
+        return deleteRow(getRows().size() - 1);
     }
 
 }

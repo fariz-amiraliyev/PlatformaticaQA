@@ -1,6 +1,5 @@
 package model;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
@@ -8,10 +7,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class BasePage {
 
-    private final WebDriver driver;
-    private static WebDriverWait webDriverWait;
-    private static JavascriptExecutor executor;
-    private static Actions actions;
+    private WebDriver driver;
+    private WebDriverWait wait;
+    private Actions actions;
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
@@ -23,17 +21,10 @@ public abstract class BasePage {
     }
 
     protected WebDriverWait getWait() {
-        if (webDriverWait == null) {
-            webDriverWait = new WebDriverWait(driver, 10);
+        if (wait == null) {
+            wait = new WebDriverWait(driver, 10);
         }
-        return webDriverWait;
-    }
-
-    protected JavascriptExecutor getExecutor() {
-        if (executor == null) {
-            executor = (JavascriptExecutor) getDriver();
-        }
-        return executor;
+        return wait;
     }
 
     protected Actions getActions() {

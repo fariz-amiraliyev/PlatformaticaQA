@@ -4,10 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import static runner.ProjectUtils.click;
-import static runner.ProjectUtils.scroll;
-
-import java.time.Duration;
+import runner.ProjectUtils;
 
 public class MainPage extends BasePage {
 
@@ -29,8 +26,8 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Home')]")
     private WebElement leftMenu;
 
-    @FindBy(xpath = "//p[contains (text(), 'Export')]")
-    private WebElement tubExport;
+    @FindBy(xpath = "//p[contains(text(), 'Export')]")
+    private WebElement menuExport;
 
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62")
     private WebElement menuEventsChain2;
@@ -39,44 +36,44 @@ public class MainPage extends BasePage {
         super(driver);
     }
 
+    private void clickMenu(WebElement element) {
+        ProjectUtils.scroll(getDriver(), element);
+        element.click();
+    }
+
     public String getCurrentUser() {
         String profileButtonText = getWait().until(ExpectedConditions.visibilityOf(userProfileButton)).getText();
-        return profileButtonText.split(" ")[1].toLowerCase();
+        return profileButtonText.substring(profileButtonText.indexOf(' ') + 1).toLowerCase();
     }
 
     public MainPage resetUserData() {
-        click(getWait(), userProfileButton);
-        click(getWait(), resetButton);
+        ProjectUtils.click(getWait(), userProfileButton);
+        ProjectUtils.click(getWait(), resetButton);
         return this;
     }
 
     public RecycleBinPage clickRecycleBin () {
-        click(getWait(), recycleBinIcon);
+        ProjectUtils.click(getWait(), recycleBinIcon);
         return new RecycleBinPage(getDriver());
     }
 
     public FieldsPage clickMenuFields() {
-        menuFields.click();
+        clickMenu(menuFields);
         return new FieldsPage(getDriver());
     }
 
     public ImportValuesPage clickMenuImportValues() {
-        menuImportValues.click();
+        clickMenu(menuImportValues);
         return new ImportValuesPage(getDriver());
     }
   
     public Chain2Page clickMenuEventsChain2() {
-        scroll(getDriver(), menuEventsChain2);
-        menuEventsChain2.click();
+        clickMenu(menuEventsChain2);
         return new Chain2Page(getDriver());
     }
 
-    public ExportPage clickTubExport() {
-        getActions().moveToElement(leftMenu).perform();
-        getExecutor().executeScript("arguments[0].scrollIntoView();", tubExport);
-        getActions().pause(Duration.ofSeconds(3));
-        tubExport.click();
-
+    public ExportPage clickMenuExport() {
+        clickMenu(menuExport);
         return new ExportPage(getDriver());
     }
 }

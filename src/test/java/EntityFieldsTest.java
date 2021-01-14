@@ -1,6 +1,7 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.Ignore;
@@ -31,19 +32,17 @@ public class EntityFieldsTest extends BaseTest {
     private static final String NEW_DATE_TIME = "25/10/2018 08:22:05";
     private static final String INVALID_ENTRY = "a";
     private static final String ERROR_MESSAGE = "error saving entity";
-    private static String RANDOM_USER = null;
-    private static String CURRENT_USER = null;
+
+    private String randomUser = null;
+    private String currentUser = null;
 
     @Test
     public void createRecordTest() {
 
-        String[] expectedValues = {"", TITLE, COMMENTS, INT, DECIMAL, DATE, DATE_TIME, "", CURRENT_USER, ""};
+        currentUser = new MainPage(getDriver()).getCurrentUser();
+        final List<String> expectedValues = Arrays.asList("", TITLE, COMMENTS, INT, DECIMAL, DATE, DATE_TIME, "", currentUser, "", "menu");
 
-        MainPage mainPage = new MainPage(getDriver());
-        CURRENT_USER = expectedValues[8] = mainPage.getCurrentUser();
-
-        FieldsPage fieldsPage = new FieldsPage(getDriver()) ;
-        fieldsPage
+        FieldsPage fieldsPage = new FieldsPage(getDriver())
                 .clickMenuFields()
                 .clickNewFolder()
                 .fillTitle(TITLE)
@@ -52,45 +51,41 @@ public class EntityFieldsTest extends BaseTest {
                 .fillDecimal(DECIMAL)
                 .fillDate(DATE)
                 .fillDateTime(DATE_TIME)
-                .selectUser(CURRENT_USER)
+                .selectUser(currentUser)
                 .clickSaveButton();
 
         Assert.assertEquals(fieldsPage.getRowCount(), 1);
-        Assert.assertEquals(fieldsPage.getRecordData(0), Arrays.asList(expectedValues));
+        Assert.assertEquals(fieldsPage.getRow(0), expectedValues);
         Assert.assertEquals(fieldsPage.getRowEntityIcon(0).getAttribute("class"), "fa fa-check-square-o");
     }
 
     @Test(dependsOnMethods = "deleteRecordTest")
     public void createDraftTest() {
 
-        String[] expectedValues = {"", TITLE, COMMENTS, "0", "0", "", "", "", CURRENT_USER, ""};
+        final List<String> expectedValues = Arrays.asList("", TITLE, COMMENTS, "0", "0", "", "", "", currentUser, "", "menu");
 
-        MainPage mainPage = new MainPage(getDriver());
-        CURRENT_USER = expectedValues[8] = mainPage.getCurrentUser();
-
-        FieldsPage fieldsPage = new FieldsPage(getDriver());
-        fieldsPage
+        FieldsPage fieldsPage = new FieldsPage(getDriver())
                 .clickMenuFields()
                 .clickNewFolder()
                 .fillTitle(TITLE)
                 .fillComments(COMMENTS)
-                .selectUser(CURRENT_USER)
+                .selectUser(currentUser)
                 .clickSaveDraftButton();
 
         Assert.assertEquals(fieldsPage.getRowCount(), 1);
-        Assert.assertEquals(fieldsPage.getRecordData(0), Arrays.asList(expectedValues));
+        Assert.assertEquals(fieldsPage.getRow(0), expectedValues);
         Assert.assertEquals(fieldsPage.getRowEntityIcon(0).getAttribute("class"), "fa fa-pencil");
     }
 
     @Test(dependsOnMethods = "createRecordTest")
     public void editRecordTest() {
 
-        String[] expectedValues = {"", NEW_TITLE, NEW_COMMENTS, NEW_INT, NEW_DECIMAL, NEW_DATE, NEW_DATE_TIME, "", RANDOM_USER, ""};
+        String[] expectedValues = {"", NEW_TITLE, NEW_COMMENTS, NEW_INT, NEW_DECIMAL, NEW_DATE, NEW_DATE_TIME, "", randomUser, "", "menu"};
 
         MainPage mainPage = new MainPage(getDriver());
         FieldsEditPage fieldsEditsPage = mainPage.clickMenuFields().editRow(0);
 
-        RANDOM_USER = expectedValues[8] = fieldsEditsPage.getRandomUser();
+        randomUser = expectedValues[8] = fieldsEditsPage.getRandomUser();
         FieldsPage fieldsPage = fieldsEditsPage
                 .fillTitle(NEW_TITLE)
                 .fillComments(NEW_COMMENTS)
@@ -98,11 +93,11 @@ public class EntityFieldsTest extends BaseTest {
                 .fillDecimal(NEW_DECIMAL)
                 .fillDate(NEW_DATE)
                 .fillDateTime(NEW_DATE_TIME)
-                .selectUser(RANDOM_USER)
+                .selectUser(randomUser)
                 .clickSaveButton();
 
         Assert.assertEquals(fieldsPage.getRowCount(), 1);
-        Assert.assertEquals(fieldsPage.getRecordData(0), Arrays.asList(expectedValues));
+        Assert.assertEquals(fieldsPage.getRow(0), Arrays.asList(expectedValues));
         Assert.assertEquals(fieldsPage.getRowEntityIcon(0).getAttribute("class"), "fa fa-check-square-o");
     }
 

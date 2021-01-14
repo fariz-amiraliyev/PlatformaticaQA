@@ -3,7 +3,7 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import static runner.ProjectUtils.click;
+import runner.ProjectUtils;
 
 public abstract class BaseEditPage<TablePage> extends BasePage {
 
@@ -20,22 +20,22 @@ public abstract class BaseEditPage<TablePage> extends BasePage {
     protected abstract TablePage createPage();
 
     public TablePage clickSaveButton() {
-        click(getWait(), saveButton);
+        ProjectUtils.click(getWait(), saveButton);
         return createPage();
     }
 
     public TablePage clickSaveDraftButton() {
-        click(getWait(), saveDraftButton);
+        ProjectUtils.click(getWait(), saveDraftButton);
         return createPage();
     }
 
     public ErrorPage clickSaveButtonErrorExpected() {
-        click(getWait(), saveButton);
+        ProjectUtils.click(getWait(), saveButton);
         return new ErrorPage(getDriver());
     }
 
     public ErrorPage clickSaveDraftButtonErrorExpected() {
-        click(getWait(), saveDraftButton);
+        ProjectUtils.click(getWait(), saveDraftButton);
         return new ErrorPage(getDriver());
     }
 
