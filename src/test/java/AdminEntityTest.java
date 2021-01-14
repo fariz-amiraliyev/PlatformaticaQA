@@ -44,14 +44,14 @@ public class AdminEntityTest extends BaseTest {
         }
         double finalRandom_double = random_double * 0.01;
         return new HashMap<Integer, String>() {{
-            put(1, ProjectUtils.createRandomString());
-            put(2, ProjectUtils.createRandomString());
+            put(1, ProjectUtils.createUUID());
+            put(2, ProjectUtils.createUUID());
             put(3, String.valueOf(getRandomInteger()));
             put(4, String.format("%.2f", finalRandom_double));
         }};
     }
 
-    private final String entity_name = ProjectUtils.createRandomString();
+    private final String entity_name = ProjectUtils.createUUID();
     private final By entity_in_menu = By.xpath(String.format
             ("//p[contains(text(),'%s')]/preceding-sibling::i/parent::a", entity_name));
     private final Map<Integer, String> entity_record = createRecordValues();

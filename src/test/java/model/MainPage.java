@@ -1,15 +1,24 @@
 package model;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import runner.ProjectUtils;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import static runner.ProjectUtils.click;
+import static runner.ProjectUtils.scroll;
 
 import java.time.Duration;
 
-public final class MainPage extends BasePage {
+public class MainPage extends BasePage {
+
+    @FindBy(id = "navbarDropdownProfile")
+    WebElement userProfileButton;
+
+    @FindBy(xpath = "//a[contains(text(), 'Reset')]")
+    WebElement resetButton;
+
+    @FindBy(css = "a[href*=recycle] > i")
+    private WebElement recycleBinIcon;
 
     @FindBy(xpath = "//li[@id = 'pa-menu-item-45']")
     private WebElement menuFields;
@@ -30,6 +39,22 @@ public final class MainPage extends BasePage {
         super(driver);
     }
 
+    public String getCurrentUser() {
+        String profileButtonText = getWait().until(ExpectedConditions.visibilityOf(userProfileButton)).getText();
+        return profileButtonText.split(" ")[1].toLowerCase();
+    }
+
+    public MainPage resetUserData() {
+        click(getWait(), userProfileButton);
+        click(getWait(), resetButton);
+        return this;
+    }
+
+    public RecycleBinPage clickRecycleBin () {
+        click(getWait(), recycleBinIcon);
+        return new RecycleBinPage(getDriver());
+    }
+
     public FieldsPage clickMenuFields() {
         menuFields.click();
         return new FieldsPage(getDriver());
@@ -41,17 +66,15 @@ public final class MainPage extends BasePage {
     }
   
     public Chain2Page clickMenuEventsChain2() {
-        ProjectUtils.scroll(getDriver(), menuEventsChain2);
+        scroll(getDriver(), menuEventsChain2);
         menuEventsChain2.click();
         return new Chain2Page(getDriver());
     }
 
     public ExportPage clickTubExport() {
-        Actions action = new Actions(getDriver());
-        action.moveToElement(leftMenu).perform();
-        JavascriptExecutor js = (JavascriptExecutor) getDriver();
-        js.executeScript("arguments[0].scrollIntoView();", tubExport);
-        action.pause(Duration.ofSeconds(3));
+        getActions().moveToElement(leftMenu).perform();
+        getExecutor().executeScript("arguments[0].scrollIntoView();", tubExport);
+        getActions().pause(Duration.ofSeconds(3));
         tubExport.click();
 
         return new ExportPage(getDriver());

@@ -1,32 +1,35 @@
 package model;
 
-
 import com.beust.jcommander.Strings;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class BaseTablePage<S, E> extends BasePage {
+import static runner.ProjectUtils.click;
 
-    private static final String ROW_MENU_ = "//button[@data-toggle='dropdown']/../ul/li/a[text()='%s']";
-
-    private static final By ROW_MENU_VIEW = By.xpath(String.format(ROW_MENU_, "view"));
-    private static final By ROW_MENU_EDIT = By.xpath(String.format(ROW_MENU_, "edit"));
-    private static final By ROW_MENU_DELETE = By.xpath(String.format(ROW_MENU_, "delete"));
+public abstract class BaseTablePage<S, E> extends MainPage {
 
     @FindBy(xpath = "//i[text() = 'create_new_folder']")
-    private WebElement buttonNew;
+    protected WebElement buttonNew;
 
     @FindBy(className = "card-body")
-    private WebElement body;
+    protected WebElement body;
 
     @FindBy(xpath = "//table[@id='pa-all-entities-table']/tbody/tr")
-    private List<WebElement> trs;
+    protected List<WebElement> trs;
+
+    @FindBy(xpath = "//button[@data-toggle='dropdown']/../ul/li/a[text()='view']")
+    protected WebElement menuView;
+
+    @FindBy(xpath = "//button[@data-toggle='dropdown']/../ul/li/a[text()='edit']")
+    protected WebElement menuEdit;
+
+    @FindBy(xpath = "//button[@data-toggle='dropdown']/../ul/li/a[text()='delete']")
+    protected WebElement menuDelete;
 
     public BaseTablePage(WebDriver driver) {
         super(driver);
@@ -47,6 +50,10 @@ public abstract class BaseTablePage<S, E> extends BasePage {
         }
     }
 
+    public WebElement getRowEntityIcon(int rowNumber) {
+        return trs.get(rowNumber).findElement(By.cssSelector("td > i"));
+    }
+
     public List<String> getRow(int rowNumber) {
         return trs.get(rowNumber).findElements(By.xpath("//td/a/div")).stream()
                 .map(WebElement::getText).collect(Collectors.toList());
@@ -54,11 +61,14 @@ public abstract class BaseTablePage<S, E> extends BasePage {
 
     private void clickRowMenu(int rowNumber) {
         trs.get(rowNumber).findElement(By.xpath("//td//div//button")).click();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ignored) {}
     }
 
     public BaseViewPage viewRow(int rowNumber) {
         clickRowMenu(rowNumber);
-        getWait().until(ExpectedConditions.elementToBeClickable(ROW_MENU_VIEW)).click();
+        click(getWait(), menuView);
 
         return new BaseViewPage(getDriver());
     }
@@ -69,7 +79,7 @@ public abstract class BaseTablePage<S, E> extends BasePage {
 
     public E editRow(int rowNumber) {
         clickRowMenu(rowNumber);
-        getWait().until(ExpectedConditions.elementToBeClickable(ROW_MENU_EDIT)).click();
+        click(getWait(), menuEdit);
 
         return createEditPage();
     }
@@ -80,7 +90,7 @@ public abstract class BaseTablePage<S, E> extends BasePage {
 
     public S deleteRow(int rowNumber) {
         clickRowMenu(rowNumber);
-        getWait().until(ExpectedConditions.elementToBeClickable(ROW_MENU_DELETE)).click();
+        click(getWait(), menuDelete);
 
         return (S)this;
     }
