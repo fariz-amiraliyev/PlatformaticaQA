@@ -69,7 +69,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
                 actionsClick(driver, 1, mode);
                 return getValues(driver, mode);
             default:
-                throw new IllegalArgumentException("Invalid mode");
+                throw new IllegalArgumentException(String.format("Invalid mode %s", mode));
         }
     }
 
