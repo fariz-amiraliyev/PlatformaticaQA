@@ -6,7 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 
-public class Chain1EditPage extends BasePage {
+public class Chain1EditPage extends BaseEditPage<Chain1Page> {
 
     @FindBy(id = "f1")
     WebElement f1;
@@ -21,6 +21,12 @@ public class Chain1EditPage extends BasePage {
     public Chain1EditPage(WebDriver driver) {
         super(driver);
     }
+    @Override
+    protected Chain1Page createPage() {
+        return new Chain1Page(getDriver());
+    }
+
+
 
     public Chain1EditPage inputInitialValue() {
         ProjectUtils.sendKeys(f1, "1");
@@ -28,10 +34,7 @@ public class Chain1EditPage extends BasePage {
         return this;
     }
 
-    public Chain1Page saveButtonClick() {
-        ProjectUtils.click(getDriver(), saveButton);
-        return new Chain1Page(getDriver());
-    }
+
 }
 
 
