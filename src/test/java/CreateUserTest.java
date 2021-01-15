@@ -102,11 +102,12 @@ public class CreateUserTest extends BaseTest {
     }
 
     @Test
-    public void createApplicationTest(){
+    public void createApplicationTest() throws InterruptedException {
         driver = getDriver();
         waitForElementAndClick(" //i[contains(text(),'create_new_folder')]");
         waitForElementAndType("//input[@id='name']", "Tester");
         waitForElementAndClick("//button[@id='pa-entity-form-save-btn']");
+        Thread.sleep(2000);
         newInstancePassword = waitForElement("//h4[contains(text(),'Password: ')]/b").getText();
         newInstanceLink = waitForElement("//div[contains(text(),'https')]").getText();
         instanceLogin();
