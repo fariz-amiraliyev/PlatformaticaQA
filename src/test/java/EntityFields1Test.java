@@ -1,50 +1,49 @@
+import model.FieldsPage;
+import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
 import runner.type.Run;
 import runner.type.RunType;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Run(run = RunType.Multiple)
-public class EnityFieldsCopyTest extends BaseTest {
+public class EntityFields1Test extends BaseTest {
 
     @Test
-    public void newAlexRecord() throws InterruptedException {
+    public void newRecord() {
 
-        final String title = UUID.randomUUID().toString();;
+        final String title = UUID.randomUUID().toString();
+        ;
         final String comments = "TEST IT";
-        final int InTeGeR = 11;
+        final String int_ = "11";
+        final String decimal = "0";
 
-        WebDriver driver = getDriver();
+        String[] record = {"", title, comments, int_, decimal, "", "", "", null, "", "menu"};
 
-        WebElement tab = driver.findElement(By.xpath("//li[@id = 'pa-menu-item-45']"));
-        tab.click();
-        WebElement newFile = driver.findElement(By.xpath("//i[text() = 'create_new_folder']"));
-        newFile.click();
+        FieldsPage fieldsPage = new MainPage(getDriver())
+                .clickMenuFields()
+                .clickNewFolder()
+                .sendKeys(title, comments, int_, decimal, "", "")
+                .clickSaveButton();
 
-        WebElement first = driver.findElement(By.xpath("//input[contains(@name, 'title')]"));
-        ProjectUtils.sendKeys(first, title);
-        WebElement second = driver.findElement(By.xpath("//textarea[@id = 'comments']"));
-        ProjectUtils.sendKeys(second, comments);
-        WebElement tri = driver.findElement(By.xpath("//input[contains(@name, 'int')]"));
-        ProjectUtils.sendKeys(tri, InTeGeR);
-
-        WebElement button2 = driver.findElement(By.xpath("//button[text() = 'Save']"));
-        ProjectUtils.click(driver, button2);
-
-        WebElement butt3 = driver.findElement(By.xpath("//div[contains(text() , '"+ title +"')]"));
-
-        Assert.assertEquals(butt3.getText(), title);
+        Assert.assertEquals(fieldsPage.getRowCount(), 1);
+        record[8] = fieldsPage.getRow(0).get(8);
+        Assert.assertEquals(fieldsPage.getRow(0), Arrays.asList(record));
     }
 
-    @Test(dependsOnMethods = "newAlexRecord")
+    @Ignore
+    @Test(dependsOnMethods = "newRecord")
     public void editRecord() throws InterruptedException {
 
         final String newTitle = UUID.randomUUID().toString();
@@ -52,7 +51,7 @@ public class EnityFieldsCopyTest extends BaseTest {
         final int newInt = 12;
 
         WebDriver driver = getDriver();
-        WebDriverWait wait = new WebDriverWait(driver,4);
+        WebDriverWait wait = new WebDriverWait(driver, 4);
 
         WebElement tab = driver.findElement(By.xpath("//li[@id = 'pa-menu-item-45']"));
         tab.click();
@@ -74,7 +73,7 @@ public class EnityFieldsCopyTest extends BaseTest {
         WebElement button2 = driver.findElement(By.xpath("//button[text() = 'Save']"));
         ProjectUtils.click(driver, button2);
 
-        WebElement butt3 = driver.findElement(By.xpath("//div[contains(text() , '"+ newTitle +"')]"));
+        WebElement butt3 = driver.findElement(By.xpath("//div[contains(text() , '" + newTitle + "')]"));
 
         Assert.assertEquals(butt3.getText(), newTitle);
     }
