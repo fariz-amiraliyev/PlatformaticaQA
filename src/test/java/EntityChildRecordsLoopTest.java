@@ -134,9 +134,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
 
         String partOfXpath = removeDecimal(endBalanceDigit) + "";
 
-        WebElement savedRecord = driver.findElement(By.xpath("//div[contains(text(),'" + partOfXpath + "')]"));
-
-        wait.until(d -> savedRecord.isDisplayed());
+        wait.until(d -> driver.findElement(By.xpath("//div[contains(text(),'" + partOfXpath + "')]")).isDisplayed());
     }
 
     @Test(dependsOnMethods = "checkStartEndBalanceBeforeSave")
@@ -153,7 +151,6 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         for (int i = 0; i < startEndBalance.size(); i++) {
             Assert.assertEquals(startEndBalance.get(i).getText(), valuesArr[i]);
         }
-        driver.navigate().back();
     }
 
     @Test(dependsOnMethods = "checkStartEndBalanceBeforeSave")
