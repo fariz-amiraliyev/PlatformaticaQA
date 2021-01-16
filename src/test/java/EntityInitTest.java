@@ -2,7 +2,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
@@ -15,7 +14,7 @@ import java.util.List;
 public class EntityInitTest extends BaseTest {
 
     final String userDefault = "User 1 Demo";
-    final String[] defaultValuesArr = {"New String", "New Text", "2", "3.14", "01/01/2020", "31/12/2020 23:59:59", "1", "Two"};
+    final String[] defaultValuesArr = {"New String", "New Text", "2", "3.14", "01/01/2020", "31/12/2020 23:59:59", "Two"};
 
     public void createDefaultInitRecord() {
         WebDriver driver = getDriver();
@@ -55,7 +54,6 @@ public class EntityInitTest extends BaseTest {
     }
 
 
-    @Ignore
     @Test
     public void checkDefaultValuesInViewMode() {
 
@@ -76,8 +74,7 @@ public class EntityInitTest extends BaseTest {
         driver.navigate().back();
     }
 
-    @Ignore
-    @Test(dependsOnMethods = "checkDefaultValuesInViewMode")
+     @Test(dependsOnMethods = "checkDefaultValuesInViewMode")
 
     public void checkDefaultValuesInEditMode() {
         WebDriver driver = getDriver();
