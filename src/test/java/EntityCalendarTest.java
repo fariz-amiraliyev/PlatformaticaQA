@@ -180,3 +180,4 @@ public class EntityCalendarTest extends BaseTest {
         getWebDriverWait().until(driver1 -> deleteRecord.isDisplayed());
     }
 }
+
