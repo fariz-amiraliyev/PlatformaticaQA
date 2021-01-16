@@ -32,6 +32,9 @@ public class MainPage extends BasePage {
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62")
     private WebElement menuEventsChain2;
 
+    @FindBy(xpath = "//p[contains(text(), 'Footers')]")
+    private WebElement menuFooters;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -75,5 +78,10 @@ public class MainPage extends BasePage {
     public ExportPage clickMenuExport() {
         clickMenu(menuExport);
         return new ExportPage(getDriver());
+    }
+
+    public FootersPage  clickMenuFooters(){
+        clickMenu(menuFooters);
+        return new FootersPage(getDriver());
     }
 }
