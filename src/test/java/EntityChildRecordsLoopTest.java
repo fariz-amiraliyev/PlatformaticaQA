@@ -15,9 +15,9 @@ import java.util.Random;
 @Run(run = RunType.Multiple)
 public class EntityChildRecordsLoopTest extends BaseTest {
 
-    final String startBalance = "1";
-    final String value9 = "6";
-    int endBalanceD;
+    private String startBalance = "1";
+    private String value9 = "6";
+    private int endBalanceD;
 
     private int numbersOfLines = 9;
     private double sumNumber = 0;
@@ -100,15 +100,9 @@ public class EntityChildRecordsLoopTest extends BaseTest {
             sumNumber += firstValuesPassed[i];
         }
 
-        fillData("//tr//textarea[@id='t-68-r-1-amount']", String.valueOf(firstValuesPassed[1]));
-        fillData("//tr//textarea[@id='t-68-r-2-amount']", String.valueOf(firstValuesPassed[2]));
-        fillData("//tr//textarea[@id='t-68-r-3-amount']", String.valueOf(firstValuesPassed[3]));
-        fillData("//tr//textarea[@id='t-68-r-4-amount']", String.valueOf(firstValuesPassed[4]));
-        fillData("//tr//textarea[@id='t-68-r-5-amount']", String.valueOf(firstValuesPassed[5]));
-        fillData("//tr//textarea[@id='t-68-r-6-amount']", String.valueOf(firstValuesPassed[6]));
-        fillData("//tr//textarea[@id='t-68-r-7-amount']", String.valueOf(firstValuesPassed[7]));
-        fillData("//tr//textarea[@id='t-68-r-8-amount']", String.valueOf(firstValuesPassed[8]));
-        fillData("//tr//textarea[@id='t-68-r-9-amount']", String.valueOf(firstValuesPassed[9]));
+        for (int i = 1; i < 10; i++) {
+            fillData(String.format("//tr//textarea[@id='t-68-r-%d-amount']", i), String.valueOf(firstValuesPassed[i]));
+        }
 
         WebElement lastLine = driver.findElement(By.xpath("//tr//textarea[@id='t-68-r-9-amount']"));
 
