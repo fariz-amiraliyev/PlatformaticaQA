@@ -8,22 +8,25 @@ import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class EntityFieldOpsEditTest extends BaseTest {
 
-    private final String DEFAULT_DROPDOWN = "Pending";
-    private final String OPTIONAL_DROPDOWN = "Done";
-    private final String REFERENCE_1 = UUID.randomUUID().toString();
-    private final String REFERENCE_2 = UUID.randomUUID().toString();
-    private final String REFERENCE_3 = UUID.randomUUID().toString();
-    private final String REFERENCE_CONSTANT = "contact@company.com";
+    private static final String DEFAULT_DROPDOWN = "Pending";
+    private static final String OPTIONAL_DROPDOWN = "Done";
+    private static final String REFERENCE_1 = UUID.randomUUID().toString();
+    private static final String REFERENCE_2 = UUID.randomUUID().toString();
+    private static final String REFERENCE_3 = UUID.randomUUID().toString();
+    private static final String REFERENCE_CONSTANT = "contact@company.com";
 
-    private final By rows = By.xpath("//tbody/tr");
+    private final By rows = By.xpath("//table[@id='pa-all-entities-table']/tbody/tr");
+    private final By cell = By.xpath("//table/tbody/tr/td[3]/a/div");
     private final By createNew = By.xpath("//div[@class='card-icon']/i");
-    private final By saveButton = By.cssSelector("button[id*='save']");
+    private final By saveButton = By.cssSelector("#pa-entity-form-save-btn");
     private final By createReferenceLabelInput = By.cssSelector("input[name*=label]");
     private final By createReferenceFilter1Input = By.cssSelector("input[name*=filter_1]");
     private final By createReferenceFilter2Input = By.cssSelector("input[name*=filter_2]");
@@ -40,6 +43,7 @@ public class EntityFieldOpsEditTest extends BaseTest {
     private WebDriverWait getWait(int timeoutSecond) {
         return new WebDriverWait(getDriver(), timeoutSecond);
     }
+
 
     private boolean isVisible(By by) {
         getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
@@ -62,8 +66,7 @@ public class EntityFieldOpsEditTest extends BaseTest {
         return inViewportByHeight && inViewportByWidth;
     }
 
-    private void goPageByName(String name) {
-        WebDriver driver = getDriver();
+    private void goPageByName(WebDriver driver, String name) {
         ProjectUtils.click(driver, driver.findElement(By.xpath(String.format("//p[contains(text(), ' %s ')]/..", name))));
     }
 
@@ -77,24 +80,24 @@ public class EntityFieldOpsEditTest extends BaseTest {
 
     private void createReference(String label) {
         WebDriver driver = getDriver();
-        goPageByName("Reference values");
+        goPageByName(driver,"Reference values");
         driver.findElement(createNew).click();
         driver.findElement(createReferenceLabelInput).sendKeys(label);
         clickSaveButton();
     }
 
-    private void createReference(String label, String filterOne) {
+    private void createReference(WebDriver driver1, String label, String filterOne) {
         WebDriver driver = getDriver();
-        goPageByName("Reference values");
+        goPageByName(driver,"Reference values");
         driver.findElement(createNew).click();
         driver.findElement(createReferenceLabelInput).sendKeys(label);
         driver.findElement(createReferenceFilter1Input).sendKeys(filterOne);
         clickSaveButton();
     }
 
-    private void createReference(String label, String filterOne, String filterTwo) {
+    private void createReference(WebDriver driver1, String label, String filterOne, String filterTwo) {
         WebDriver driver = getDriver();
-        goPageByName("Reference values");
+        goPageByName(driver,"Reference values");
         driver.findElement(createNew).click();
         driver.findElement(createReferenceLabelInput).sendKeys(label);
         driver.findElement(createReferenceFilter1Input).sendKeys(filterOne);
@@ -162,8 +165,8 @@ public class EntityFieldOpsEditTest extends BaseTest {
         actions.perform();
     }
 
-    private String createReferenceValue(String referenceValue) {
-        goPageByName("Reference values");
+    private String createReferenceValue(WebDriver driver, String referenceValue) {
+        goPageByName(driver,"Reference values");
         getDriver().findElement(By.xpath("//i[contains(text(),'create_new_folder')]")).click();
         WebElement labelInput = getDriver().findElement(By.xpath("//input[@id='label']"));
         labelInput.sendKeys(referenceValue);
@@ -172,8 +175,8 @@ public class EntityFieldOpsEditTest extends BaseTest {
         return getCreatedReferenceValue();
     }
 
-    private void createFieldOpsToDelete(String referenceValue) {
-        goPageByName("Fields Ops");
+    private void createFieldOpsToDelete(WebDriver driver, String referenceValue) {
+        goPageByName(driver,"Fields Ops");
         getDriver().findElement(By.xpath("//i[contains(text(),'create_new_folder')]")).click();
         WebElement referenceCheckBox = getWait(3).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format("//label[contains(text(), '%s')]", referenceValue))));
         scrollToElement(referenceCheckBox);
@@ -185,223 +188,215 @@ public class EntityFieldOpsEditTest extends BaseTest {
     @Test
     public void createNewRecordTest() {
         WebDriver driver = getDriver();
-        goPageByName("Fields Ops");
+        goPageByName(driver, "Fields Ops");
 
-        WebElement createNewFolder = driver.findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
-        createNewFolder.click();
+        driver.findElement(createNew).click();
+        driver.findElement(createEditMainToggle).click();
 
-        WebElement checkbox = driver.findElement(By.xpath("//div[@class='d-flex']//span"));
-        checkbox.click();
-
-        Select dropdownMenu = new Select(driver.findElement(By.xpath("//select[@name='entity_form_data[dropdown]']")));
+        Select dropdownMenu = new Select(driver.findElement(createEditDropdownSelect));
         dropdownMenu.selectByValue("Done");
 
-        WebElement saveBtn = driver.findElement(By.id("pa-entity-form-save-btn"));
-        ProjectUtils.click(driver, saveBtn);
+        ProjectUtils.click(driver, driver.findElement(saveButton));
 
-        try {
-            WebElement pageTitle = driver.findElement(By.className("card-title"));
-            Assert.assertEquals(pageTitle.getText(), "Fields Ops",
-                    "Redirection works incorrectly");
-        } catch (TimeoutException e) {
-            Assert.fail("Redirection works incorrectly");
-        }
+        Assert.assertEquals(driver.findElements(rows).size(),1);
+        Assert.assertEquals(driver.findElement(cell).getText(), OPTIONAL_DROPDOWN);
     }
 
-    @Test
-    public void viewBaseRecordNoRefExistTest() throws InterruptedException {
 
-        final String SWITCH_VALUE = "0";
-        final String REFERENCE = "";
-        final String MULTI_REFERENCE = "";
-        final String REFERENCE_WITH_FILTER = "";
-        String[] values = {null, SWITCH_VALUE, DEFAULT_DROPDOWN, REFERENCE, MULTI_REFERENCE, REFERENCE_WITH_FILTER,
-                REFERENCE_CONSTANT, null};
-
-        WebDriver driver = getDriver();
-
-        goPageByName("Fields Ops");
-        driver.findElement(createNew).click();
-        clickSaveButton();
-
-        Assert.assertEquals(driver.findElements(rows).size(), 1);
-        WebElement row = driver.findElement(rows);
-        List<WebElement> cols = row.findElements(By.tagName("td"));
-        Assert.assertEquals(cols.size(), values.length);
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] != null) {
-                Assert.assertEquals(cols.get(i).getText(), values[i]);
-            }
-        }
-        Assert.assertEquals(getRecordTypeIcon(), "");
-
-        clickSandwichAction(driver.findElement(rows), "view");
-        Assert.assertEquals(driver.findElement(viewSwitchValue).getText(), SWITCH_VALUE);
-        Assert.assertEquals(driver.findElement(viewDropdownValue).getText(), DEFAULT_DROPDOWN);
-        Assert.assertEquals(getViewReferenceConstant(), REFERENCE_CONSTANT);
-        Assert.assertFalse(isVisible(viewReferenceValue));
-        Assert.assertFalse(isVisible(viewMultiReferenceValue));
-        Assert.assertFalse(isVisible(viewReferenceWithFilterValue));
-        Assert.assertFalse(isVisible(rows));
-    }
-
-    @Ignore
-    @Test
-    public void viewBaseRecordRefExistTest() throws InterruptedException {
-
-        final String SWITCH_VALUE = "0";
-        final String reference = "";
-        final String multiReference = "";
-        final String referenceWithFilter = "";
-        String[] values = {null, SWITCH_VALUE, DEFAULT_DROPDOWN, reference, multiReference, referenceWithFilter,
-                REFERENCE_CONSTANT, null};
-
-        WebDriver driver = getDriver();
-
-        createReference(REFERENCE_1);
-        createReference(REFERENCE_2, REFERENCE_1);
-        createReference(REFERENCE_3, REFERENCE_2, REFERENCE_1);
-
-        goPageByName("Fields Ops");
-        driver.findElement(createNew).click();
-        clickSaveButton();
-
-        Assert.assertEquals(driver.findElements(rows).size(), 1);
-        WebElement row = driver.findElement(rows);
-        List<WebElement> cols = row.findElements(By.tagName("td"));
-        Assert.assertEquals(cols.size(), values.length);
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] != null) {
-                Assert.assertEquals(cols.get(i).getText(), values[i]);
-            }
-        }
-        Assert.assertEquals(getRecordTypeIcon(), "");
-
-        clickSandwichAction(driver.findElement(rows), "view");
-        Assert.assertEquals(driver.findElement(viewSwitchValue).getText(), SWITCH_VALUE);
-        Assert.assertEquals(driver.findElement(viewDropdownValue).getText(), DEFAULT_DROPDOWN);
-        Assert.assertEquals(getViewReferenceConstant(), REFERENCE_CONSTANT);
-        Assert.assertFalse(isVisible(viewReferenceValue));
-        Assert.assertFalse(isVisible(viewMultiReferenceValue));
-        Assert.assertFalse(isVisible(viewReferenceWithFilterValue));
-        Assert.assertFalse(isVisible(rows));
-    }
-
-    @Ignore
-    @Test
-    public void viewRecordWithRefTest() throws InterruptedException {
-
-        final String SWITCH_VALUE = "1";
-        final String REFERENCE = REFERENCE_1;
-        final String MULTI_REFERENCE = "";
-        final String REFERENCE_WITH_FILTER = "";
-        String[] values = {null, SWITCH_VALUE, OPTIONAL_DROPDOWN, REFERENCE, MULTI_REFERENCE, REFERENCE_WITH_FILTER,
-                REFERENCE_CONSTANT, null};
-
-        WebDriver driver = getDriver();
-
-        createReference(REFERENCE_1);
-        createReference(REFERENCE_2, REFERENCE_1);
-        createReference(REFERENCE_3, REFERENCE_2, REFERENCE_1);
-
-        goPageByName("Fields Ops");
-        driver.findElement(createNew).click();
-        driver.findElement(createEditMainToggle).click();
-        new Select(driver.findElement(createEditDropdownSelect)).selectByVisibleText(OPTIONAL_DROPDOWN);
-        new Select(driver.findElement(createEditReferenceSelect)).selectByVisibleText(REFERENCE);
-        clickSaveButton();
-
-        Assert.assertEquals(driver.findElements(rows).size(), 1);
-        WebElement row = driver.findElement(rows);
-        List<WebElement> cols = row.findElements(By.tagName("td"));
-        Assert.assertEquals(cols.size(), values.length);
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] != null) {
-                Assert.assertEquals(cols.get(i).getText(), values[i]);
-            }
-        }
-        Assert.assertEquals(getRecordTypeIcon(), "");
-
-        clickSandwichAction(driver.findElement(rows), "view");
-        Assert.assertEquals(driver.findElement(viewSwitchValue).getText(), SWITCH_VALUE);
-        Assert.assertEquals(driver.findElement(viewDropdownValue).getText(), OPTIONAL_DROPDOWN);
-        Assert.assertEquals(driver.findElement(viewReferenceValue).getText(), REFERENCE);
-        Assert.assertEquals(getViewReferenceConstant(), REFERENCE_CONSTANT);
-        Assert.assertFalse(isVisible(viewMultiReferenceValue));
-        Assert.assertFalse(isVisible(viewReferenceWithFilterValue));
-        Assert.assertFalse(isVisible(rows));
-    }
-
-    @Ignore
-    @Test
-    public void viewRecordWithRefMultiRefTest() throws InterruptedException {
-
-        final String SWITCH_VALUE = "1";
-        final String REFERENCE = REFERENCE_1;
-        final String MULTI_REFERENCE = String.format("%s, %s", REFERENCE_1, REFERENCE_2);
-        final String REFERENCE_WITH_FILTER = "";
-        String[] values = {null, SWITCH_VALUE, OPTIONAL_DROPDOWN, REFERENCE, MULTI_REFERENCE, REFERENCE_WITH_FILTER,
-                REFERENCE_CONSTANT, null};
-
-        WebDriver driver = getDriver();
-
-        createReference(REFERENCE_1);
-        createReference(REFERENCE_2, REFERENCE_1);
-        createReference(REFERENCE_3, REFERENCE_2, REFERENCE_1);
-
-        goPageByName("Fields Ops");
-        driver.findElement(createNew).click();
-        driver.findElement(createEditMainToggle).click();
-        new Select(driver.findElement(createEditDropdownSelect)).selectByVisibleText(OPTIONAL_DROPDOWN);
-        new Select(driver.findElement(createEditReferenceSelect)).selectByVisibleText(REFERENCE);
-        for (String ref : MULTI_REFERENCE.split(", ")) {
-            driver.findElement(By.xpath(String.format("//label[contains(text(), '%s')]/span", ref))).click();
-        }
-        clickSaveButton();
-
-        Assert.assertEquals(driver.findElements(rows).size(), 1);
-        WebElement row = driver.findElement(rows);
-        List<WebElement> cols = row.findElements(By.tagName("td"));
-        Assert.assertEquals(cols.size(), values.length);
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] != null) {
-                Assert.assertEquals(cols.get(i).getText(), values[i]);
-            }
-        }
-        Assert.assertEquals(getRecordTypeIcon(), "");
-
-        clickSandwichAction(driver.findElement(rows), "view");
-        Assert.assertEquals(driver.findElement(viewSwitchValue).getText(), SWITCH_VALUE);
-        Assert.assertEquals(driver.findElement(viewDropdownValue).getText(), OPTIONAL_DROPDOWN);
-        Assert.assertEquals(driver.findElement(viewReferenceValue).getText(), REFERENCE);
-        Assert.assertEquals(getViewMultiReference(), MULTI_REFERENCE);
-        Assert.assertFalse(isVisible(viewReferenceWithFilterValue));
-        Assert.assertEquals(getViewReferenceConstant(), REFERENCE_CONSTANT);
-        Assert.assertFalse(isVisible(rows));
-    }
-
-    @Test
-    public void fieldOpsDeleteTest() {
-        String referenceValue = UUID.randomUUID().toString();
-        String refValueId = createReferenceValue(referenceValue);
-        createFieldOpsToDelete(referenceValue);
-
-        goPageByName("Fields Ops");
-
-        int beforeCountOfRecords = getNumberOfRecords();
-        By dropdownMenu = By.xpath("//td[contains(text(), '" + referenceValue + "' )]/../td/div/button");
-        WebElement dropDown = getWait(3).until(ExpectedConditions.elementToBeClickable(dropdownMenu));
-        ProjectUtils.click(getDriver(), dropDown);
-        WebElement deleteMenuItem = getDriver().findElement(By.cssSelector("ul.dropdown-menu.show li:nth-child(3) > a"));
-        ProjectUtils.click(getDriver(), deleteMenuItem);
-
-        int afterCountOfRecords = getNumberOfRecords();
-        Assert.assertNotEquals(beforeCountOfRecords, afterCountOfRecords);
-
-        WebElement notificationIcon = getDriver().findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
-        ProjectUtils.click(getDriver(), notificationIcon);
-
-        WebElement firstRow = getDriver().findElement(By.xpath("//tbody/tr[1]/td[1]"));
-        Assert.assertTrue(firstRow.getText().contains(refValueId));
-    }
+//    @Test
+//    public void viewBaseRecordNoRefExistTest() throws InterruptedException {
+//
+//        final String SWITCH_VALUE = "0";
+//        final String REFERENCE = "";
+//        final String MULTI_REFERENCE = "";
+//        final String REFERENCE_WITH_FILTER = "";
+//        String[] values = {null, SWITCH_VALUE, DEFAULT_DROPDOWN, REFERENCE, MULTI_REFERENCE, REFERENCE_WITH_FILTER,
+//                REFERENCE_CONSTANT, null};
+//
+//        WebDriver driver = getDriver();
+//
+//        goPageByName("Fields Ops");
+//        driver.findElement(createNew).click();
+//        clickSaveButton();
+//
+//        Assert.assertEquals(driver.findElements(rows).size(), 1);
+//        WebElement row = driver.findElement(rows);
+//        List<WebElement> cols = row.findElements(By.tagName("td"));
+//        Assert.assertEquals(cols.size(), values.length);
+//        for (int i = 0; i < values.length; i++) {
+//            if (values[i] != null) {
+//                Assert.assertEquals(cols.get(i).getText(), values[i]);
+//            }
+//        }
+//        Assert.assertEquals(getRecordTypeIcon(), "");
+//
+//        clickSandwichAction(driver.findElement(rows), "view");
+//        Assert.assertEquals(driver.findElement(viewSwitchValue).getText(), SWITCH_VALUE);
+//        Assert.assertEquals(driver.findElement(viewDropdownValue).getText(), DEFAULT_DROPDOWN);
+//        Assert.assertEquals(getViewReferenceConstant(), REFERENCE_CONSTANT);
+//        Assert.assertFalse(isVisible(viewReferenceValue));
+//        Assert.assertFalse(isVisible(viewMultiReferenceValue));
+//        Assert.assertFalse(isVisible(viewReferenceWithFilterValue));
+//        Assert.assertFalse(isVisible(rows));
+//    }
+//
+//    @Ignore
+//    @Test
+//    public void viewBaseRecordRefExistTest() throws InterruptedException {
+//
+//        final String SWITCH_VALUE = "0";
+//        final String reference = "";
+//        final String multiReference = "";
+//        final String referenceWithFilter = "";
+//        String[] values = {null, SWITCH_VALUE, DEFAULT_DROPDOWN, reference, multiReference, referenceWithFilter,
+//                REFERENCE_CONSTANT, null};
+//
+//        WebDriver driver = getDriver();
+//
+//        createReference(REFERENCE_1);
+//        createReference(REFERENCE_2, REFERENCE_1);
+//        createReference(REFERENCE_3, REFERENCE_2, REFERENCE_1);
+//
+//        goPageByName("Fields Ops");
+//        driver.findElement(createNew).click();
+//        clickSaveButton();
+//
+//        Assert.assertEquals(driver.findElements(rows).size(), 1);
+//        WebElement row = driver.findElement(rows);
+//        List<WebElement> cols = row.findElements(By.tagName("td"));
+//        Assert.assertEquals(cols.size(), values.length);
+//        for (int i = 0; i < values.length; i++) {
+//            if (values[i] != null) {
+//                Assert.assertEquals(cols.get(i).getText(), values[i]);
+//            }
+//        }
+//        Assert.assertEquals(getRecordTypeIcon(), "");
+//
+//        clickSandwichAction(driver.findElement(rows), "view");
+//        Assert.assertEquals(driver.findElement(viewSwitchValue).getText(), SWITCH_VALUE);
+//        Assert.assertEquals(driver.findElement(viewDropdownValue).getText(), DEFAULT_DROPDOWN);
+//        Assert.assertEquals(getViewReferenceConstant(), REFERENCE_CONSTANT);
+//        Assert.assertFalse(isVisible(viewReferenceValue));
+//        Assert.assertFalse(isVisible(viewMultiReferenceValue));
+//        Assert.assertFalse(isVisible(viewReferenceWithFilterValue));
+//        Assert.assertFalse(isVisible(rows));
+//    }
+//
+//    @Ignore
+//    @Test
+//    public void viewRecordWithRefTest() throws InterruptedException {
+//
+//        final String SWITCH_VALUE = "1";
+//        final String REFERENCE = REFERENCE_1;
+//        final String MULTI_REFERENCE = "";
+//        final String REFERENCE_WITH_FILTER = "";
+//        String[] values = {null, SWITCH_VALUE, OPTIONAL_DROPDOWN, REFERENCE, MULTI_REFERENCE, REFERENCE_WITH_FILTER,
+//                REFERENCE_CONSTANT, null};
+//
+//        WebDriver driver = getDriver();
+//
+//        createReference(REFERENCE_1);
+//        createReference(REFERENCE_2, REFERENCE_1);
+//        createReference(REFERENCE_3, REFERENCE_2, REFERENCE_1);
+//
+//        goPageByName("Fields Ops");
+//        driver.findElement(createNew).click();
+//        driver.findElement(createEditMainToggle).click();
+//        new Select(driver.findElement(createEditDropdownSelect)).selectByVisibleText(OPTIONAL_DROPDOWN);
+//        new Select(driver.findElement(createEditReferenceSelect)).selectByVisibleText(REFERENCE);
+//        clickSaveButton();
+//
+//        Assert.assertEquals(driver.findElements(rows).size(), 1);
+//        WebElement row = driver.findElement(rows);
+//        List<WebElement> cols = row.findElements(By.tagName("td"));
+//        Assert.assertEquals(cols.size(), values.length);
+//        for (int i = 0; i < values.length; i++) {
+//            if (values[i] != null) {
+//                Assert.assertEquals(cols.get(i).getText(), values[i]);
+//            }
+//        }
+//        Assert.assertEquals(getRecordTypeIcon(), "");
+//
+//        clickSandwichAction(driver.findElement(rows), "view");
+//        Assert.assertEquals(driver.findElement(viewSwitchValue).getText(), SWITCH_VALUE);
+//        Assert.assertEquals(driver.findElement(viewDropdownValue).getText(), OPTIONAL_DROPDOWN);
+//        Assert.assertEquals(driver.findElement(viewReferenceValue).getText(), REFERENCE);
+//        Assert.assertEquals(getViewReferenceConstant(), REFERENCE_CONSTANT);
+//        Assert.assertFalse(isVisible(viewMultiReferenceValue));
+//        Assert.assertFalse(isVisible(viewReferenceWithFilterValue));
+//        Assert.assertFalse(isVisible(rows));
+//    }
+//
+//    @Ignore
+//    @Test
+//    public void viewRecordWithRefMultiRefTest() throws InterruptedException {
+//
+//        final String SWITCH_VALUE = "1";
+//        final String REFERENCE = REFERENCE_1;
+//        final String MULTI_REFERENCE = String.format("%s, %s", REFERENCE_1, REFERENCE_2);
+//        final String REFERENCE_WITH_FILTER = "";
+//        String[] values = {null, SWITCH_VALUE, OPTIONAL_DROPDOWN, REFERENCE, MULTI_REFERENCE, REFERENCE_WITH_FILTER,
+//                REFERENCE_CONSTANT, null};
+//
+//        WebDriver driver = getDriver();
+//
+//        createReference(REFERENCE_1);
+//        createReference(REFERENCE_2, REFERENCE_1);
+//        createReference(REFERENCE_3, REFERENCE_2, REFERENCE_1);
+//
+//        goPageByName("Fields Ops");
+//        driver.findElement(createNew).click();
+//        driver.findElement(createEditMainToggle).click();
+//        new Select(driver.findElement(createEditDropdownSelect)).selectByVisibleText(OPTIONAL_DROPDOWN);
+//        new Select(driver.findElement(createEditReferenceSelect)).selectByVisibleText(REFERENCE);
+//        for (String ref : MULTI_REFERENCE.split(", ")) {
+//            driver.findElement(By.xpath(String.format("//label[contains(text(), '%s')]/span", ref))).click();
+//        }
+//        clickSaveButton();
+//
+//        Assert.assertEquals(driver.findElements(rows).size(), 1);
+//        WebElement row = driver.findElement(rows);
+//        List<WebElement> cols = row.findElements(By.tagName("td"));
+//        Assert.assertEquals(cols.size(), values.length);
+//        for (int i = 0; i < values.length; i++) {
+//            if (values[i] != null) {
+//                Assert.assertEquals(cols.get(i).getText(), values[i]);
+//            }
+//        }
+//        Assert.assertEquals(getRecordTypeIcon(), "");
+//
+//        clickSandwichAction(driver.findElement(rows), "view");
+//        Assert.assertEquals(driver.findElement(viewSwitchValue).getText(), SWITCH_VALUE);
+//        Assert.assertEquals(driver.findElement(viewDropdownValue).getText(), OPTIONAL_DROPDOWN);
+//        Assert.assertEquals(driver.findElement(viewReferenceValue).getText(), REFERENCE);
+//        Assert.assertEquals(getViewMultiReference(), MULTI_REFERENCE);
+//        Assert.assertFalse(isVisible(viewReferenceWithFilterValue));
+//        Assert.assertEquals(getViewReferenceConstant(), REFERENCE_CONSTANT);
+//        Assert.assertFalse(isVisible(rows));
+//    }
+//
+//    @Test
+//    public void fieldOpsDeleteTest() {
+//        String referenceValue = UUID.randomUUID().toString();
+//        String refValueId = createReferenceValue(referenceValue);
+//        createFieldOpsToDelete(referenceValue);
+//
+//        goPageByName("Fields Ops");
+//
+//        int beforeCountOfRecords = getNumberOfRecords();
+//        By dropdownMenu = By.xpath("//td[contains(text(), '" + referenceValue + "' )]/../td/div/button");
+//        WebElement dropDown = getWait(3).until(ExpectedConditions.elementToBeClickable(dropdownMenu));
+//        ProjectUtils.click(getDriver(), dropDown);
+//        WebElement deleteMenuItem = getDriver().findElement(By.cssSelector("ul.dropdown-menu.show li:nth-child(3) > a"));
+//        ProjectUtils.click(getDriver(), deleteMenuItem);
+//
+//        int afterCountOfRecords = getNumberOfRecords();
+//        Assert.assertNotEquals(beforeCountOfRecords, afterCountOfRecords);
+//
+//        WebElement notificationIcon = getDriver().findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
+//        ProjectUtils.click(getDriver(), notificationIcon);
+//
+//        WebElement firstRow = getDriver().findElement(By.xpath("//tbody/tr[1]/td[1]"));
+//        Assert.assertTrue(firstRow.getText().contains(refValueId));
+//    }
 }
