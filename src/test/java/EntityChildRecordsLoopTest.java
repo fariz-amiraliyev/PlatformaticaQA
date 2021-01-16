@@ -132,7 +132,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         WebElement saveBtn = driver.findElement(By.xpath("//button[@id='pa-entity-form-save-btn']"));
         ProjectUtils.click(driver, saveBtn);
 
-        String partOfXpath = removeDecimal(endBalanceDigit) + "";
+        String partOfXpath = Integer.toString(removeDecimal(endBalanceDigit));
 
         wait.until(d -> driver.findElement(By.xpath("//div[contains(text(),'" + partOfXpath + "')]")).isDisplayed());
     }
