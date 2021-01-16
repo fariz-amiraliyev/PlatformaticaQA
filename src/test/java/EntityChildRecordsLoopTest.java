@@ -22,7 +22,6 @@ public class EntityChildRecordsLoopTest extends BaseTest {
     private int numbersOfLines = 9;
     private double sumNumber = 0;
     private double[] firstValuesPassed = {0.00, 10.50, 11.00, 12.00, 13.00, 14.00, 1.00, 1.00, 2.50, 0.0};
-    private String[] valuesArr = {startBalance + ".00", "58.00"};
 
     private void addingRowsByClickingOnGreenPlus(int n) {
         WebDriver driver = getDriver();
@@ -153,6 +152,8 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         goToChildLoop();
         WebElement viewFunction = driver.findElement(By.xpath("//a[text() = 'view']"));
         ProjectUtils.click(driver, viewFunction);
+
+        String[] valuesArr = {startBalance + ".00", endBalanceD + ".00"};
 
         List<WebElement> startEndBalance = driver.findElements(By.xpath("//div/span[@class='pa-view-field']"));
         for (int i = 0; i < startEndBalance.size(); i++) {
