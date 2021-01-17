@@ -40,7 +40,7 @@ public class EntityBoardTest extends BaseTest {
             (WebDriver driver, String text, String status, String number, String decimal, String RANDOM_DAY, String user) {
 
         WebDriverWait wait = getWebDriverWait();
-        ProjectUtils.click(driver, driver.findElement(By.xpath("//p[contains(text(),'Board')]")));
+        //ProjectUtils.click(driver, driver.findElement(By.xpath("//p[contains(text(),'Board')]")));
 
         driver.findElement(By.xpath("//div[@class = 'card-icon']")).click();
 
@@ -92,7 +92,7 @@ public class EntityBoardTest extends BaseTest {
         driver.findElement(By.xpath("//a[contains(@href, '31')]/i[text()='list']")).click();
 
         List<WebElement> tabList = driver.findElements(By.xpath("//tbody/tr"));
-        Assert.assertEquals(tabList.size(), 1, "Issue with unique record");
+        Assert.assertEquals(tabList.size(), 1);
 
         List<WebElement> tabListValues = driver.findElements(By.xpath("//tbody/tr/td"));
         Assert.assertEquals(tabListValues.get(1).getText(), PENDING, "Created record Pending issue");

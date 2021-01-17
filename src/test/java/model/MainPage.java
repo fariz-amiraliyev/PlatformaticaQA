@@ -1,5 +1,6 @@
 package model;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -31,6 +32,11 @@ public class MainPage extends BasePage {
 
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62")
     private WebElement menuEventsChain2;
+
+    @FindBy(xpath = "//p[contains(text(),'Board')]")
+    private WebElement menuBoard;
+
+            //ProjectUtils.click(driver, driver.findElement(By.xpath("//p[contains(text(),'Board')]")));
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -75,5 +81,10 @@ public class MainPage extends BasePage {
     public ExportPage clickMenuExport() {
         clickMenu(menuExport);
         return new ExportPage(getDriver());
+    }
+
+    public BoardPage clickMenuBoard() {
+        clickMenu(menuBoard);
+        return new BoardPage(getDriver());
     }
 }
