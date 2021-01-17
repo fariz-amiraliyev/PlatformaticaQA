@@ -1,11 +1,13 @@
 package model;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.Select;
 import runner.ProjectUtils;
 
-public class DefaultEditPage extends BasePage{
+public class DefaultEditPage extends BaseEditPage<DefaultPage>{
 
     @FindBy(id = "string")
     private WebElement fieldString;
@@ -25,7 +27,7 @@ public class DefaultEditPage extends BasePage{
     @FindBy(id = "datetime")
     private WebElement fieldDateTime;
 
-    @FindBy(xpath = "//div[@id='_field_container-user']/div/button")
+    @FindBy(xpath = "//select[@id = 'user']")
     private WebElement fieldUser;
 
     @FindBy(xpath = "//button[@data-table_id='11']")
@@ -58,17 +60,31 @@ public class DefaultEditPage extends BasePage{
     public DefaultEditPage(WebDriver driver) {
         super(driver);
     }
-    public void sendKeys(String string, String text, String int_, String decimal, String date,
-                         String dateTime, String user) {
-        ProjectUtils.sendKeys(fieldString , string);
-        ProjectUtils.sendKeys(fieldText, text);
-        ProjectUtils.sendKeys(fieldInt, int_);
-        ProjectUtils.sendKeys(fieldDecimal, decimal);
-        ProjectUtils.sendKeys(fieldDate, date);
-        ProjectUtils.sendKeys(fieldDateTime, dateTime);
+
+    @Override
+    protected DefaultPage createPage() {
+        return new DefaultPage(getDriver());
     }
 
-    public DefaultPage ckickSaveButton() {
+    private void sendKeys(WebElement element, String newValue){
+        element.clear();
+        element.sendKeys(newValue);
+        element.sendKeys("\t");
+    }
+
+    public void sendKeys(String string, String text, String int_, String decimal, String date,
+                         String dateTime, String user) {
+        sendKeys(fieldString, string);
+        sendKeys(fieldText, text);
+        sendKeys(fieldInt, int_);
+        sendKeys(fieldDecimal, decimal);
+        sendKeys(fieldDate, date);
+        sendKeys(fieldDateTime, dateTime);
+        Select userSelect = new Select(fieldUser);
+        userSelect.selectByVisibleText(user);
+    }
+
+    public DefaultPage clickSaveButton() {
         ProjectUtils.click(getDriver(), saveButton);
 
         return new DefaultPage(getDriver());

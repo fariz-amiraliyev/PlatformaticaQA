@@ -55,7 +55,11 @@ public abstract class BaseTablePage<TablePage, EditPage> extends MainPage {
     }
 
     public List<String> getRow(int rowNumber) {
-        return getRows().get(rowNumber).findElements(By.xpath("//td/a/div")).stream()
+        return getRow(rowNumber, "//td/a/div");
+    }
+
+    public List<String> getRow(int rowNumber, String xpath) {
+        return getRows().get(rowNumber).findElements(By.xpath(xpath)).stream()
                 .map(WebElement::getText).collect(Collectors.toList());
     }
 

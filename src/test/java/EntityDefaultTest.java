@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.UUID;
 
+import model.DefaultEditPage;
 import model.DefaultPage;
 import model.MainPage;
 import model.RecycleBinPage;
@@ -165,6 +166,15 @@ public class EntityDefaultTest extends BaseTest {
         ProjectUtils.click(driver, viewFunction);
     }
 
+    private void assertRecordValues(WebDriver driver, List<String> cells, String[] changed_default_values) {
+        Assert.assertEquals(cells.size(), changed_default_values.length);
+        for (int i = 0; i < changed_default_values.length; i++) {
+            if (changed_default_values[i] != null) {
+                Assert.assertEquals(cells.get(i), changed_default_values[i]);
+            }
+        }
+    }
+
     private void assertRecordValues(WebDriver driver, String xpath, String[] changed_default_values) {
         List<WebElement> rows = driver.findElements(By.xpath(xpath));
         Assert.assertEquals(rows.size(), changed_default_values.length);
@@ -242,29 +252,20 @@ public class EntityDefaultTest extends BaseTest {
     @ Test (dependsOnMethods = "deleteRecord")
     public void editExistingRecord() {
 
-        WebDriver driver = getDriver();
+        MainPage mainPage = new MainPage(getDriver());
+        DefaultPage defaultPage = mainPage
+                .clickMenuDefault()
+                .clickNewButton()
+                .clickSaveButton();
 
-        driver.findElement(By.xpath("//p[contains(text(), 'Default')]")).click();
+        DefaultEditPage defaultEditPage = defaultPage.editRow(0);
 
-        createDefaultRecord(driver);
+        defaultEditPage.sendKeys(newValues.fieldString, newValues.fieldText, newValues.fieldInt,
+                newValues.fieldDecimal, newValues.fieldDate, newValues.fieldDateTime, newValues.fieldUser);
 
-        selectFromRecordMenu(driver, BY_EDIT);
+        defaultPage = defaultEditPage.clickSaveButton();
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
 
-        assertAndReplace(driver, BY_STRING, defaultValues.fieldString, newValues.fieldString, false);
-        assertAndReplace(driver, BY_TEXT, defaultValues.fieldText, newValues.fieldText, false);
-        assertAndReplace(driver, BY_INT, defaultValues.fieldInt, newValues.fieldInt, false);
-        assertAndReplace(driver, BY_DECIMAL, defaultValues.fieldDecimal, newValues.fieldDecimal,false );
-        assertAndReplace(driver, BY_DATE, defaultValues.fieldDate, newValues.fieldDate,false );
-        assertAndReplace(driver, BY_DATETIME, defaultValues.fieldDateTime, newValues.fieldDateTime, false);
-        Select userSelect = new Select(driver.findElement(By.xpath("//select[@id = 'user']")));
-        userSelect.selectByVisibleText(newValues.fieldUser);
-
-        WebElement saveButton = driver.findElement(BY_SAVE_BUTTON);
-        ProjectUtils.click(driver, saveButton);
-
-        List<WebElement> rows = driver.findElements(By.xpath("//table[@id='pa-all-entities-table']/tbody/tr"));
-        Assert.assertEquals(rows.size(), 1);
-
-        assertRecordValues(driver, "//table/tbody/tr/td", NEW_VALUES);
+        assertRecordValues(getDriver(), defaultPage.getRow(0, "//td"), NEW_VALUES);
     }
 }
