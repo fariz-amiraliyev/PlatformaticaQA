@@ -15,6 +15,10 @@ import runner.type.RunType;
 @Run(run = RunType.Multiple)
 public class EntityCalendarTest extends BaseTest {
 
+    private static final String STRING = UUID.randomUUID().toString();
+    private static final int NUMBER = 25;
+    private static final double NUMBER1 = 56.23;
+
     @Test
     public void newCalendar() throws InterruptedException {
 
@@ -26,40 +30,33 @@ public class EntityCalendarTest extends BaseTest {
         WebElement newCalendar = driver.findElement(By.xpath("//div[@class='card-icon']/i"));
         newCalendar.click();
 
-        final String string = UUID.randomUUID().toString();
-        final int number = 25;
-        final double number1 = 56.23;
+        WebElement titleElement = driver.findElement(By.xpath("//input[contains(@name, 'string')]"));
+        titleElement.sendKeys(STRING);
 
-        WebElement titleElement = driver.findElement(By.xpath("//input[@name='entity_form_data[string]']"));
-        titleElement.sendKeys(string);
+        WebElement numberElement = driver.findElement(By.xpath("//input[contains(@name, 'int')]"));
+        numberElement.sendKeys(String.valueOf(NUMBER));
 
-        WebElement numberElement = driver.findElement(By.xpath("//*[@id=\"int\"]"));
-        numberElement.sendKeys(String.valueOf(number));
+        WebElement number1Element = driver.findElement(By.xpath("//input[contains(@name, 'decimal')]"));
+        number1Element.sendKeys(String.valueOf(NUMBER1));
 
-        WebElement number1Element = driver.findElement(By.xpath("//*[@id=\"decimal\"]"));
-        number1Element.sendKeys(String.valueOf(number1));
-
-        WebElement dateElement = driver.findElement(By.xpath("//*[@id=\"date\"]"));
-        Actions actions = new Actions(driver);
-
-        actions.moveToElement(dateElement).build().perform();
+        WebElement dateElement = driver.findElement(By.xpath("//input[contains(@name, 'date')]"));
         dateElement.click();
+        Actions actions = new Actions(driver);
+        actions.moveToElement(dateElement).build().perform();
 
-        WebElement dateTimeElement = driver.findElement(By.xpath("//*[@id=\"datetime\"]"));
+        WebElement dateTimeElement = driver.findElement(By.xpath("//input[contains(@name, 'datetime')]"));
         dateTimeElement.click();
-
         Actions actions1 = new Actions(driver);
         actions1.moveToElement(dateTimeElement).build().perform();
-        dateTimeElement.click();
 
-        WebElement submit = driver.findElement(By.xpath("//*[@id=\"pa-entity-form-save-btn\"]"));
+        WebElement submit = driver.findElement(By.xpath("//button[text() = 'Save']"));
         ProjectUtils.click(driver, submit);
 
         Thread.sleep(3000);
         WebElement listElement = driver.findElement(By.xpath("//div[2]/div[1]//div[1]/div/ul/li[2]/a"));
         listElement.click();
 
-        driver.findElement(By.xpath("//div[contains(text(), '" + string + "')]"));
+        driver.findElement(By.xpath("//div[contains(text(), '" + STRING + "')]"));
     }
 
 
