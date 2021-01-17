@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public final class DefaultPage extends BasePage {
+public final class DefaultPage extends BaseTablePage<DefaultPage, DefaultEditPage> {
 
     @FindBy(xpath = "//i[text() = 'create_new_folder']")
     private WebElement buttonNew;
@@ -16,5 +16,10 @@ public final class DefaultPage extends BasePage {
 
     public DefaultPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected DefaultEditPage createEditPage() {
+        return new DefaultEditPage(getDriver());
     }
 }

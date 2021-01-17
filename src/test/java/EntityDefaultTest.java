@@ -1,5 +1,9 @@
 import java.util.List;
 import java.util.UUID;
+
+import model.DefaultPage;
+import model.MainPage;
+import model.RecycleBinPage;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 import org.testng.Assert;
@@ -219,27 +223,20 @@ public class EntityDefaultTest extends BaseTest {
     @Test (dependsOnMethods = "checkDefaultValuesAndUpdate")
     public void deleteRecord() {
 
-        WebDriver driver = getDriver();
+        MainPage mainPage  = new MainPage(getDriver());
+        DefaultPage defaultPage = mainPage.clickMenuDefault();
 
-        WebElement defaultBtn = driver.findElement(By.xpath("//p[contains(text(),' Default ')]"));
-        ProjectUtils.click(driver,defaultBtn);
+        defaultPage.deleteRow();
 
-        WebElement firstColumn = driver.findElement(By.xpath("//table/tbody/tr/td[2]"));
-        Assert.assertEquals(firstColumn.getText(),changedDefaultValues.fieldString);
+        Assert.assertEquals(defaultPage.getRowCount(), 0);
 
-        selectFromRecordMenu(driver, BY_DELETE);
+        RecycleBinPage recycleBinPage = mainPage.clickRecycleBin();
 
-        Assert.assertEquals(driver.findElement(By.className("card-body")).getText(), "");
+        Assert.assertEquals(recycleBinPage.getRowCount(), 1);
+        Assert.assertEquals(recycleBinPage.getFirstCellValue(0), changedDefaultValues.fieldString);
 
-        WebElement recycleBin = driver.findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
-        ProjectUtils.click(driver, recycleBin);
-
-        WebElement deletedRecord = driver.findElement(By.xpath(String.format("//b[contains(text(),'%s')]",
-                                                                             changedDefaultValues.fieldString)));
-        Assert.assertEquals(deletedRecord.getText(), changedDefaultValues.fieldString);
-
-        WebElement deletePermanently = driver.findElement(By.xpath("//a[contains (text(), 'delete permanently')]"));
-        deletePermanently.click();
+        recycleBinPage.clickDeletePermanently(0);
+        Assert.assertEquals(recycleBinPage.getRowCount(), 0);
     }
 
     @ Test (dependsOnMethods = "deleteRecord")
