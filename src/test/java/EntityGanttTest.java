@@ -57,9 +57,6 @@ public class EntityGanttTest extends BaseTest {
 
         WebElement ganttChart = driver.findElement(By.xpath("//div//*[@class='card-body ']"));
         Assert.assertTrue(ganttChart.isDisplayed());
-        Thread.sleep(5000);
-
-
     }
 }
 
