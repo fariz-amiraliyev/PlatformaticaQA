@@ -1,6 +1,7 @@
 import model.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.type.Run;
@@ -51,6 +52,7 @@ public class EntityEventsChain2Test extends BaseTest {
                 .getActualValues(), EXPECTED_VALUES_F1_1);
     }
 
+    @Ignore
     @Test(dependsOnMethods = {"verifyRecordEdit"})
     public void editRecord() {
         final String newF1 = "0";
@@ -65,6 +67,7 @@ public class EntityEventsChain2Test extends BaseTest {
         Assert.assertEquals(chain2Page.getRow(0), EXPECTED_VALUES_F1_0);
     }
 
+    @Ignore
     @Test(dependsOnMethods = {"editRecord"})
     public void editRecordInvalidValues() {
 
@@ -81,6 +84,7 @@ public class EntityEventsChain2Test extends BaseTest {
         Assert.assertEquals(chain2Page.getRow(0), EXPECTED_VALUES_F1_0);
     }
 
+    @Ignore
     @Test(dependsOnMethods = {"editRecordInvalidValues"})
     public void deleteRecord() {
         Chain2Page chain2Page = new MainPage(getDriver())
