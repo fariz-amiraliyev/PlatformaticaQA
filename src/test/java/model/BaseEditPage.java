@@ -20,21 +20,25 @@ public abstract class BaseEditPage<TablePage> extends BasePage {
     protected abstract TablePage createPage();
 
     public TablePage clickSaveButton() {
+        ProjectUtils.scroll(getDriver(), saveButton);
         ProjectUtils.click(getWait(), saveButton);
         return createPage();
     }
 
     public TablePage clickSaveDraftButton() {
+        ProjectUtils.scroll(getDriver(), saveButton);
         ProjectUtils.click(getWait(), saveDraftButton);
         return createPage();
     }
 
     public ErrorPage clickSaveButtonErrorExpected() {
+        ProjectUtils.scroll(getDriver(), saveButton);
         ProjectUtils.click(getWait(), saveButton);
         return new ErrorPage(getDriver());
     }
 
     public ErrorPage clickSaveDraftButtonErrorExpected() {
+        ProjectUtils.scroll(getDriver(), saveButton);
         ProjectUtils.click(getWait(), saveDraftButton);
         return new ErrorPage(getDriver());
     }
