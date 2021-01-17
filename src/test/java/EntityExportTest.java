@@ -1,13 +1,10 @@
-import model.ExportEditPage;
-import model.ExportPage;
-import model.MainPage;
+import model.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
@@ -267,11 +264,10 @@ public class EntityExportTest extends BaseTest {
         Assert.assertEquals(tableDecimalField.getText(), tableDec);
     }
 
-    @Ignore
     @Test
     public void negativeTestForInt() {
         MainPage mainPage = new MainPage(getDriver());
-        ExportEditPage exportEditPage = mainPage.clickMenuExport().clickNewExportButton();
+        ExportEditPage exportEditPage = mainPage.clickMenuExport().clickNewFolder();
         ExportPage exportPage = exportEditPage
                 .sendKeys("comments").clickSaveButton();
         exportPage.getErrorMassage();

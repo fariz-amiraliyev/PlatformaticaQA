@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import runner.ProjectUtils;
 
-public final class ExportEditPage extends BasePage {
+public final class ExportEditPage extends BaseEditPage<ExportPage> {
 
     @FindBy(xpath = "//*[@name='entity_form_data[int]']")
     private WebElement fieldInt;
@@ -13,7 +13,7 @@ public final class ExportEditPage extends BasePage {
     @FindBy(xpath = "//button[@class='btn btn-warning']")
     private WebElement saveButton;
 
-    @FindBy (xpath = "//div[@id='pa-error']")
+    @FindBy (xpath = "//body")
     private WebElement getError;
 
     public ExportEditPage(WebDriver driver) {
@@ -26,6 +26,11 @@ public final class ExportEditPage extends BasePage {
     }
     public ExportPage clickSaveButton() {
         ProjectUtils.click(getDriver(), saveButton);
+        return new ExportPage(getDriver());
+    }
+
+    @Override
+    protected ExportPage createPage() {
         return new ExportPage(getDriver());
     }
 }
