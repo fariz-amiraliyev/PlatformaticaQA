@@ -31,11 +31,6 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         }
     }
 
-    private int removeDecimal(double y) {
-        double x = y;
-        return (int) x;
-    }
-
     private int randomIntGeneration(int min, int max) {
         Random rand = new Random();
         return rand.nextInt((max - min) + 1) + min;
@@ -108,28 +103,28 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         List<WebElement> tableLines = driver.findElements(By.xpath("//textarea[@class='pa-entity-table-textarea pa-table-field t-68-amount']"));
         Assert.assertEquals(tableLines.size(), firstValuesPassed.length - 1);
 
-        getWebDriverWait().until(d -> endBalance.getAttribute("value").equals(String.valueOf(removeDecimal(sumNumber))));
+        getWebDriverWait().until(d -> endBalance.getAttribute("value").equals(String.valueOf((int)sumNumber)));
 
         deleteRows(4);
         deleteRows(6);
 
         final double sum = sumNumber - firstValuesPassed[4] - firstValuesPassed[6];
-        getWebDriverWait().until(d -> endBalance.getAttribute("value").equals(String.valueOf(removeDecimal(sum))));
+        getWebDriverWait().until(d -> endBalance.getAttribute("value").equals(String.valueOf((int)(sum))));
 
         addingRowsByClickingOnGreenPlus(randomIntGeneration(1, 5));
 
         final double endBalanceDigit = sum + Integer.parseInt(value9);
-        endBalanceD = removeDecimal(endBalanceDigit);
+        endBalanceD =  (int) endBalanceDigit;
 
         tableLines.get(firstValuesPassed.length - 2).clear();
         tableLines.get(firstValuesPassed.length - 2).sendKeys(value9);
 
-        getWebDriverWait().until(d -> (endBalance.getAttribute("value").equals(String.valueOf(removeDecimal(endBalanceDigit)))));
+        getWebDriverWait().until(d -> (endBalance.getAttribute("value").equals(String.valueOf( (int) endBalanceDigit))));
 
         WebElement saveBtn = driver.findElement(By.xpath("//button[@id='pa-entity-form-save-btn']"));
         ProjectUtils.click(driver, saveBtn);
 
-        String partOfXpath = Integer.toString(removeDecimal(endBalanceDigit));
+        String partOfXpath = Integer.toString((int) endBalanceDigit);
 
         getWebDriverWait().until(d -> driver.findElement(By.xpath("//div[contains(text(),'" + partOfXpath + "')]")).isDisplayed());
     }
