@@ -1,4 +1,5 @@
 import model.*;
+import model.ErrorPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,6 +18,8 @@ import java.util.List;
 
 @Run(run = RunType.Multiple)
 public class EntityExportTest extends BaseTest {
+    private static final String INVALID_ENTRY = "comments";
+    private static final String ERROR_MESSAGE = "error saving entity";
     private static final By BY_STRING = By.id("string");
     private static final By BY_TEXT = By.id("text");
     private static final By BY_INT = By.id("int");
@@ -266,10 +269,10 @@ public class EntityExportTest extends BaseTest {
 
     @Test
     public void negativeTestForInt() {
-        MainPage mainPage = new MainPage(getDriver());
-        ExportEditPage exportEditPage = mainPage.clickMenuExport().clickNewFolder();
-        ExportPage exportPage = exportEditPage
-                .sendKeys("comments").clickSaveButton();
-        exportPage.getErrorMassage();
+        ErrorPage errorPage = new MainPage(getDriver()).clickMenuExport()
+                .clickNewFolder()
+                .fillInt(INVALID_ENTRY)
+                .clickSaveButtonErrorExpected();
+        Assert.assertEquals(errorPage.getErrorMessage(),ERROR_MESSAGE );
     }
 }
