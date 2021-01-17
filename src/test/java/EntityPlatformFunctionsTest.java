@@ -3,6 +3,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
@@ -95,6 +96,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
         Assert.assertTrue(constant_table.getText().isEmpty());
     }
 
+    @Ignore
     @Test (dependsOnMethods = "functionCancelTest")
     public void functionDraftTest() {
         WebDriver driver = getDriver();
@@ -109,6 +111,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
         ProjectUtils.click(driver, driver.findElement(By.xpath("//a[contains(text(), 'Reset')]")));
     }
 
+    @Ignore
     @Test (dependsOnMethods = {"functionCancelTest", "functionDraftTest"})
     public void functionCreateTest() {
         WebDriver driver = getDriver();
@@ -118,6 +121,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
         assertRecordValues(second_record_values, first_record_values, "new");
     }
 
+    @Ignore
     @Test (dependsOnMethods = {"functionCancelTest", "functionDraftTest", "functionCreateTest"})
     public void functionViewTest() {
         WebDriver driver = getDriver();
@@ -126,6 +130,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
         assertRecordValues(view_record_values, first_record_values, "view");
     }
 
+    @Ignore
     @Test (dependsOnMethods = {"functionCancelTest", "functionDraftTest", "functionCreateTest", "functionViewTest"})
     public void functionEditTest() {
         WebDriver driver = getDriver();
@@ -134,6 +139,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
         assertRecordValues(edit_record_values, first_record_values, "edit");
     }
 
+    @Ignore
     @Test (dependsOnMethods =
             {"functionCancelTest", "functionDraftTest", "functionCreateTest", "functionViewTest", "functionEditTest"})
     public void functionDeleteTest() {
