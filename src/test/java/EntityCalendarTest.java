@@ -100,7 +100,6 @@ public class EntityCalendarTest extends BaseTest {
         Assert.assertEquals(resultEdit.getText(), "Ne znayu chto delat");
     }
 
-
     final String titleField = UUID.randomUUID().toString();
 
     final String titleFieldNew = UUID.randomUUID().toString();
@@ -131,10 +130,8 @@ public class EntityCalendarTest extends BaseTest {
     }
 
     @Test
-    public void newRecord() throws InterruptedException {
+    public void newRecord(){
         WebDriver driver = getDriver();
-
-        WebDriverWait wait = new WebDriverWait(driver, 10);
 
         WebElement tab = driver.findElement(By.xpath("//p[contains(text(),'Calendar')]"));
         ProjectUtils.click(driver, tab);
@@ -142,7 +139,20 @@ public class EntityCalendarTest extends BaseTest {
         WebElement createNewFolder = driver.findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
         createNewFolder.click();
 
-        setValue(driver, titleField, "test", 55, 0);
+        setValue(driver, titleField, "test_1", 342, 0);
+
+        getWebDriverWait().until(driver1 -> driver.findElement(By.xpath("//tr[@data-index]")).isDisplayed());
+    }
+
+    @Test(dependsOnMethods = "newRecord")
+    public void editRecord() {
+        WebDriver driver = getDriver();
+
+        WebElement tab = driver.findElement(By.xpath("//p[contains(text(),'Calendar')]"));
+        tab.click();
+
+        WebElement listBtn = driver.findElement(By.xpath("//ul[@role='tablist']//i[contains(text(),'list')]"));
+        listBtn.click();
 
         WebElement dropdown = driver.findElement(By.xpath("//div[@class='dropdown pull-left']"));
         dropdown.click();
@@ -152,7 +162,7 @@ public class EntityCalendarTest extends BaseTest {
 
         setValue(driver, titleFieldNew, "test test test", 256, 0.1);
 
-        WebElement nameString = driver.findElement(By.xpath("//div[contains(text(),'" + titleFieldNew + "')]"));
+        WebElement nameString = driver.findElement(By.xpath(String.format("//div[contains(text(),'%s')]" , titleFieldNew )));
         Assert.assertEquals(nameString.getText(), titleFieldNew);
 
         WebElement nameText = driver.findElement(By.xpath("//div[contains(text(),'test test test')]"));
@@ -163,6 +173,17 @@ public class EntityCalendarTest extends BaseTest {
 
         WebElement decimalField = driver.findElement(By.xpath("//div[contains(text(),'0.1')]"));
         Assert.assertEquals(decimalField.getText(), "0.1");
+    }
+
+    @Test(dependsOnMethods = {"newRecord" , "editRecord"})
+    public void deleteRecord() {
+        WebDriver driver = getDriver();
+
+        WebElement tab = driver.findElement(By.xpath("//p[contains(text(),'Calendar')]"));
+        tab.click();
+
+        WebElement listBtn = driver.findElement(By.xpath("//ul[@role='tablist']//i[contains(text(),'list')]"));
+        listBtn.click();
 
         WebElement dropdownDelete = driver.findElement(By.xpath("//div[@class='dropdown pull-left']"));
         dropdownDelete.click();
@@ -173,7 +194,7 @@ public class EntityCalendarTest extends BaseTest {
         WebElement RecycleBin = driver.findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
         RecycleBin.click();
 
-        WebElement deleteRecord = driver.findElement(By.xpath("//b[contains(text(),'" + titleFieldNew + "')]"));
-        wait.until(driver1 -> deleteRecord.isDisplayed());
+        WebElement deleteRecord = driver.findElement(By.xpath(String.format("//b[contains(text(), '%s')]", titleFieldNew )));
+        getWebDriverWait().until(driver1 -> deleteRecord.isDisplayed());
     }
 }
