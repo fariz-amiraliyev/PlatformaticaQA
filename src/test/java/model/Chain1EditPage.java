@@ -6,29 +6,35 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 
-public class Chain2NewPage extends BasePage {
+public class Chain1EditPage extends BaseEditPage<Chain1Page> {
 
     @FindBy(id = "f1")
-    private WebElement f1;
+    WebElement f1;
 
     @FindBy(id = "f10")
-    private WebElement f10;
+    WebElement f10;
 
     @FindBy(id = "pa-entity-form-save-btn")
-    private WebElement saveButton;
+    WebElement saveButton;
 
-    public Chain2NewPage(WebDriver driver) {
+
+    public Chain1EditPage(WebDriver driver) {
         super(driver);
     }
+    @Override
+    protected Chain1Page createPage() {
+        return new Chain1Page(getDriver());
+    }
 
-    public Chain2NewPage inputF1Value(String f1Value) {
-        ProjectUtils.sendKeys(f1, f1Value);
+
+
+    public Chain1EditPage inputInitialValue() {
+        ProjectUtils.sendKeys(f1, "1");
         getWait().until(ExpectedConditions.attributeToBeNotEmpty(f10, "value"));
         return this;
     }
 
-    public Chain2Page clickSaveButton() {
-        saveButton.click();
-        return new Chain2Page(getDriver());
-    }
+
 }
+
+
