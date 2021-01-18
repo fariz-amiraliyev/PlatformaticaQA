@@ -3,6 +3,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
@@ -44,6 +45,7 @@ public class EntityTagTest extends BaseTest {
         Assert.assertEquals(assignedTag(driver, newTagText).size(), 0);
     }
 
+    @Ignore
     @Test
     public void viewTest() throws InterruptedException {
 
