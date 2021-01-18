@@ -52,7 +52,8 @@ public class EntityBoardTest extends BaseTest {
                 .fillform(PENDING, TEXT, NUMBER, DECIMAL, APP_USER)
                 .clickSaveDraftButton();
 
-        //Assert.assertEquals(boardPage.getPendingText(), "");
+        Assert.assertEquals(boardPage.pendingCardItemsCount(), 1);
+        Assert.assertEquals(boardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
 
     }
 

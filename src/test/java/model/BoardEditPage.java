@@ -34,8 +34,11 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
     @FindBy(id = "decimal")
     private WebElement decimalPlaceholder;
 
-    @FindBy(xpath = "//div[contains(text(),'User 1 Demo')")
-    private WebElement dropdownUser ;
+    @FindBy(xpath = "//button[@data-id='user']/div/div")
+    private WebElement dropdownUser;
+
+    @FindBy(id = "user")
+    private WebElement appTester1;
 
 
     public BoardEditPage(WebDriver driver) {
@@ -76,9 +79,13 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
         ProjectUtils.sendKeys(intPlaceholder, number);
         ProjectUtils.sendKeys(decimalPlaceholder, decimal);
         ProjectUtils.scroll(getDriver(), dropdownUser);
-        Select dropUser = new Select(dropdownUser);
+        ProjectUtils.click(getDriver(),dropdownUser);
+        Select dropUser = new Select(appTester1);
         dropUser.selectByVisibleText(user);
         return this;
+
+        /*Select appTester1 = new Select(driver.findElement(By.id("user")));
+        appTester1.selectByVisibleText(APP_USER);*/
     }
  /* Select drop = new Select(driver.findElement(By.id("string")));
         drop.selectByVisibleText(status);*/
