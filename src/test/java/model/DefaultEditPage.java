@@ -1,11 +1,13 @@
 package model;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 import runner.ProjectUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultEditPage extends BaseEditPage<DefaultPage>{
 
@@ -27,8 +29,11 @@ public class DefaultEditPage extends BaseEditPage<DefaultPage>{
     @FindBy(id = "datetime")
     private WebElement fieldDateTime;
 
-    @FindBy(xpath = "//select[@id = 'user']")
+    @FindBy(xpath = "//button[@data-id = 'user']")
     private WebElement fieldUser;
+
+    @FindBy(xpath = "//select[@id = 'user']")
+    private WebElement buttonUser;
 
     @FindBy(xpath = "//button[@data-table_id='11']")
     private WebElement createEmbedD;
@@ -80,8 +85,21 @@ public class DefaultEditPage extends BaseEditPage<DefaultPage>{
         sendKeys(fieldDecimal, decimal);
         sendKeys(fieldDate, date);
         sendKeys(fieldDateTime, dateTime);
-        Select userSelect = new Select(fieldUser);
+        Select userSelect = new Select(buttonUser);
         userSelect.selectByVisibleText(user);
+    }
+
+    public List<String> toList() {
+
+        List<String> result = new ArrayList<>();
+        result.add(fieldString.getAttribute("value"));
+        result.add(fieldText.getText());
+        result.add(fieldInt.getAttribute("value"));
+        result.add(fieldDecimal.getAttribute("value"));
+        result.add(fieldDate.getAttribute("value"));
+        result.add(fieldDateTime.getAttribute("value"));
+        result.add(fieldUser.getText());
+        return result;
     }
 
     public DefaultPage clickSaveButton() {

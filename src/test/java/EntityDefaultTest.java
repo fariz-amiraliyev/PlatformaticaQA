@@ -43,13 +43,6 @@ public class EntityDefaultTest extends BaseTest {
         }
     }
 
-    private static final By BY_STRING = By.id("string");
-    private static final By BY_TEXT = By.id("text");
-    private static final By BY_INT = By.id("int");
-    private static final By BY_DECIMAL = By.id("decimal");
-    private static final By BY_DATE = By.id("date");
-    private static final By BY_DATETIME = By.id("datetime");
-    private static final By BY_USER = By.xpath("//div[@id='_field_container-user']/div/button");
     private static final By BY_EMBEDD_STRING = By.xpath("//td/textarea[@id='t-11-r-1-string']");
     private static final By BY_EMBEDD_TEXT = By.xpath("//td/textarea[@id='t-11-r-1-text']");
     private static final By BY_EMBEDD_INT = By.xpath("//td/textarea[@id='t-11-r-1-int']");
@@ -59,11 +52,8 @@ public class EntityDefaultTest extends BaseTest {
     private static final By BY_EMBEDD_USER = By.xpath("//select[@id='t-11-r-1-user']/option[@value='0']");
     private static final By BY_SAVE_BUTTON = By.xpath("//button[.='Save']");
     private static final By BY_RECORD_HAMBURGER_MENU = By.xpath("//button[contains(@data-toggle, 'dropdown')] ");
-    private static final By BY_DROPDOWN = (By.xpath("//select[@id = 'user']"));
     private static final By BY_EMBEDD_DROPDOWN = By.xpath("//select[@id='t-11-r-1-user']");
     private static final By BY_VIEW = By.xpath("//a[text() = 'view']");
-    private static final By BY_EDIT = By.xpath("//a[text() = 'edit']");
-    private static final By BY_DELETE = By.xpath("//a[text() = 'delete']");
 
     private final FieldValues defaultValues = new FieldValues(
             null,
@@ -115,6 +105,10 @@ public class EntityDefaultTest extends BaseTest {
             "30/12/2020 12:34:56",
             "user100@tester.com");
 
+    private final String[] DEFAULT_VALUES = {defaultValues.fieldString, defaultValues.fieldText,
+            defaultValues.fieldInt, defaultValues.fieldDecimal,
+            defaultValues.fieldDate, defaultValues.fieldDateTime, defaultValues.fieldUser};
+
     private final String[] NEW_VALUES = {null, newValues.fieldString, newValues.fieldText,
                   newValues.fieldInt, newValues.fieldDecimal,
                   newValues.fieldDate, newValues.fieldDateTime, null, null, newValues.fieldUser, null};
@@ -147,17 +141,6 @@ public class EntityDefaultTest extends BaseTest {
         userSelect.selectByVisibleText(newValue);
     }
 
-    private void createDefaultRecord(WebDriver driver) {
-
-        driver.findElement(By.xpath("//a[@href='#menu-list-parent']")).click();
-        driver.findElement(By.xpath("//i/following-sibling::p[contains (text(), 'Default')]")).click();
-        WebElement createFolder = driver.findElement(By.xpath("//i[.='create_new_folder']/ancestor::a"));
-        ProjectUtils.click(driver,createFolder);
-
-        WebElement saveBtn = driver.findElement(BY_SAVE_BUTTON);
-        ProjectUtils.click(driver, saveBtn);
-    }
-
     private void selectFromRecordMenu (WebDriver driver, By byFunction) {
 
         driver.findElement(BY_RECORD_HAMBURGER_MENU).click();
@@ -166,11 +149,11 @@ public class EntityDefaultTest extends BaseTest {
         ProjectUtils.click(driver, viewFunction);
     }
 
-    private void assertRecordValues(WebDriver driver, List<String> cells, String[] changed_default_values) {
-        Assert.assertEquals(cells.size(), changed_default_values.length);
-        for (int i = 0; i < changed_default_values.length; i++) {
-            if (changed_default_values[i] != null) {
-                Assert.assertEquals(cells.get(i), changed_default_values[i]);
+    private void assertRecordValues(List<String> actual_values, String[] expected_values) {
+        Assert.assertEquals(actual_values.size(), expected_values.length);
+        for (int i = 0; i < expected_values.length; i++) {
+            if (expected_values[i] != null) {
+                Assert.assertEquals(actual_values.get(i), expected_values[i]);
             }
         }
     }
@@ -190,18 +173,15 @@ public class EntityDefaultTest extends BaseTest {
 
         WebDriver driver = getDriver();
 
-        driver.findElement(By.xpath("//p[contains (text(), 'Default')]")).click();
+        MainPage mainPage = new MainPage(getDriver());
+        DefaultEditPage defaultEditPage = mainPage
+                .clickMenuDefault()
+                .clickNewButton();
 
-        WebElement createFolder = driver.findElement(By.xpath("//i[.='create_new_folder']/ancestor::a"));
-        ProjectUtils.click(driver, createFolder);
+        assertRecordValues(defaultEditPage.toList(), DEFAULT_VALUES);
 
-        assertAndReplace(driver, BY_STRING, defaultValues.fieldString, changedDefaultValues.fieldString, false);
-        assertAndReplace(driver, BY_TEXT, defaultValues.fieldText, changedDefaultValues.fieldText, false);
-        assertAndReplace(driver, BY_INT, defaultValues.fieldInt, changedDefaultValues.fieldInt, false);
-        assertAndReplace(driver, BY_DECIMAL, defaultValues.fieldDecimal, changedDefaultValues.fieldDecimal, false);
-        assertAndReplace(driver, BY_DATE, defaultValues.fieldDate, changedDefaultValues.fieldDate, false);
-        assertAndReplace(driver, BY_DATETIME, defaultValues.fieldDateTime, changedDefaultValues.fieldDateTime, false);
-        assertAndReplaceFieldUser(driver, defaultValues.fieldUser, changedDefaultValues.fieldUser, BY_USER, BY_DROPDOWN);
+        defaultEditPage.sendKeys(changedDefaultValues.fieldString, changedDefaultValues.fieldText, changedDefaultValues.fieldInt,
+                changedDefaultValues.fieldDecimal, changedDefaultValues.fieldDate, changedDefaultValues.fieldDateTime, changedDefaultValues.fieldUser);
 
         WebElement createEmbedD = driver.findElement(By.xpath("//button[@data-table_id='11']"));
         ProjectUtils.click(driver, createEmbedD);
@@ -266,6 +246,6 @@ public class EntityDefaultTest extends BaseTest {
         defaultPage = defaultEditPage.clickSaveButton();
         Assert.assertEquals(defaultPage.getRowCount(), 1);
 
-        assertRecordValues(getDriver(), defaultPage.getRow(0, "//td"), NEW_VALUES);
+        assertRecordValues(defaultPage.getRow(0, "//td"), NEW_VALUES);
     }
 }
