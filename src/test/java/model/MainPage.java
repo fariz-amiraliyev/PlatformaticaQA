@@ -32,18 +32,8 @@ public class MainPage extends BasePage {
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62")
     private WebElement menuEventsChain2;
 
-    @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
-    private WebElement menuEventsChain1;
-
     @FindBy(xpath = "//p[contains(text(),'Board')]")
     private WebElement menuBoard;
-
-    @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
-    private WebElement menuEventsChain1;
-
-    @FindBy(xpath = "//p[contains(text(),'Placeholder')]/preceding-sibling::i")
-    private WebElement menuPlaceholder;
-
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -65,7 +55,7 @@ public class MainPage extends BasePage {
         return this;
     }
 
-    public RecycleBinPage clickRecycleBin () {
+    public RecycleBinPage clickRecycleBin() {
         ProjectUtils.click(getWait(), recycleBinIcon);
         return new RecycleBinPage(getDriver());
     }
@@ -90,27 +80,8 @@ public class MainPage extends BasePage {
         return new ExportPage(getDriver());
     }
 
-    public Chain1Page clickMenuEventsChain1(){
-        WebDriver driver = getDriver();
-        ProjectUtils.scroll(driver,menuEventsChain1);
-        ProjectUtils.click(driver,menuEventsChain1);
-        return new Chain1Page(driver);
-    }
-
     public BoardPage clickMenuBoard() {
         clickMenu(menuBoard);
         return new BoardPage(getDriver());
-    }
-
-    public Chain1Page clickMenuEventsChain1(){
-        WebDriver driver = getDriver();
-        ProjectUtils.scroll(driver,menuEventsChain1);
-        ProjectUtils.click(driver,menuEventsChain1);
-        return new Chain1Page(driver);
-    }
-
-    public PlaceholderPage clickMenuPlaceholder(){
-        clickMenu(menuPlaceholder);
-        return new PlaceholderPage(getDriver());
     }
 }
