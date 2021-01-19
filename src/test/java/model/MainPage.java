@@ -91,7 +91,7 @@ public class MainPage extends BasePage {
     }
 
     public DefaultPage clickMenuDefault() {
-        menuDefault.click();
+        clickMenu(menuDefault);
         return new DefaultPage(getDriver());
     }
 

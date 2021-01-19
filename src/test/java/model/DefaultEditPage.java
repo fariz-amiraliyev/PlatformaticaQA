@@ -59,9 +59,6 @@ public class DefaultEditPage extends BaseEditPage<DefaultPage>{
     @FindBy(xpath = "//select[@id='t-11-r-1-user']/option[@value='0']")
     private WebElement fieldEmbedDUser;
 
-    @FindBy(xpath = "//button[.='Save']")
-    private WebElement saveButton;
-
     public DefaultEditPage(WebDriver driver) {
         super(driver);
     }
@@ -100,11 +97,5 @@ public class DefaultEditPage extends BaseEditPage<DefaultPage>{
         result.add(fieldDateTime.getAttribute("value"));
         result.add(fieldUser.getText());
         return result;
-    }
-
-    public DefaultPage clickSaveButton() {
-        ProjectUtils.click(getDriver(), saveButton);
-
-        return new DefaultPage(getDriver());
     }
 }

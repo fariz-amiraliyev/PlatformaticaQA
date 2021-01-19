@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -105,13 +107,13 @@ public class EntityDefaultTest extends BaseTest {
             "30/12/2020 12:34:56",
             "user100@tester.com");
 
-    private final String[] DEFAULT_VALUES = {defaultValues.fieldString, defaultValues.fieldText,
+    private final List<String> DEFAULT_VALUES = new ArrayList<>(Arrays.asList(defaultValues.fieldString, defaultValues.fieldText,
             defaultValues.fieldInt, defaultValues.fieldDecimal,
-            defaultValues.fieldDate, defaultValues.fieldDateTime, defaultValues.fieldUser};
+            defaultValues.fieldDate, defaultValues.fieldDateTime, defaultValues.fieldUser));
 
-    private final String[] NEW_VALUES = {null, newValues.fieldString, newValues.fieldText,
+    private final List<String> NEW_VALUES = new ArrayList<>(Arrays.asList("", newValues.fieldString, newValues.fieldText,
                   newValues.fieldInt, newValues.fieldDecimal,
-                  newValues.fieldDate, newValues.fieldDateTime, null, null, newValues.fieldUser, null};
+                  newValues.fieldDate, newValues.fieldDateTime, "", "", newValues.fieldUser, "menu"));
 
     private final String[] CHANGED_DEFAULT_VALUES = {changedDefaultValues.fieldString,
                    changedDefaultValues.fieldText, changedDefaultValues.fieldInt, changedDefaultValues.fieldDecimal,
@@ -149,14 +151,14 @@ public class EntityDefaultTest extends BaseTest {
         ProjectUtils.click(driver, viewFunction);
     }
 
-    private void assertRecordValues(List<String> actual_values, String[] expected_values) {
-        Assert.assertEquals(actual_values.size(), expected_values.length);
-        for (int i = 0; i < expected_values.length; i++) {
-            if (expected_values[i] != null) {
-                Assert.assertEquals(actual_values.get(i), expected_values[i]);
-            }
-        }
-    }
+//    private void assertRecordValues(List<String> actual_values, String[] expected_values) {
+//        Assert.assertEquals(actual_values.size(), expected_values.length);
+//        for (int i = 0; i < expected_values.length; i++) {
+//            if (expected_values[i] != null) {
+//                Assert.assertEquals(actual_values.get(i), expected_values[i]);
+//            }
+//        }
+//    }
 
     private void assertRecordValues(WebDriver driver, String xpath, String[] changed_default_values) {
         List<WebElement> rows = driver.findElements(By.xpath(xpath));
@@ -176,9 +178,10 @@ public class EntityDefaultTest extends BaseTest {
         MainPage mainPage = new MainPage(getDriver());
         DefaultEditPage defaultEditPage = mainPage
                 .clickMenuDefault()
-                .clickNewButton();
+                .clickNewFolder();
 
-        assertRecordValues(defaultEditPage.toList(), DEFAULT_VALUES);
+        Assert.assertEquals(defaultEditPage.toList(), DEFAULT_VALUES);
+
 
         defaultEditPage.sendKeys(changedDefaultValues.fieldString, changedDefaultValues.fieldText, changedDefaultValues.fieldInt,
                 changedDefaultValues.fieldDecimal, changedDefaultValues.fieldDate, changedDefaultValues.fieldDateTime, changedDefaultValues.fieldUser);
@@ -235,7 +238,7 @@ public class EntityDefaultTest extends BaseTest {
         MainPage mainPage = new MainPage(getDriver());
         DefaultPage defaultPage = mainPage
                 .clickMenuDefault()
-                .clickNewButton()
+                .clickNewFolder()
                 .clickSaveButton();
 
         DefaultEditPage defaultEditPage = defaultPage.editRow(0);
@@ -246,6 +249,6 @@ public class EntityDefaultTest extends BaseTest {
         defaultPage = defaultEditPage.clickSaveButton();
         Assert.assertEquals(defaultPage.getRowCount(), 1);
 
-        assertRecordValues(defaultPage.getRow(0, "//td"), NEW_VALUES);
+        Assert.assertEquals(defaultPage.getRow(0, "//td"), NEW_VALUES);
     }
 }
