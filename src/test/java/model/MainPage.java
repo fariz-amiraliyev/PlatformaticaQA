@@ -38,6 +38,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains (text(), 'Default')]")
     private WebElement menuDefault;
 
+    @FindBy(xpath = "//p[contains(text(),'Placeholder')]/preceding-sibling::i")
+    private WebElement menuPlaceholder;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -95,4 +98,8 @@ public class MainPage extends BasePage {
         return new DefaultPage(getDriver());
     }
 
+    public PlaceholderPage clickMenuPlaceholder(){
+        clickMenu(menuPlaceholder);
+        return new PlaceholderPage(getDriver());
+    }
 }

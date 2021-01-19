@@ -3,9 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
@@ -14,6 +12,10 @@ import runner.type.RunType;
 
 @Run(run = RunType.Multiple)
 public class EntityCalendarTest extends BaseTest {
+
+    private static final String STRING = UUID.randomUUID().toString();
+    private static final int NUMBER = 25;
+    private static final double NUMBER1 = 56.23;
 
     @Test
     public void newCalendar() throws InterruptedException {
@@ -26,40 +28,33 @@ public class EntityCalendarTest extends BaseTest {
         WebElement newCalendar = driver.findElement(By.xpath("//div[@class='card-icon']/i"));
         newCalendar.click();
 
-        final String string = UUID.randomUUID().toString();
-        final int number = 25;
-        final double number1 = 56.23;
+        WebElement titleElement = driver.findElement(By.xpath("//input[contains(@name, 'string')]"));
+        titleElement.sendKeys(STRING);
 
-        WebElement titleElement = driver.findElement(By.xpath("//input[@name='entity_form_data[string]']"));
-        titleElement.sendKeys(string);
+        WebElement numberElement = driver.findElement(By.xpath("//input[contains(@name, 'int')]"));
+        numberElement.sendKeys(String.valueOf(NUMBER));
 
-        WebElement numberElement = driver.findElement(By.xpath("//*[@id=\"int\"]"));
-        numberElement.sendKeys(String.valueOf(number));
+        WebElement number1Element = driver.findElement(By.xpath("//input[contains(@name, 'decimal')]"));
+        number1Element.sendKeys(String.valueOf(NUMBER1));
 
-        WebElement number1Element = driver.findElement(By.xpath("//*[@id=\"decimal\"]"));
-        number1Element.sendKeys(String.valueOf(number1));
-
-        WebElement dateElement = driver.findElement(By.xpath("//*[@id=\"date\"]"));
-        Actions actions = new Actions(driver);
-
-        actions.moveToElement(dateElement).build().perform();
+        WebElement dateElement = driver.findElement(By.xpath("//input[contains(@name, 'date')]"));
         dateElement.click();
+        Actions actions = new Actions(driver);
+        actions.moveToElement(dateElement).build().perform();
 
-        WebElement dateTimeElement = driver.findElement(By.xpath("//*[@id=\"datetime\"]"));
+        WebElement dateTimeElement = driver.findElement(By.xpath("//input[contains(@name, 'datetime')]"));
         dateTimeElement.click();
-
         Actions actions1 = new Actions(driver);
         actions1.moveToElement(dateTimeElement).build().perform();
-        dateTimeElement.click();
 
-        WebElement submit = driver.findElement(By.xpath("//*[@id=\"pa-entity-form-save-btn\"]"));
+        WebElement submit = driver.findElement(By.xpath("//button[text() = 'Save']"));
         ProjectUtils.click(driver, submit);
 
         Thread.sleep(3000);
         WebElement listElement = driver.findElement(By.xpath("//div[2]/div[1]//div[1]/div/ul/li[2]/a"));
         listElement.click();
 
-        driver.findElement(By.xpath("//div[contains(text(), '" + string + "')]"));
+        driver.findElement(By.xpath("//div[contains(text(), '" + STRING + "')]"));
     }
 
 
@@ -100,7 +95,6 @@ public class EntityCalendarTest extends BaseTest {
         Assert.assertEquals(resultEdit.getText(), "Ne znayu chto delat");
     }
 
-
     final String titleField = UUID.randomUUID().toString();
 
     final String titleFieldNew = UUID.randomUUID().toString();
@@ -131,10 +125,8 @@ public class EntityCalendarTest extends BaseTest {
     }
 
     @Test
-    public void newRecord() throws InterruptedException {
+    public void newRecord(){
         WebDriver driver = getDriver();
-
-        WebDriverWait wait = new WebDriverWait(driver, 10);
 
         WebElement tab = driver.findElement(By.xpath("//p[contains(text(),'Calendar')]"));
         ProjectUtils.click(driver, tab);
@@ -142,7 +134,20 @@ public class EntityCalendarTest extends BaseTest {
         WebElement createNewFolder = driver.findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
         createNewFolder.click();
 
-        setValue(driver, titleField, "test", 55, 0);
+        setValue(driver, titleField, "test_1", 342, 0);
+
+        getWebDriverWait().until(driver1 -> driver.findElement(By.xpath("//tr[@data-index]")).isDisplayed());
+    }
+
+    @Test(dependsOnMethods = "newRecord")
+    public void editRecord() {
+        WebDriver driver = getDriver();
+
+        WebElement tab = driver.findElement(By.xpath("//p[contains(text(),'Calendar')]"));
+        ProjectUtils.click(driver, tab);
+
+        WebElement listBtn = driver.findElement(By.xpath("//ul[@role='tablist']//i[contains(text(),'list')]"));
+        listBtn.click();
 
         WebElement dropdown = driver.findElement(By.xpath("//div[@class='dropdown pull-left']"));
         dropdown.click();
@@ -152,7 +157,7 @@ public class EntityCalendarTest extends BaseTest {
 
         setValue(driver, titleFieldNew, "test test test", 256, 0.1);
 
-        WebElement nameString = driver.findElement(By.xpath("//div[contains(text(),'" + titleFieldNew + "')]"));
+        WebElement nameString = driver.findElement(By.xpath(String.format("//div[contains(text(),'%s')]" , titleFieldNew )));
         Assert.assertEquals(nameString.getText(), titleFieldNew);
 
         WebElement nameText = driver.findElement(By.xpath("//div[contains(text(),'test test test')]"));
@@ -163,6 +168,17 @@ public class EntityCalendarTest extends BaseTest {
 
         WebElement decimalField = driver.findElement(By.xpath("//div[contains(text(),'0.1')]"));
         Assert.assertEquals(decimalField.getText(), "0.1");
+    }
+
+    @Test(dependsOnMethods = {"newRecord" , "editRecord"})
+    public void deleteRecord() {
+        WebDriver driver = getDriver();
+
+        WebElement tab = driver.findElement(By.xpath("//p[contains(text(),'Calendar')]"));
+        ProjectUtils.click(driver, tab);
+
+        WebElement listBtn = driver.findElement(By.xpath("//ul[@role='tablist']//i[contains(text(),'list')]"));
+        listBtn.click();
 
         WebElement dropdownDelete = driver.findElement(By.xpath("//div[@class='dropdown pull-left']"));
         dropdownDelete.click();
@@ -173,7 +189,7 @@ public class EntityCalendarTest extends BaseTest {
         WebElement RecycleBin = driver.findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
         RecycleBin.click();
 
-        WebElement deleteRecord = driver.findElement(By.xpath("//b[contains(text(),'" + titleFieldNew + "')]"));
-        wait.until(driver1 -> deleteRecord.isDisplayed());
+        WebElement deleteRecord = driver.findElement(By.xpath(String.format("//b[contains(text(), '%s')]", titleFieldNew )));
+        getWebDriverWait().until(driver1 -> deleteRecord.isDisplayed());
     }
 }
