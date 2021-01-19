@@ -151,15 +151,6 @@ public class EntityDefaultTest extends BaseTest {
         ProjectUtils.click(driver, viewFunction);
     }
 
-//    private void assertRecordValues(List<String> actual_values, String[] expected_values) {
-//        Assert.assertEquals(actual_values.size(), expected_values.length);
-//        for (int i = 0; i < expected_values.length; i++) {
-//            if (expected_values[i] != null) {
-//                Assert.assertEquals(actual_values.get(i), expected_values[i]);
-//            }
-//        }
-//    }
-
     private void assertRecordValues(WebDriver driver, String xpath, String[] changed_default_values) {
         List<WebElement> rows = driver.findElements(By.xpath(xpath));
         Assert.assertEquals(rows.size(), changed_default_values.length);
