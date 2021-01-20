@@ -1,6 +1,8 @@
 
+import java.util.Arrays;
 import java.util.Random;
 
+import model.BaseTablePage;
 import model.BoardPage;
 import model.MainPage;
 import org.openqa.selenium.*;
@@ -17,6 +19,7 @@ import runner.type.RunType;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Run(run = RunType.Multiple)
 public class EntityBoardTest extends BaseTest {
@@ -38,12 +41,8 @@ public class EntityBoardTest extends BaseTest {
 
     @Test
     public void inputValidationTest() {
+        final String[] arr = {null, PENDING, TEXT, NUMBER, DECIMAL, null, null, null, APP_USER, null};
 
-        //WebDriver driver = getDriver();
-
-        final String[] arr = {null, TEXT, PENDING, NUMBER, DECIMAL, null, null, null, APP_USER, null};
-
-        //createRecord(driver, TEXT, PENDING, NUMBER, DECIMAL, RANDOM_DAY, APP_USER);
         MainPage mainPage = new MainPage(getDriver())
                 .clickMenuBoard();
 
@@ -55,31 +54,13 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(boardPage.pendingCardItemsCount(), 1);
         Assert.assertEquals(boardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
 
-    }
+        boardPage.clickListButton();
 
+        ProjectUtils.verifyEntityData(getDriver(), arr);
 
+        // Still in work for POM
 
-
-       /* ProjectUtils.click(driver, driver.findElement(By.id("pa-entity-form-draft-btn")));
-
-        driver.findElement(By.xpath("//a[contains(@href, '31')]/i[text()='list']")).click();
-
-        List<WebElement> tabList = driver.findElements(By.xpath("//tbody/tr"));
-        Assert.assertEquals(tabList.size(), 1);*/
-
-        /*List<WebElement> tabListValues = driver.findElements(By.xpath("//tbody/tr/td"));
-        Assert.assertEquals(tabListValues.get(1).getText(), PENDING, "Created record Pending issue");
-        Assert.assertEquals(tabListValues.get(2).getText(), TEXT, "Created record text issue");
-        Assert.assertEquals(tabListValues.get(3).getText(), NUMBER, "Created record number issue");
-        Assert.assertEquals(tabListValues.get(4).getText(), DECIMAL, "Created record decimal issue");
-        Assert.assertEquals(tabListValues.get(5).getText(),
-                RANDOM_DAY + "/" + CURRENT_MONTH + "/" + CURRENT_YEAR, "Created record date issue");
-        Assert.assertEquals(tabListValues.get(6).getText().substring(0, 10),
-                RANDOM_DAY + "/" + CURRENT_MONTH + "/" + CURRENT_YEAR, "Created record dateTime issue");
-        Assert.assertEquals(tabListValues.get(8).getText(), APP_USER, "Created record user issue");*/
-
-
-    @Test(dependsOnMethods = "inputValidationTest")
+    /*@Test(dependsOnMethods = "inputValidationTest")
     public void viewRecords() {
 
         WebDriver driver = getDriver();
@@ -123,8 +104,8 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(myElement.findElement(By.tagName("div")).getText(), status);
 
     }
-
-    @Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})
+*/
+    /*@Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})
     public void manipulateTest1() {
 
         WebDriver driver = getDriver();
@@ -133,10 +114,9 @@ public class EntityBoardTest extends BaseTest {
         ProjectUtils.click(driver, board);
 
         dragAndDropAndVerify("On track", "//div[contains(text(),'" + TEXT + "')]");
+    }*/
 
-    }
-
-    @Test(dependsOnMethods = {"manipulateTest1"})
+   /* @Test(dependsOnMethods = {"manipulateTest1"})
     public void manipulateTest2() {
 
         WebDriver driver = getDriver();
@@ -147,8 +127,8 @@ public class EntityBoardTest extends BaseTest {
         dragAndDropAndVerify("Done", "//main[@class='kanban-drag']//div[contains(text(),'On track')]");
 
     }
-
-    @Test(dependsOnMethods = {"manipulateTest2"})
+*/
+    /*@Test(dependsOnMethods = {"manipulateTest2"})
     public void manipulateTest3() {
 
         WebDriver driver = getDriver();
@@ -158,9 +138,9 @@ public class EntityBoardTest extends BaseTest {
 
         dragAndDropAndVerify("On track", "//main[@class='kanban-drag']//div[contains(text(),'Done')]");
 
-    }
+    }*/
 
-    @Test(dependsOnMethods = {"manipulateTest3"})
+   /* @Test(dependsOnMethods = {"manipulateTest3"})
     public void manipulateTest4() {
 
         WebDriver driver = getDriver();
@@ -170,9 +150,9 @@ public class EntityBoardTest extends BaseTest {
 
         dragAndDropAndVerify("Pending", "//main[@class='kanban-drag']//div[contains(text(),'On track')]");
 
-    }
+    }*/
 
-    @Test(dependsOnMethods = {"manipulateTest4"})
+    /*@Test(dependsOnMethods = {"manipulateTest4"})
     public void editBoard() throws InterruptedException {
 
         WebDriver driver = getDriver();
@@ -227,8 +207,8 @@ public class EntityBoardTest extends BaseTest {
         String result = driver.findElement(By.xpath("//tbody/tr[1]/td[3]/a[1]/div[1]")).getText();
         Assert.assertEquals(result, "my test changed");
     }
-
-    @Test(dependsOnMethods = {"editBoard"})
+*/
+    /*@Test(dependsOnMethods = {"editBoard"})
     public void recordDeletion() {
 
         WebDriver driver = getDriver();
@@ -252,8 +232,8 @@ public class EntityBoardTest extends BaseTest {
         boolean emptyField = driver.findElements(By.xpath("//tbody/tr[1]/td[10]/div[1]/button[1]")).size() < 1;
         Assert.assertTrue(emptyField);
     }
-
-    @Test(dependsOnMethods = {"recordDeletion"})
+*/
+   /* @Test(dependsOnMethods = {"recordDeletion"})
     public void recordDeletionRecBin() {
 
         WebDriver driver = getDriver();
@@ -274,10 +254,9 @@ public class EntityBoardTest extends BaseTest {
                 "//div[contains(text(), 'Good job with housekeeping! Recycle bin is currently empty!')]"));
         Assert.assertNotNull(emptyRecycleBin, "No empty recycle bin message found.");
     }
+        //@Test(dependsOnMethods = {"recordDeletionRecBin"})
 
-    //@Test(dependsOnMethods = {"recordDeletionRecBin"})
-
-    /*public void cancelInputTest() {
+    public void cancelInputTest() {
 
         WebDriver driver = getDriver();
 
@@ -291,4 +270,5 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(tabList.size(), 0, "No records");
 
     }*/
+    }
 }
