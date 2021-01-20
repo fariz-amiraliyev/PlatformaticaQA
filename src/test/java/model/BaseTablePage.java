@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import runner.ProjectUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,12 @@ public abstract class BaseTablePage<TablePage, EditPage> extends MainPage {
 
     @FindBy(xpath = "//table[@id='pa-all-entities-table']/tbody/tr")
     private List<WebElement> trs;
+
+    @FindBy(xpath = "//a[contains(@href, '31')]/i[text()='list']")
+    private WebElement listButton;
+
+    @FindBy(xpath = "//a[contains(@href, '31')]/i[text()='dashboard']")
+    private  WebElement boardButton;
 
     public BaseTablePage(WebDriver driver) {
         super(driver);
@@ -93,4 +100,16 @@ public abstract class BaseTablePage<TablePage, EditPage> extends MainPage {
         return deleteRow(getRows().size() - 1);
     }
 
+    public void clickListButton() {
+        listButton.click();
+    }
+
+    public void clickBoardButton() {
+        boardButton.click();
+    }
+
 }
+
+
+
+

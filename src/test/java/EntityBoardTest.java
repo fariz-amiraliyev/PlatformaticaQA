@@ -1,13 +1,15 @@
 
+import java.util.Arrays;
 import java.util.Random;
 
+import model.BaseTablePage;
+import model.BoardPage;
+import model.MainPage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
@@ -17,6 +19,7 @@ import runner.type.RunType;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Run(run = RunType.Multiple)
 public class EntityBoardTest extends BaseTest {
@@ -36,77 +39,28 @@ public class EntityBoardTest extends BaseTest {
     Random generator = new Random();
     private final String RANDOM_DAY = String.format("%02d", generator.nextInt(27) + 1);
 
-    private void createRecord
-            (WebDriver driver, String text, String status, String number, String decimal, String RANDOM_DAY, String user) {
-
-        WebDriverWait wait = getWebDriverWait();
-        ProjectUtils.click(driver, driver.findElement(By.xpath("//p[contains(text(),'Board')]")));
-
-        driver.findElement(By.xpath("//div[@class = 'card-icon']")).click();
-
-        Select drop = new Select(driver.findElement(By.id("string")));
-        drop.selectByVisibleText(status);
-
-        WebElement textPlaceholder = driver.findElement(By.id("text"));
-        textPlaceholder.click();
-        textPlaceholder.sendKeys(TEXT);
-        wait.until(ExpectedConditions.attributeContains(textPlaceholder, "value", TEXT));
-
-        WebElement intPlaceholder = driver.findElement(By.xpath("//input[@name='entity_form_data[int]']"));
-        intPlaceholder.click();
-        intPlaceholder.sendKeys(NUMBER);
-        wait.until(ExpectedConditions.attributeContains(intPlaceholder, "value", NUMBER));
-
-        WebElement decimalPlaceholder = driver.findElement(By.id("decimal"));
-        decimalPlaceholder.click();
-        decimalPlaceholder.sendKeys(DECIMAL);
-        wait.until(ExpectedConditions.attributeContains(decimalPlaceholder, "value", DECIMAL));
-
-        driver.findElement(By.id("datetime")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//div[@class = 'datepicker-days']"))));
-        driver.findElement(By.xpath(String.format
-                ("//td[@data-day = '%1$s%2$s%3$s%2$s%4$s']", CURRENT_MONTH, "/", RANDOM_DAY, CURRENT_YEAR))).click();
-
-        driver.findElement(By.id("date")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//div[@class = 'datepicker']"))));
-        driver.findElement(By.xpath(String.format
-                ("//td[@data-day = '%1$s%2$s%3$s%2$s%4$s']", CURRENT_MONTH, "/", RANDOM_DAY, CURRENT_YEAR))).click();
-
-        WebElement dropdownUser = driver.findElement(By.xpath("//div[contains(text(),'User 1 Demo')]"));
-        ProjectUtils.scroll(driver, dropdownUser);
-        ProjectUtils.click(driver, dropdownUser);
-
-        Select appTester1 = new Select(driver.findElement(By.id("user")));
-        appTester1.selectByVisibleText(APP_USER);
-    }
-
     @Test
     public void inputValidationTest() {
+        final String[] arr = {null, PENDING, TEXT, NUMBER, DECIMAL, null, null, null, APP_USER, null};
 
-        WebDriver driver = getDriver();
+        MainPage mainPage = new MainPage(getDriver())
+                .clickMenuBoard();
 
-        createRecord(driver, TEXT, PENDING, NUMBER, DECIMAL, RANDOM_DAY, APP_USER);
+        BoardPage boardPage = new BoardPage(getDriver())
+                .clickNewFolder()
+                .fillform(PENDING, TEXT, NUMBER, DECIMAL, APP_USER)
+                .clickSaveDraftButton();
 
-        ProjectUtils.click(driver, driver.findElement(By.id("pa-entity-form-draft-btn")));
+        Assert.assertEquals(boardPage.pendingCardItemsCount(), 1);
+        Assert.assertEquals(boardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
 
-        driver.findElement(By.xpath("//a[contains(@href, '31')]/i[text()='list']")).click();
+        boardPage.clickListButton();
 
-        List<WebElement> tabList = driver.findElements(By.xpath("//tbody/tr"));
-        Assert.assertEquals(tabList.size(), 1, "Issue with unique record");
+        ProjectUtils.verifyEntityData(getDriver(), arr);
 
-        List<WebElement> tabListValues = driver.findElements(By.xpath("//tbody/tr/td"));
-        Assert.assertEquals(tabListValues.get(1).getText(), PENDING, "Created record Pending issue");
-        Assert.assertEquals(tabListValues.get(2).getText(), TEXT, "Created record text issue");
-        Assert.assertEquals(tabListValues.get(3).getText(), NUMBER, "Created record number issue");
-        Assert.assertEquals(tabListValues.get(4).getText(), DECIMAL, "Created record decimal issue");
-        Assert.assertEquals(tabListValues.get(5).getText(),
-                RANDOM_DAY + "/" + CURRENT_MONTH + "/" + CURRENT_YEAR, "Created record date issue");
-        Assert.assertEquals(tabListValues.get(6).getText().substring(0, 10),
-                RANDOM_DAY + "/" + CURRENT_MONTH + "/" + CURRENT_YEAR, "Created record dateTime issue");
-        Assert.assertEquals(tabListValues.get(8).getText(), APP_USER, "Created record user issue");
-    }
+        // Still in work for POM
 
-    @Test(dependsOnMethods = "inputValidationTest")
+    /*@Test(dependsOnMethods = "inputValidationTest")
     public void viewRecords() {
 
         WebDriver driver = getDriver();
@@ -150,8 +104,8 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(myElement.findElement(By.tagName("div")).getText(), status);
 
     }
-
-    @Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})
+*/
+    /*@Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})
     public void manipulateTest1() {
 
         WebDriver driver = getDriver();
@@ -160,10 +114,9 @@ public class EntityBoardTest extends BaseTest {
         ProjectUtils.click(driver, board);
 
         dragAndDropAndVerify("On track", "//div[contains(text(),'" + TEXT + "')]");
+    }*/
 
-    }
-
-    @Test(dependsOnMethods = {"manipulateTest1"})
+   /* @Test(dependsOnMethods = {"manipulateTest1"})
     public void manipulateTest2() {
 
         WebDriver driver = getDriver();
@@ -174,8 +127,8 @@ public class EntityBoardTest extends BaseTest {
         dragAndDropAndVerify("Done", "//main[@class='kanban-drag']//div[contains(text(),'On track')]");
 
     }
-
-    @Test(dependsOnMethods = {"manipulateTest2"})
+*/
+    /*@Test(dependsOnMethods = {"manipulateTest2"})
     public void manipulateTest3() {
 
         WebDriver driver = getDriver();
@@ -185,9 +138,9 @@ public class EntityBoardTest extends BaseTest {
 
         dragAndDropAndVerify("On track", "//main[@class='kanban-drag']//div[contains(text(),'Done')]");
 
-    }
+    }*/
 
-    @Test(dependsOnMethods = {"manipulateTest3"})
+   /* @Test(dependsOnMethods = {"manipulateTest3"})
     public void manipulateTest4() {
 
         WebDriver driver = getDriver();
@@ -197,9 +150,9 @@ public class EntityBoardTest extends BaseTest {
 
         dragAndDropAndVerify("Pending", "//main[@class='kanban-drag']//div[contains(text(),'On track')]");
 
-    }
+    }*/
 
-    @Test(dependsOnMethods = {"manipulateTest4"})
+    /*@Test(dependsOnMethods = {"manipulateTest4"})
     public void editBoard() throws InterruptedException {
 
         WebDriver driver = getDriver();
@@ -254,8 +207,8 @@ public class EntityBoardTest extends BaseTest {
         String result = driver.findElement(By.xpath("//tbody/tr[1]/td[3]/a[1]/div[1]")).getText();
         Assert.assertEquals(result, "my test changed");
     }
-
-    @Test(dependsOnMethods = {"editBoard"})
+*/
+    /*@Test(dependsOnMethods = {"editBoard"})
     public void recordDeletion() {
 
         WebDriver driver = getDriver();
@@ -279,8 +232,8 @@ public class EntityBoardTest extends BaseTest {
         boolean emptyField = driver.findElements(By.xpath("//tbody/tr[1]/td[10]/div[1]/button[1]")).size() < 1;
         Assert.assertTrue(emptyField);
     }
-
-    @Test(dependsOnMethods = {"recordDeletion"})
+*/
+   /* @Test(dependsOnMethods = {"recordDeletion"})
     public void recordDeletionRecBin() {
 
         WebDriver driver = getDriver();
@@ -301,8 +254,7 @@ public class EntityBoardTest extends BaseTest {
                 "//div[contains(text(), 'Good job with housekeeping! Recycle bin is currently empty!')]"));
         Assert.assertNotNull(emptyRecycleBin, "No empty recycle bin message found.");
     }
-
-    @Test(dependsOnMethods = {"recordDeletionRecBin"})
+        //@Test(dependsOnMethods = {"recordDeletionRecBin"})
 
     public void cancelInputTest() {
 
@@ -317,5 +269,6 @@ public class EntityBoardTest extends BaseTest {
         List<WebElement> tabList = driver.findElements(By.xpath("//tbody/tr"));
         Assert.assertEquals(tabList.size(), 0, "No records");
 
+    }*/
     }
 }
