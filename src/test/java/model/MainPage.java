@@ -34,9 +34,11 @@ public class MainPage extends BasePage {
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
     private WebElement menuEventsChain1;
 
-    @FindBy(xpath = "//p[contains(text(),'Placeholder')]/preceding-sibling::i")
+    @FindBy(xpath = "//p[contains(text(),'Placeholder')]")
     private WebElement menuPlaceholder;
 
+    @FindBy(xpath = "//p[contains(text(),'Platform functions')]")
+    private WebElement menuPlatformFunctions;
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -83,14 +85,18 @@ public class MainPage extends BasePage {
     }
 
     public Chain1Page clickMenuEventsChain1(){
-        WebDriver driver = getDriver();
-        ProjectUtils.scroll(driver,menuEventsChain1);
-        ProjectUtils.click(driver,menuEventsChain1);
-        return new Chain1Page(driver);
+        clickMenu(menuEventsChain1);
+        return new Chain1Page(getDriver());
     }
 
     public PlaceholderPage clickMenuPlaceholder(){
         clickMenu(menuPlaceholder);
         return new PlaceholderPage(getDriver());
     }
+
+    public PlatformFuncPage clickMenuPlatformFunctions() {
+        clickMenu(menuPlatformFunctions);
+        return new PlatformFuncPage(getDriver());
+    }
+
 }
