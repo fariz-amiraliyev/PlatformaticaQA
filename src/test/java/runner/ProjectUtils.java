@@ -33,7 +33,6 @@ public abstract class ProjectUtils {
 
     @Deprecated
     public static void login(WebDriver driver, String userName, String pas) {
-
     }
 
     public static void click(WebDriverWait wait, WebElement element) {
