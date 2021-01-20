@@ -13,6 +13,9 @@ public abstract class BaseEditPage<TablePage> extends BasePage {
     @FindBy(css = "button[id*='draft']")
     protected WebElement saveDraftButton;
 
+    @FindBy(xpath = "//button[text() = 'Cancel']")
+    protected WebElement cancelButton;
+
     public BaseEditPage(WebDriver driver) {
         super(driver);
     }
@@ -43,4 +46,9 @@ public abstract class BaseEditPage<TablePage> extends BasePage {
         return new ErrorPage(getDriver());
     }
 
+    public TablePage clickCancelButton() {
+        ProjectUtils.scroll(getDriver(), cancelButton);
+        ProjectUtils.click(getWait(), cancelButton);
+        return createPage();
+    }
 }
