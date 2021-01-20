@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import runner.BaseTest;
@@ -16,6 +17,9 @@ public class EntityCalendarTest extends BaseTest {
     private static final String STRING = UUID.randomUUID().toString();
     private static final int NUMBER = 25;
     private static final double NUMBER1 = 56.23;
+    private static final String TEXT_COMMENTS = "DON'T WAOORY, BE HAPPY!";
+    private static final String TITLE_FIELD = UUID.randomUUID().toString();
+    private static final String TITLE_FIELD_NEW = UUID.randomUUID().toString();
 
     @Test
     public void newCalendar() throws InterruptedException {
@@ -50,13 +54,12 @@ public class EntityCalendarTest extends BaseTest {
         WebElement submit = driver.findElement(By.xpath("//button[text() = 'Save']"));
         ProjectUtils.click(driver, submit);
 
-        Thread.sleep(3000);
-        WebElement listElement = driver.findElement(By.xpath("//div[2]/div[1]//div[1]/div/ul/li[2]/a"));
+        WebElement listElement =
+                getWebDriverWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//div[2]/div[1]//div[1]/div/ul/li[2]/a")));
         listElement.click();
 
         driver.findElement(By.xpath("//div[contains(text(), '" + STRING + "')]"));
     }
-
 
     @Test(dependsOnMethods = "newCalendar")
     public void editCalendar() throws InterruptedException {
@@ -69,35 +72,31 @@ public class EntityCalendarTest extends BaseTest {
         WebElement list = driver.findElement(By.xpath("//div[@class='content']//li[2]"));
         list.click();
 
-        WebElement editList = driver.findElement(By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']"));
+        WebElement editList = driver.findElement(By.xpath("//td/div/button"));
         editList.click();
 
-        Thread.sleep(1000);
-
-        WebElement clickEdit = driver.findElement(By.xpath("//a[normalize-space()='edit']"));
+        WebElement clickEdit =
+                getWebDriverWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//a[normalize-space()='edit']")));
         clickEdit.click();
 
-        WebElement str = driver.findElement(By.xpath("//input[@id='string']"));
+        WebElement str =
+                getWebDriverWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='string']")));
         str.clear();
-        str.sendKeys("New Zapis");
+        ProjectUtils.sendKeys(str,"New Record");
 
         WebElement text = driver.findElement(By.xpath("//textarea[@id='text']"));
         text.clear();
-        text.sendKeys("Ne znayu chto delat");
+        text.sendKeys(TEXT_COMMENTS);
 
-        WebElement number = driver.findElement(By.xpath("//*[@id='int']"));
-        number.sendKeys("585");
+        WebElement number = driver.findElement(By.xpath("//input[@id='int']"));
+        number.sendKeys("777");
 
         WebElement save = driver.findElement(By.xpath("//button[normalize-space()='Save']"));
         ProjectUtils.click(driver, save);
 
         WebElement resultEdit = driver.findElement(By.xpath("//tr//td[3]"));
-        Assert.assertEquals(resultEdit.getText(), "Ne znayu chto delat");
+        Assert.assertEquals(resultEdit.getText(), TEXT_COMMENTS);
     }
-
-    final String titleField = UUID.randomUUID().toString();
-
-    final String titleFieldNew = UUID.randomUUID().toString();
 
     public void setValue(WebDriver driver, String title, String text, int num, double decimal) {
 
@@ -134,7 +133,7 @@ public class EntityCalendarTest extends BaseTest {
         WebElement createNewFolder = driver.findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
         createNewFolder.click();
 
-        setValue(driver, titleField, "test_1", 342, 0);
+        setValue(driver, TITLE_FIELD, "test_1", 342, 0);
 
         getWebDriverWait().until(driver1 -> driver.findElement(By.xpath("//tr[@data-index]")).isDisplayed());
     }
@@ -155,10 +154,10 @@ public class EntityCalendarTest extends BaseTest {
         WebElement editBtn = driver.findElement(By.xpath("//a[contains(text(),'edit')]"));
         ProjectUtils.click(driver, editBtn);
 
-        setValue(driver, titleFieldNew, "test test test", 256, 0.1);
+        setValue(driver, TITLE_FIELD_NEW, "test test test", 256, 0.1);
 
-        WebElement nameString = driver.findElement(By.xpath(String.format("//div[contains(text(),'%s')]" , titleFieldNew )));
-        Assert.assertEquals(nameString.getText(), titleFieldNew);
+        WebElement nameString = driver.findElement(By.xpath(String.format("//div[contains(text(),'%s')]" , TITLE_FIELD_NEW)));
+        Assert.assertEquals(nameString.getText(), TITLE_FIELD_NEW);
 
         WebElement nameText = driver.findElement(By.xpath("//div[contains(text(),'test test test')]"));
         Assert.assertEquals(nameText.getText(), "test test test");
@@ -189,7 +188,7 @@ public class EntityCalendarTest extends BaseTest {
         WebElement RecycleBin = driver.findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
         RecycleBin.click();
 
-        WebElement deleteRecord = driver.findElement(By.xpath(String.format("//b[contains(text(), '%s')]", titleFieldNew )));
+        WebElement deleteRecord = driver.findElement(By.xpath(String.format("//b[contains(text(), '%s')]", TITLE_FIELD_NEW)));
         getWebDriverWait().until(driver1 -> deleteRecord.isDisplayed());
     }
 }

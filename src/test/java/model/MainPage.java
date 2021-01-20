@@ -3,7 +3,6 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 
 public class MainPage extends BasePage {
@@ -35,8 +34,11 @@ public class MainPage extends BasePage {
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
     private WebElement menuEventsChain1;
 
-    @FindBy(xpath = "//p[contains(text(),'Placeholder')]/preceding-sibling::i")
+    @FindBy(xpath = "//p[contains(text(),'Placeholder')]")
     private WebElement menuPlaceholder;
+
+    @FindBy(xpath = "//p[contains(text(),'Platform functions')]")
+    private WebElement menuPlatformFunctions;
 
     @FindBy(xpath = "//p[contains(text(),'Board')]")
     private WebElement menuBoard;
@@ -51,8 +53,7 @@ public class MainPage extends BasePage {
     }
 
     public String getCurrentUser() {
-        String profileButtonText = getWait().until(ExpectedConditions.visibilityOf(userProfileButton)).getText();
-        return profileButtonText.substring(profileButtonText.indexOf(' ') + 1).toLowerCase();
+        return userProfileButton.getAttribute("textContent").split("\n")[3].trim();
     }
 
     public MainPage resetUserData() {
@@ -102,4 +103,10 @@ public class MainPage extends BasePage {
         clickMenu(menuBoard);
         return new BoardPage(getDriver());
     }
+
+    public PlatformFuncPage clickMenuPlatformFunctions() {
+        clickMenu(menuPlatformFunctions);
+        return new PlatformFuncPage(getDriver());
+    }
+
 }
