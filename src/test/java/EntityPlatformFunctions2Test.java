@@ -1,6 +1,7 @@
 import model.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.type.Run;
@@ -22,6 +23,7 @@ public class EntityPlatformFunctions2Test extends BaseTest {
     private static final String CONSTANT = "contact@company.com";
     private static final String ERROR_MESSAGE = "error saving entity";
 
+    @Ignore
     @Test
     public void createCancelTest() {
 
@@ -34,7 +36,7 @@ public class EntityPlatformFunctions2Test extends BaseTest {
         Assert.assertEquals(platformFuncPage.getRowCount(), 0);
         Assert.assertEquals(platformFuncPage.clickNewFolder().getLastInt(), LAST_INT);
     }
-
+    @Ignore
     @Test(dependsOnMethods = "createCancelTest")
     public void createDraftTest() {
 
@@ -52,7 +54,7 @@ public class EntityPlatformFunctions2Test extends BaseTest {
 
         platformFuncPage.deleteRow();
     }
-
+    @Ignore
     @Test(dependsOnMethods = "createDraftTest")
     public void viewRecordLongStringTest() {
 
@@ -70,7 +72,7 @@ public class EntityPlatformFunctions2Test extends BaseTest {
                 .viewRow()
                 .getValues(), expectedValues.subList(1,4));
     }
-
+    @Ignore
     @Test(dependsOnMethods = "viewRecordLongStringTest")
     public void invalidLastIntTest() {
 
@@ -81,7 +83,7 @@ public class EntityPlatformFunctions2Test extends BaseTest {
                 .clickSaveButtonErrorExpected()
                 .getErrorMessage(), ERROR_MESSAGE);
     }
-
+    @Ignore
     @Test(dependsOnMethods = "invalidLastIntTest")
     public void maxBoundaryIntTest() {
 
@@ -99,7 +101,7 @@ public class EntityPlatformFunctions2Test extends BaseTest {
                 .clickSaveButtonErrorExpected()
                 .getErrorMessage(), ERROR_MESSAGE);
     }
-
+    @Ignore
     @Test(dependsOnMethods = "maxBoundaryIntTest")
     public void minBoundaryIntTest() {
 
