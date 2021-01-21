@@ -41,6 +41,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Platform functions')]")
     private WebElement menuPlatformFunctions;
 
+    @FindBy(xpath = "//p[contains(text(),'Board')]")
+    private WebElement menuBoard;
+
     @FindBy(xpath = "//p[contains (text(), 'Default')]")
     private WebElement menuDefault;
 
@@ -63,7 +66,7 @@ public class MainPage extends BasePage {
         return this;
     }
 
-    public RecycleBinPage clickRecycleBin () {
+    public RecycleBinPage clickRecycleBin() {
         ProjectUtils.click(getWait(), recycleBinIcon);
         return new RecycleBinPage(getDriver());
     }
@@ -77,7 +80,7 @@ public class MainPage extends BasePage {
         clickMenu(menuImportValues);
         return new ImportValuesPage(getDriver());
     }
-  
+
     public Chain2Page clickMenuEventsChain2() {
         clickMenu(menuEventsChain2);
         return new Chain2Page(getDriver());
@@ -89,8 +92,20 @@ public class MainPage extends BasePage {
     }
 
     public Chain1Page clickMenuEventsChain1(){
-        clickMenu(menuEventsChain1);
-        return new Chain1Page(getDriver());
+        WebDriver driver = getDriver();
+        ProjectUtils.scroll(driver,menuEventsChain1);
+        ProjectUtils.click(driver,menuEventsChain1);
+        return new Chain1Page(driver);
+    }
+
+    public PlaceholderPage clickMenuPlaceholder(){
+        clickMenu(menuPlaceholder);
+        return new PlaceholderPage(getDriver());
+    }
+
+    public BoardPage clickMenuBoard(){
+        clickMenu(menuBoard);
+        return new BoardPage(getDriver());
     }
 
     public PlatformFuncPage clickMenuPlatformFunctions() {
