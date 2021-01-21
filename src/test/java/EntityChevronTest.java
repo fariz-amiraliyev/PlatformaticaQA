@@ -1,3 +1,5 @@
+import model.ChevronPage;
+import model.MainPage;
 import runner.BaseTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -5,9 +7,12 @@ import org.testng.annotations.Test;
 import org.testng.Assert;
 import runner.ProjectUtils;
 
-
 public class EntityChevronTest extends BaseTest {
 
+    final String comments = "TEST";
+    final String int_ = "11";
+    final String decimal = "0.1";
+    final String expectedStatus = "Fulfillment";
 
     @Test
     public void findChevron() throws InterruptedException {
@@ -59,13 +64,17 @@ public class EntityChevronTest extends BaseTest {
         String ExpectedSign = "Fulfillment";
         Assert.assertEquals(ExpectedSign, recheckFulfillment.getText());
     }
+    @Test
+    public void newRecord() {
+        ChevronPage chevronPage = new MainPage(getDriver())
+                .clickMenuChevron()
+                .clickNewFolder()
+                .chooseRecordStatus()
+                .sendKeys(comments, int_, decimal, "", "")
+                .clickSaveButton();
+        Assert.assertEquals(getDriver().findElement(By.xpath("//div[contains(text(), 'Fulfillment')]")).getText(), expectedStatus);
+    }
 }
-
-
-
-
-
-
 
 
 
