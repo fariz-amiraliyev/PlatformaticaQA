@@ -17,7 +17,7 @@ public class EntityChevronTest extends BaseTest {
     final String int_ = "11";
     final String decimal = "0.1";
     final String expectedStatus = "Fulfillment";
-    final String[] expectedResults = {"", expectedStatus, comments, int_, decimal};
+    final String ROW = "//div[contains(text(), 'Fulfillment')]";
 
     @Test
     public void findChevron() throws InterruptedException {
@@ -78,13 +78,11 @@ public class EntityChevronTest extends BaseTest {
                 .chooseRecordStatus()
                 .sendKeys(comments, int_, decimal, "", "")
                 .clickSaveButton();
-        List<WebElement> listOfValues = getDriver().findElements(By.xpath("//tbody//tr[1]//td"));
-        for (int i = 0; i < expectedResults.length; i++) {
-            Assert.assertEquals(listOfValues.get(i).getText(), expectedResults[i]);
-            Assert.assertEquals(getDriver().findElement(By.xpath("//div[contains(text(), 'Fulfillment')]")).getText(), expectedStatus);
-        }
+
+        chevronPage.getRowValues();
     }
 }
+
 
 
 

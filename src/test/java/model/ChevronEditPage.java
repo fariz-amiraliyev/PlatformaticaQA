@@ -37,10 +37,6 @@ public final class ChevronEditPage extends BaseEditPage<ChevronPage> {
     @FindBy(xpath = "//input[@id = 'datetime']")
     private WebElement inputDateTime;
 
-    @FindBy (xpath = " //tbody/tr/td/a/div")
-    private List <String> listOfValues;
-
-
     @Override
     protected ChevronPage createPage() {
         return new ChevronPage(getDriver());
