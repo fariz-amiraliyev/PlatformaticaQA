@@ -3,7 +3,6 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 
 public class MainPage extends BasePage {
@@ -41,6 +40,15 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Placeholder')]/preceding-sibling::i")
     private WebElement menuPlaceholder;
 
+    @FindBy(xpath = "//p[contains(text(),'Placeholder')]")
+    private WebElement menuPlaceholder;
+
+    @FindBy(xpath = "//p[contains(text(),'Platform functions')]")
+    private WebElement menuPlatformFunctions;
+
+    @FindBy(xpath = "//p[contains(text(),'Board')]")
+    private WebElement menuBoard;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -51,8 +59,7 @@ public class MainPage extends BasePage {
     }
 
     public String getCurrentUser() {
-        String profileButtonText = getWait().until(ExpectedConditions.visibilityOf(userProfileButton)).getText();
-        return profileButtonText.substring(profileButtonText.indexOf(' ') + 1).toLowerCase();
+        return userProfileButton.getAttribute("textContent").split("\n")[3].trim();
     }
 
     public MainPage resetUserData() {
@@ -61,7 +68,7 @@ public class MainPage extends BasePage {
         return this;
     }
 
-    public RecycleBinPage clickRecycleBin () {
+    public RecycleBinPage clickRecycleBin() {
         ProjectUtils.click(getWait(), recycleBinIcon);
         return new RecycleBinPage(getDriver());
     }
@@ -75,7 +82,7 @@ public class MainPage extends BasePage {
         clickMenu(menuImportValues);
         return new ImportValuesPage(getDriver());
     }
-  
+
     public Chain2Page clickMenuEventsChain2() {
         clickMenu(menuEventsChain2);
         return new Chain2Page(getDriver());
@@ -102,4 +109,15 @@ public class MainPage extends BasePage {
         clickMenu(menuPlaceholder);
         return new PlaceholderPage(getDriver());
     }
+
+    public BoardPage clickMenuBoard(){
+        clickMenu(menuBoard);
+        return new BoardPage(getDriver());
+    }
+
+    public PlatformFuncPage clickMenuPlatformFunctions() {
+        clickMenu(menuPlatformFunctions);
+        return new PlatformFuncPage(getDriver());
+    }
+
 }
