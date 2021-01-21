@@ -16,7 +16,6 @@ public class EntityChevronTest extends BaseTest {
     final String comments = "TEST";
     final String int_ = "11";
     final String decimal = "0.1";
-    final String expectedStatus = "Fulfillment";
     final String ROW = "//div[contains(text(), 'Fulfillment')]";
 
     @Test
@@ -82,7 +81,6 @@ public class EntityChevronTest extends BaseTest {
         chevronPage.getRowValues();
     }
 }
-
 
 
 
