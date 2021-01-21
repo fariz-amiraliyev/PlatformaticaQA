@@ -41,6 +41,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Platform functions')]")
     private WebElement menuPlatformFunctions;
 
+    @FindBy(xpath = "//p[contains (text(), 'Default')]")
+    private WebElement menuDefault;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -90,14 +93,13 @@ public class MainPage extends BasePage {
         return new Chain1Page(getDriver());
     }
 
-    public PlaceholderPage clickMenuPlaceholder(){
-        clickMenu(menuPlaceholder);
-        return new PlaceholderPage(getDriver());
-    }
-
     public PlatformFuncPage clickMenuPlatformFunctions() {
         clickMenu(menuPlatformFunctions);
         return new PlatformFuncPage(getDriver());
     }
 
+    public DefaultPage clickMenuDefault() {
+        menuDefault.click();
+        return new DefaultPage(getDriver());
+    }
 }
