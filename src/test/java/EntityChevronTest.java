@@ -8,15 +8,20 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import runner.ProjectUtils;
-
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EntityChevronTest extends BaseTest {
 
     final String comments = "TEST";
     final String int_ = "11";
     final String decimal = "0.1";
-    final String ROW = "//div[contains(text(), 'Fulfillment')]";
+
+    SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
+    public String Data = data.format(new Date());
+
+    SimpleDateFormat Time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    public String DataTime = Time.format(new Date());
 
     @Test
     public void findChevron() throws InterruptedException {
@@ -75,10 +80,9 @@ public class EntityChevronTest extends BaseTest {
                 .clickMenuChevron()
                 .clickNewFolder()
                 .chooseRecordStatus()
-                .sendKeys(comments, int_, decimal, "", "")
-                .clickSaveButton();
-
-        chevronPage.getRowValues();
+                .sendKeys(comments, int_, decimal, DataTime, Data)
+                .clickSaveButton()
+                .getRowValues();
     }
 }
 

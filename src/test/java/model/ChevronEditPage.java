@@ -1,12 +1,7 @@
 package model;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.testng.Assert;
-
-import java.util.List;
-
 import static runner.ProjectUtils.fill;
 
 public final class ChevronEditPage extends BaseEditPage<ChevronPage> {
@@ -14,7 +9,6 @@ public final class ChevronEditPage extends BaseEditPage<ChevronPage> {
     public ChevronEditPage(WebDriver driver) {
         super(driver);
     }
-
 
     @FindBy(xpath = "//div[contains(text(),'Pending')]")
     private WebElement statusButton;
@@ -49,12 +43,12 @@ public final class ChevronEditPage extends BaseEditPage<ChevronPage> {
         return this;
     }
 
-    public ChevronEditPage sendKeys(String comments, String int_, String decimal, String date, String datetime) {
+    public ChevronEditPage sendKeys(String comments, String int_, String decimal, String Time, String Data) {
         fill(getWait(), inputString, comments);
         fill(getWait(), inputInt, int_);
         fill(getWait(), inputDecimal, decimal);
-        fill(getWait(), inputDate, date);
-        fill(getWait(), inputDateTime, datetime);
+        fill(getWait(), inputDate, Time);
+        fill(getWait(), inputDateTime, Data);
         return this;
     }
 }
