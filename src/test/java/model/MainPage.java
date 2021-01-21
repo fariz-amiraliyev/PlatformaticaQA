@@ -35,6 +35,12 @@ public class MainPage extends BasePage {
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
     private WebElement menuEventsChain1;
 
+    @FindBy(xpath = "//p[contains (text(), 'Default')]")
+    private WebElement menuDefault;
+
+    @FindBy(xpath = "//p[contains(text(),'Placeholder')]/preceding-sibling::i")
+    private WebElement menuPlaceholder;
+
     @FindBy(xpath = "//p[contains(text(),'Placeholder')]")
     private WebElement menuPlaceholder;
 
@@ -96,6 +102,11 @@ public class MainPage extends BasePage {
         ProjectUtils.scroll(driver,menuEventsChain1);
         ProjectUtils.click(driver,menuEventsChain1);
         return new Chain1Page(driver);
+    }
+
+    public DefaultPage clickMenuDefault() {
+        clickMenu(menuDefault);
+        return new DefaultPage(getDriver());
     }
 
     public PlaceholderPage clickMenuPlaceholder(){
