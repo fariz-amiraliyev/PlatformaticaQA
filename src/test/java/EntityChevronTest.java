@@ -1,3 +1,5 @@
+import model.BaseViewPage;
+import model.ChevronEditPage;
 import model.ChevronPage;
 import model.MainPage;
 import runner.BaseTest;
@@ -7,12 +9,15 @@ import org.testng.annotations.Test;
 import org.testng.Assert;
 import runner.ProjectUtils;
 
+import java.util.List;
+
 public class EntityChevronTest extends BaseTest {
 
     final String comments = "TEST";
     final String int_ = "11";
     final String decimal = "0.1";
     final String expectedStatus = "Fulfillment";
+    final String[] expectedResults = {"", expectedStatus, comments, int_, decimal};
 
     @Test
     public void findChevron() throws InterruptedException {
@@ -64,6 +69,7 @@ public class EntityChevronTest extends BaseTest {
         String ExpectedSign = "Fulfillment";
         Assert.assertEquals(ExpectedSign, recheckFulfillment.getText());
     }
+
     @Test
     public void newRecord() {
         ChevronPage chevronPage = new MainPage(getDriver())
@@ -72,7 +78,11 @@ public class EntityChevronTest extends BaseTest {
                 .chooseRecordStatus()
                 .sendKeys(comments, int_, decimal, "", "")
                 .clickSaveButton();
-        Assert.assertEquals(getDriver().findElement(By.xpath("//div[contains(text(), 'Fulfillment')]")).getText(), expectedStatus);
+        List<WebElement> listOfValues = getDriver().findElements(By.xpath("//tbody//tr[1]//td"));
+        for (int i = 0; i < expectedResults.length; i++) {
+            Assert.assertEquals(listOfValues.get(i).getText(), expectedResults[i]);
+            Assert.assertEquals(getDriver().findElement(By.xpath("//div[contains(text(), 'Fulfillment')]")).getText(), expectedStatus);
+        }
     }
 }
 
