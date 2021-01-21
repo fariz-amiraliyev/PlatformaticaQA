@@ -1,10 +1,10 @@
+import model.*;
+import model.ErrorPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import runner.BaseTest;
@@ -18,15 +18,8 @@ import java.util.List;
 
 @Run(run = RunType.Multiple)
 public class EntityExportTest extends BaseTest {
-    public String exportString = "My String";
-    public String exportText = "New text with 1234";
-    public String exportInt = "1234";
-    public String exportDec = "23.34";
-    public String User = "User 1";
-    public String tablString = "abc";
-    public String tableTex = "abc123";
-    public String tableInt = "124";
-    public String tableDec = "34.56";
+    private static final String INVALID_ENTRY = "comments";
+    private static final String ERROR_MESSAGE = "error saving entity";
     private static final By BY_STRING = By.id("string");
     private static final By BY_TEXT = By.id("text");
     private static final By BY_INT = By.id("int");
@@ -39,7 +32,15 @@ public class EntityExportTest extends BaseTest {
     private static final String EDITED_DECIMAL = "11.11";
     private static final String EDITED_DATE = "02/01/2021";
     private static final String EDITED_DATETIME = "03/01/2021 13:13:13";
-
+    public String exportString = "My String";
+    public String exportText = "New text with 1234";
+    public String exportInt = "1234";
+    public String exportDec = "23.34";
+    public String User = "User 1";
+    public String tablString = "abc";
+    public String tableTex = "abc123";
+    public String tableInt = "124";
+    public String tableDec = "34.56";
     SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
     public String Data = data.format(new Date());
 
@@ -180,24 +181,25 @@ public class EntityExportTest extends BaseTest {
         clickSandwichAction(record, "view");
 
         WebElement exportPage = driver.findElement(By.xpath("//h4[contains(text(),'Export')]"));
-        Assert.assertTrue(exportPage.isDisplayed());
         WebElement verifyString = driver.findElement(By.xpath("//label[text()='String']/../div[1]//span"));
-        Assert.assertEquals(verifyString.getText(), exportString);
         WebElement verifyText = driver.findElement(By.xpath("//label[text()='String']/../div[2]//span"));
-        Assert.assertEquals(verifyText.getText(), exportText);
         WebElement verifyInt = driver.findElement(By.xpath("//label[text()='String']/../div[3]//span"));
-        Assert.assertEquals(verifyInt.getText(), exportInt);
         WebElement verifyDecimal = driver.findElement(By.xpath("//label[text()='String']/../div[4]//span"));
-        Assert.assertTrue(verifyDecimal.isDisplayed());
         WebElement tableNumberColumn = driver.findElement(By.xpath("//tbody/tr[1]/td[1]"));
-        Assert.assertTrue(tableNumberColumn.isDisplayed());
         WebElement tableStringField = driver.findElement(By.xpath("//tbody/tr[1]/td[2]"));
-        Assert.assertEquals(tableStringField.getText(), tablString);
         WebElement tableTextField = driver.findElement(By.xpath("//tbody/tr[1]/td[3]"));
-        Assert.assertEquals(tableTextField.getText(), tableTex);
         WebElement tableIntField = driver.findElement(By.xpath("//tbody/tr[1]/td[4]"));
-        Assert.assertEquals(tableIntField.getText(), tableInt);
         WebElement tableDecimalField = driver.findElement(By.xpath("//tbody/tr[1]/td[5]"));
+
+        Assert.assertTrue(exportPage.isDisplayed());
+        Assert.assertEquals(verifyString.getText(), exportString);
+        Assert.assertEquals(verifyText.getText(), exportText);
+        Assert.assertEquals(verifyInt.getText(), exportInt);
+        Assert.assertTrue(verifyDecimal.isDisplayed());
+        Assert.assertTrue(tableNumberColumn.isDisplayed());
+        Assert.assertEquals(tableStringField.getText(), tablString);
+        Assert.assertEquals(tableTextField.getText(), tableTex);
+        Assert.assertEquals(tableIntField.getText(), tableInt);
         Assert.assertEquals(tableDecimalField.getText(), tableDec);
     }
 
@@ -226,5 +228,51 @@ public class EntityExportTest extends BaseTest {
         Assert.assertEquals(savedRecord.get(0).findElements(By.tagName("td")).get(4).getText(), EDITED_DECIMAL);
         Assert.assertEquals(savedRecord.get(0).findElements(By.tagName("td")).get(5).getText(), EDITED_DATE);
         Assert.assertEquals(savedRecord.get(0).findElements(By.tagName("td")).get(6).getText(), EDITED_DATETIME);
+    }
+
+    @Test(dependsOnMethods = "inputTest")
+    public void someLabelTest() throws InterruptedException {
+        WebDriver driver = getDriver();
+        WebElement export = driver.findElement(By.xpath("//div[@id= 'menu-list-parent']/ul/li[8]/a"));
+        ProjectUtils.click(driver, export);
+
+        WebElement recordLabel = driver.findElement(By.xpath("//a[contains(text(),'Some label')]"));
+        ProjectUtils.click(driver, recordLabel);
+        WebElement saveButton = driver.findElement(By.xpath("//button[@id='pa-entity-form-save-btn']"));
+        saveButton.click();
+
+        WebElement exportDistination = driver.findElement(By.xpath("//div[@id= 'menu-list-parent']/ul/li[9]/a"));
+        ProjectUtils.click(driver, exportDistination);
+        WebElement verifyRecord = driver.findElement(By.xpath("//tbody/tr/td[2]/a"));
+        verifyRecord.click();
+
+        WebElement verifyString = driver.findElement(By.xpath("//label[text()='String']/../div[1]//span"));
+        WebElement verifyText = driver.findElement(By.xpath("//label[text()='String']/../div[2]//span"));
+        WebElement verifyInt = driver.findElement(By.xpath("//label[text()='String']/../div[3]//span"));
+        WebElement verifyDecimal = driver.findElement(By.xpath("//label[text()='String']/../div[4]//span"));
+        WebElement tableNumberColumn = driver.findElement(By.xpath("//tbody/tr[1]/td[1]"));
+        WebElement tableStringField = driver.findElement(By.xpath("//tbody/tr[1]/td[2]"));
+        WebElement tableTextField = driver.findElement(By.xpath("//tbody/tr[1]/td[3]"));
+        WebElement tableIntField = driver.findElement(By.xpath("//tbody/tr[1]/td[4]"));
+        WebElement tableDecimalField = driver.findElement(By.xpath("//tbody/tr[1]/td[5]"));
+
+        Assert.assertEquals(verifyString.getText(), exportString);
+        Assert.assertEquals(verifyText.getText(), exportText);
+        Assert.assertEquals(verifyInt.getText(), exportInt);
+        Assert.assertTrue(verifyDecimal.isDisplayed());
+        Assert.assertTrue(tableNumberColumn.isDisplayed());
+        Assert.assertEquals(tableStringField.getText(), tablString);
+        Assert.assertEquals(tableTextField.getText(), tableTex);
+        Assert.assertEquals(tableIntField.getText(), tableInt);
+        Assert.assertEquals(tableDecimalField.getText(), tableDec);
+    }
+
+    @Test
+    public void negativeTestForInt() {
+        ErrorPage errorPage = new MainPage(getDriver()).clickMenuExport()
+                .clickNewFolder()
+                .fillInt(INVALID_ENTRY)
+                .clickSaveButtonErrorExpected();
+        Assert.assertEquals(errorPage.getErrorMessage(),ERROR_MESSAGE );
     }
 }
