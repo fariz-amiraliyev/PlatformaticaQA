@@ -1,5 +1,4 @@
 import com.beust.jcommander.Strings;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import runner.BaseTest;
@@ -15,13 +14,13 @@ import java.util.Random;
 @Run(run = RunType.Multiple)
 public class EntityChildRecordsLoopTest extends BaseTest {
 
-    private String startBalance = "1";
-    private String value9 = "6";
-    private int endBalanceD;
+    private static final String START_BALANCE = "1";
+    private static final String VALUE_9 = "6";
+    private static int endBalanceD;
 
-    private int numbersOfLines = 9;
-    private double sumNumber = 0;
-    private double[] firstValuesPassed = {0.00, 10.50, 11.00, 12.00, 13.00, 14.00, 1.00, 1.00, 2.50, 0.0};
+    private static final int NUMBERS_OF_LINES = 9;
+    private static double sumNumber = 0;
+    private static final double[] FIRST_VALUES_PASSED = {0.00, 10.50, 11.00, 12.00, 13.00, 14.00, 1.00, 1.00, 2.50, 0.0};
 
     private void addingRowsByClickingOnGreenPlus(int n) {
         WebDriver driver = getDriver();
@@ -32,8 +31,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
     }
 
     private int randomIntGeneration(int min, int max) {
-        Random rand = new Random();
-        return rand.nextInt((max - min) + 1) + min;
+        return new Random().nextInt((max - min) + 1) + min;
     }
 
     private void createNewChildLoopEmptyRecord() {
@@ -42,7 +40,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         ProjectUtils.click(driver, childRecordsLoop);
         WebElement createNew = driver.findElement(By.xpath("//i[contains(text(), 'create_new_folder')]/ancestor::a"));
         ProjectUtils.click(driver, createNew);
-        addingRowsByClickingOnGreenPlus(numbersOfLines);
+        addingRowsByClickingOnGreenPlus(NUMBERS_OF_LINES);
     }
 
     private void fillData(String xpath, String valueSend) {
@@ -56,17 +54,12 @@ public class EntityChildRecordsLoopTest extends BaseTest {
 
     private void deleteRows(int rowNumber) {
         WebDriver driver = getDriver();
-        WebElement deleteLine = findElementUsingText("//i[@data-row=", String.valueOf(rowNumber), "  and contains(text(), 'clear')]");
+        WebElement deleteLine = driver.findElement(By.xpath(String.format("//i[@data-row= '%d'  and contains(text(), 'clear')]", rowNumber)));
         ProjectUtils.click(driver, deleteLine);
         getWebDriverWait().until(d -> !deleteLine.isDisplayed());
     }
 
-    private WebElement findElementUsingText(String firstPartOfXpath, String rowDeleted, String lastPartOfXpath) {
-        WebDriver driver = getDriver();
-        return driver.findElement(By.xpath(firstPartOfXpath + rowDeleted + lastPartOfXpath));
-    }
-
-    private void goToChildLoop() {
+   private void goToChildLoop() {
         WebDriver driver = getDriver();
         WebElement childRecord = driver.findElement(By.xpath("//p[contains(text(), 'Child records loop')]/ancestor::a"));
         ProjectUtils.click(driver, childRecord);
@@ -80,44 +73,44 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         WebDriver driver = getDriver();
         createNewChildLoopEmptyRecord();
 
-        driver.findElement(By.xpath("//input[@id='start_balance']")).sendKeys(startBalance);
+        driver.findElement(By.xpath("//input[@id='start_balance']")).sendKeys(START_BALANCE);
 
         WebElement endBalance = driver.findElement(By.xpath("//input[@id='end_balance']"));
 
-        getWebDriverWait().until(d -> endBalance.getAttribute("value").equals(startBalance));
+        getWebDriverWait().until(d -> endBalance.getAttribute("value").equals(START_BALANCE));
 
-        sumNumber += Integer.parseInt(startBalance);
+        sumNumber += Integer.parseInt(START_BALANCE);
 
-        for (int i = 0; i < firstValuesPassed.length; i++) {
-            sumNumber += firstValuesPassed[i];
+        for (int i = 0; i < FIRST_VALUES_PASSED.length; i++) {
+            sumNumber += FIRST_VALUES_PASSED[i];
         }
 
         for (int i = 1; i < 10; i++) {
-            fillData(String.format("//tr//textarea[@id='t-68-r-%d-amount']", i), String.valueOf(firstValuesPassed[i]));
+            fillData(String.format("//tr//textarea[@id='t-68-r-%d-amount']", i), String.valueOf(FIRST_VALUES_PASSED[i]));
         }
 
         WebElement lastLine = driver.findElement(By.xpath("//tr//textarea[@id='t-68-r-9-amount']"));
 
-        getWebDriverWait().until(d -> lastLine.getAttribute("value").equals(String.valueOf(firstValuesPassed[9])));
+        getWebDriverWait().until(d -> lastLine.getAttribute("value").equals(String.valueOf(FIRST_VALUES_PASSED[9])));
 
         List<WebElement> tableLines = driver.findElements(By.xpath("//textarea[@class='pa-entity-table-textarea pa-table-field t-68-amount']"));
-        Assert.assertEquals(tableLines.size(), firstValuesPassed.length - 1);
+        Assert.assertEquals(tableLines.size(), FIRST_VALUES_PASSED.length - 1);
 
         getWebDriverWait().until(d -> endBalance.getAttribute("value").equals(String.valueOf((int)sumNumber)));
 
         deleteRows(4);
         deleteRows(6);
 
-        final double sum = sumNumber - firstValuesPassed[4] - firstValuesPassed[6];
+        final double sum = sumNumber - FIRST_VALUES_PASSED[4] - FIRST_VALUES_PASSED[6];
         getWebDriverWait().until(d -> endBalance.getAttribute("value").equals(String.valueOf((int)(sum))));
 
         addingRowsByClickingOnGreenPlus(randomIntGeneration(1, 5));
 
-        final double endBalanceDigit = sum + Integer.parseInt(value9);
+        final double endBalanceDigit = sum + Integer.parseInt(VALUE_9);
         endBalanceD =  (int) endBalanceDigit;
 
-        tableLines.get(firstValuesPassed.length - 2).clear();
-        tableLines.get(firstValuesPassed.length - 2).sendKeys(value9);
+        tableLines.get(FIRST_VALUES_PASSED.length - 2).clear();
+        tableLines.get(FIRST_VALUES_PASSED.length - 2).sendKeys(VALUE_9);
 
         getWebDriverWait().until(d -> (endBalance.getAttribute("value").equals(String.valueOf( (int) endBalanceDigit))));
 
@@ -137,7 +130,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         WebElement viewFunction = driver.findElement(By.xpath("//a[text() = 'view']"));
         ProjectUtils.click(driver, viewFunction);
 
-        String[] valuesArr = {startBalance + ".00", endBalanceD + ".00"};
+        String[] valuesArr = {START_BALANCE + ".00", endBalanceD + ".00"};
 
         List<WebElement> startEndBalance = driver.findElements(By.xpath("//div/span[@class='pa-view-field']"));
         for (int i = 0; i < startEndBalance.size(); i++) {
@@ -154,7 +147,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
 
         WebElement startBalanceField = driver.findElement(By.xpath("//input[@id='start_balance']"));
         WebElement endBalance = driver.findElement(By.xpath("//input[@id='end_balance']"));
-        Assert.assertEquals(startBalanceField.getAttribute("value"), startBalance);
+        Assert.assertEquals(startBalanceField.getAttribute("value"), START_BALANCE);
         Assert.assertEquals(endBalance.getAttribute("value"), String.valueOf(endBalanceD));
     }
 }
