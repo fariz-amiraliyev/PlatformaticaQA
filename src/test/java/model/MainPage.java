@@ -43,6 +43,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Board')]")
     private WebElement menuBoard;
 
+    @FindBy(xpath = "//p[contains (text(), 'Init')]/parent::a")
+    private WebElement init;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -109,4 +112,8 @@ public class MainPage extends BasePage {
         return new PlatformFuncPage(getDriver());
     }
 
+    public InitPage clickMenuInit() {
+        clickMenu(init);
+        return new InitPage(getDriver());
+    }
 }
