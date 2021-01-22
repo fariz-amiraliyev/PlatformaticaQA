@@ -3,6 +3,7 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 
 public class MainPage extends BasePage {
@@ -34,7 +35,10 @@ public class MainPage extends BasePage {
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
     private WebElement menuEventsChain1;
 
-    @FindBy(xpath = "//p[contains(text(),'Placeholder')]")
+    @FindBy(xpath = "//p[contains (text(), 'Default')]")
+    private WebElement menuDefault;
+
+    @FindBy(xpath = "//p[contains(text(),'Placeholder')]/preceding-sibling::i")
     private WebElement menuPlaceholder;
 
     @FindBy(xpath = "//p[contains(text(),'Platform functions')]")
@@ -45,6 +49,9 @@ public class MainPage extends BasePage {
 
     @FindBy(xpath = "//p[contains (text(), 'Init')]/parent::a")
     private WebElement init;
+
+    @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
+    private WebElement menuArithmeticInline;
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -97,6 +104,11 @@ public class MainPage extends BasePage {
         return new Chain1Page(driver);
     }
 
+    public DefaultPage clickMenuDefault() {
+        clickMenu(menuDefault);
+        return new DefaultPage(getDriver());
+    }
+
     public PlaceholderPage clickMenuPlaceholder(){
         clickMenu(menuPlaceholder);
         return new PlaceholderPage(getDriver());
@@ -115,5 +127,9 @@ public class MainPage extends BasePage {
     public InitPage clickMenuInit() {
         clickMenu(init);
         return new InitPage(getDriver());
+    }
+    public ArithmeticInlinePage clickMenuArithmeticInline() {
+        clickMenu(menuArithmeticInline);
+        return new ArithmeticInlinePage(getDriver());
     }
 }

@@ -1,25 +1,14 @@
+import java.util.*;
 
-import java.util.Arrays;
-import java.util.Random;
-
-import model.BaseTablePage;
 import model.BoardPage;
 import model.MainPage;
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import runner.BaseTest;
-import runner.ProjectUtils;
 import runner.type.Run;
 import runner.type.RunType;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Run(run = RunType.Multiple)
 public class EntityBoardTest extends BaseTest {
@@ -41,12 +30,11 @@ public class EntityBoardTest extends BaseTest {
 
     @Test
     public void inputValidationTest() {
-        final String[] arr = {null, PENDING, TEXT, NUMBER, DECIMAL, null, null, null, APP_USER, null};
 
-        MainPage mainPage = new MainPage(getDriver())
-                .clickMenuBoard();
+        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
 
-        BoardPage boardPage = new BoardPage(getDriver())
+        BoardPage boardPage = new MainPage(getDriver())
+                .clickMenuBoard()
                 .clickNewFolder()
                 .fillform(PENDING, TEXT, NUMBER, DECIMAL, APP_USER)
                 .clickSaveDraftButton();
@@ -55,7 +43,7 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(boardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
 
         boardPage.clickListButton();
-
-        ProjectUtils.verifyEntityData(getDriver(), arr);
+        Assert.assertEquals(boardPage.getRowCount(), 1);
+        Assert.assertEquals(boardPage.getRow(0), expectedValues);
     }
 }
