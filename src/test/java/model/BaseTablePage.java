@@ -107,11 +107,6 @@ public abstract class BaseTablePage<TablePage, EditPage> extends MainPage {
     public void clickListButton() {
         listButton.click();
     }
-
-    public void clickBoardButton() {
-        boardButton.click();
-    }
-
 }
 
 

@@ -41,7 +41,7 @@ public class EntityBoardTest extends BaseTest {
 
     @Test
     public void inputValidationTest() {
-        final String[] arr = {null, PENDING, TEXT, NUMBER, DECIMAL, null, null, null, APP_USER, null};
+        final String[] arr = {PENDING, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER};
 
         MainPage mainPage = new MainPage(getDriver())
                 .clickMenuBoard();
@@ -55,7 +55,7 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(boardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
 
         boardPage.clickListButton();
-
-        ProjectUtils.verifyEntityData(getDriver(), arr);
+        Assert.assertEquals(boardPage.getRowCount(), 1);
+        Assert.assertEquals(boardPage.getRow(0), Arrays.asList(arr));
     }
 }
