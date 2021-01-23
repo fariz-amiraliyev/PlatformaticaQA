@@ -28,7 +28,7 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(), 'Export')]")
     private WebElement menuExport;
 
-    @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62")
+    @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62']")
     private WebElement menuEventsChain2;
 
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
@@ -46,6 +46,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Board')]")
     private WebElement menuBoard;
 
+    @FindBy(xpath = "//p[contains(text(), 'Chevron')]")
+    private WebElement menuChevron;
+    
     @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
     private WebElement menuArithmeticInline;
 
@@ -120,6 +123,10 @@ public class MainPage extends BasePage {
         return new PlatformFuncPage(getDriver());
     }
 
+    public ChevronPage clickMenuChevron() {
+        clickMenu(menuChevron);
+        return new ChevronPage(getDriver());
+    }
     public ArithmeticInlinePage clickMenuArithmeticInline() {
         clickMenu(menuArithmeticInline);
         return new ArithmeticInlinePage(getDriver());
