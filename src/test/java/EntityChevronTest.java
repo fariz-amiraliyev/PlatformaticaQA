@@ -18,6 +18,7 @@ public class EntityChevronTest extends BaseTest {
     final String comments = "TEST";
     final String int_ = "11";
     final String decimal = "0.1";
+    final  String xpath = "//tbody/tr[1]/td[10]/div[1]/ul[1]/li[1]/a[1]";
 
     SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
     public String Data = data.format(new Date());
@@ -38,6 +39,13 @@ public class EntityChevronTest extends BaseTest {
         Assert.assertEquals(chevronPage.getRow(0), expectedResults);
     }
 
+    @Test(dependsOnMethods = "createNewRecord")
+    public void viewRecord() {
+        ChevronPage page = new MainPage(getDriver())
+                .clickMenuChevron()
+                .clickViewButton(xpath)
+                .getColumn();
+    }
     @Test
     public void findChevron() throws InterruptedException {
 
