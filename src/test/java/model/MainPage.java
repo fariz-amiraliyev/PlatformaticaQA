@@ -46,6 +46,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Board')]")
     private WebElement menuBoard;
 
+    @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
+    private WebElement menuArithmeticInline;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -117,4 +120,8 @@ public class MainPage extends BasePage {
         return new PlatformFuncPage(getDriver());
     }
 
+    public ArithmeticInlinePage clickMenuArithmeticInline() {
+        clickMenu(menuArithmeticInline);
+        return new ArithmeticInlinePage(getDriver());
+    }
 }
