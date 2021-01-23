@@ -11,18 +11,19 @@ import java.util.List;
 
 public abstract class BaseEmbededPage<TablePage> extends MainPage {
 
-    private static final String TBODY_XPASS = "//table[@class='pa-entity-table']/tbody";
-    private static final String ROW_NUM = "@data-row = '%d'";
-    private static final String XPASS_TDS = "//td";
-    private static final String XPASS_DELETE_X = "//td[@class='pa-row-delete-btn-col']/div/i";
+    private static final String TBODY_XPATH = "//table[@class='pa-entity-table']/tbody";
+    private static final String DATA_ROW = "data-row";
 
-    @FindBy (xpath = TBODY_XPASS)
+    private static final By BY_XPATH_TDS = By.xpath("//td");
+    private static final By BY_XPATH_DELETE_X = By.xpath("//td[@class='pa-row-delete-btn-col']/div/i");
+
+    @FindBy (xpath = TBODY_XPATH)
     private WebElement body;
 
-    @FindBy(xpath = TBODY_XPASS + "/tr[starts-with(@id,'add-row-')]/td[@class='pa-add-row-btn-col']/button")
+    @FindBy(xpath = TBODY_XPATH + "/tr[starts-with(@id,'add-row-')]/td[@class='pa-add-row-btn-col']/button")
     private WebElement buttonNewEmbeded;
 
-    @FindBy(xpath = TBODY_XPASS + "/tr[starts-with(@id,'row-') and @data-row > '0']")
+    @FindBy(xpath = TBODY_XPATH + "/tr[starts-with(@id,'row-') and @data-row > '0']")
     private List<WebElement> trs;
 
     protected List<WebElement> getRows() {
@@ -33,7 +34,7 @@ public abstract class BaseEmbededPage<TablePage> extends MainPage {
         super(driver);
     }
 
-    public TablePage clickNewFolder() {
+    public TablePage clickNewEmbededRow() {
         buttonNewEmbeded.click();
         return (TablePage) this;
     }
@@ -48,17 +49,18 @@ public abstract class BaseEmbededPage<TablePage> extends MainPage {
 
     public List<String> getRow(int rowNumber) {
         List<String> result = new ArrayList<>();
-        List<WebElement> cells = getRows().get(rowNumber).findElements(By.xpath(XPASS_TDS));
+        List<WebElement> cells = getRows().get(rowNumber).findElements(BY_XPATH_TDS);
 
+        result.add(cells.get(0).getAttribute(DATA_ROW));
         for (int i = 1; i < cells.size()-1; i++ ) {
-            result.add(cells.get(i).getText());
+           result.add(cells.get(i).getText());
         }
 
         return result;
     }
 
     public TablePage deleteRow(int rowNumber) {
-        trs.get(rowNumber).findElement(By.xpath(XPASS_DELETE_X)).click();
+        trs.get(rowNumber).findElement(BY_XPATH_DELETE_X).click();
         return (TablePage) this;
     }
 
@@ -66,4 +68,7 @@ public abstract class BaseEmbededPage<TablePage> extends MainPage {
         return deleteRow(getRows().size() - 1);
     }
 
+    public String getLineNumber(int rowNumber){
+        return getRow(rowNumber).get(0);
+    }
 }
