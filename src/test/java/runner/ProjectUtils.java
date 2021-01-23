@@ -97,16 +97,5 @@ public abstract class ProjectUtils {
         return UUID.randomUUID().toString();
     }
 
-    public static void verifyEntityData(WebDriver driver, String[] expected) {
-        List<WebElement> rows = driver.findElements(By.xpath("//tbody/tr"));
-        Assert.assertEquals(rows.size(), 1);
-        List<WebElement> columns = rows.get(0).findElements(By.tagName("td"));
-        Assert.assertEquals(columns.size(), expected.length);
-        for (int i = 0; i < columns.size(); i++) {
-            if (expected[i] != null) {
-                Assert.assertEquals(columns.get(i).getText(), expected[i]);
-            }
-        }
-    }
 }
 

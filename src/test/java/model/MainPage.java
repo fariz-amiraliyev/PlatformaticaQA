@@ -50,6 +50,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(), 'Chevron')]")
     private WebElement menuChevron;
 
+    @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
+    private WebElement menuArithmeticInline;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -125,5 +128,9 @@ public class MainPage extends BasePage {
     public ChevronPage clickMenuChevron() {
         clickMenu(menuChevron);
         return new ChevronPage(getDriver());
+    }
+    public ArithmeticInlinePage clickMenuArithmeticInline() {
+        clickMenu(menuArithmeticInline);
+        return new ArithmeticInlinePage(getDriver());
     }
 }
