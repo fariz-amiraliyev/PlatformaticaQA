@@ -47,8 +47,8 @@ public final class ChevronEditPage extends BaseEditPage<ChevronPage> {
         fill(getWait(), inputString, comments);
         fill(getWait(), inputInt, int_);
         fill(getWait(), inputDecimal, decimal);
-        fill(getWait(), inputDate, Time);
-        fill(getWait(), inputDateTime, Data);
+        fill(getWait(), inputDate, Data);
+        fill(getWait(), inputDateTime, Time);
         return this;
     }
 }
