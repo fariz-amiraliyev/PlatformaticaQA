@@ -1,6 +1,7 @@
 import java.util.*;
 
-import model.BoardPage;
+import model.BoardBoardPage;
+import model.BoardListPage;
 import model.MainPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,17 +34,39 @@ public class EntityBoardTest extends BaseTest {
 
         List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
 
-        BoardPage boardPage = new MainPage(getDriver())
+        BoardListPage boardListPage = new MainPage(getDriver())
                 .clickMenuBoard()
                 .clickNewFolder()
                 .fillform(PENDING, TEXT, NUMBER, DECIMAL, APP_USER)
-                .clickSaveDraftButton();
+                .clickSaveDraftButton()
+                .clickListButton();
 
-        Assert.assertEquals(boardPage.pendingCardItemsCount(), 1);
-        Assert.assertEquals(boardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getRow(0), expectedValues);
+    }
 
-        boardPage.clickListButton();
-        Assert.assertEquals(boardPage.getRowCount(), 1);
-        Assert.assertEquals(boardPage.getRow(0), expectedValues);
+    @Test(dependsOnMethods = "inputValidationTest")
+
+    public void viewRecords() {
+
+        BoardBoardPage boardBoardPage = new MainPage(getDriver())
+                .clickMenuBoard();
+
+        Assert.assertEquals(boardBoardPage.getPendingItemsCount(), 1);
+        Assert.assertEquals(boardBoardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
+    }
+
+    @Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})
+    public void manipulateTest1() {
+
+        List<String> expectedValues = Arrays.asList(ON_TRACK, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
+
+        BoardListPage boardListPage = new MainPage(getDriver())
+                .clickMenuBoard()
+                .moveFromPedingToOntrack()
+                .clickListButton();
+
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getRow(0), expectedValues);
     }
 }
