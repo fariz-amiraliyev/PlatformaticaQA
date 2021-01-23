@@ -1,5 +1,4 @@
 import model.*;
-import org.testng.annotations.Ignore;
 import runner.BaseTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;

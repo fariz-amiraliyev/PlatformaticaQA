@@ -49,8 +49,7 @@ public class MainPage extends BasePage {
 
     @FindBy(xpath = "//p[contains(text(), 'Chevron')]")
     private WebElement menuChevron;
-
-
+    
     @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
     private WebElement menuArithmeticInline;
 
