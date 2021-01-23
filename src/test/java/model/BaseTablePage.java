@@ -5,8 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import runner.ProjectUtils;
+import runner.TestUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,9 +71,7 @@ public abstract class BaseTablePage<TablePage, EditPage> extends MainPage {
 
     private void clickRowMenu(int rowNumber, By menu) {
         trs.get(rowNumber).findElement(By.xpath("//td//div//button")).click();
-
-        WebElement menuElement = getWait().until(ExpectedConditions.visibilityOfElementLocated(menu));
-        getWait().until(ExpectedConditions.elementToBeClickable(menuElement)).click();
+        getWait().until(TestUtils.movingIsFinished(menu)).click();
     }
 
     public BaseViewPage viewRow(int rowNumber) {
@@ -107,8 +104,5 @@ public abstract class BaseTablePage<TablePage, EditPage> extends MainPage {
     public void clickListButton() {
         listButton.click();
     }
+
 }
-
-
-
-

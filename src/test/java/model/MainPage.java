@@ -3,7 +3,6 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 
 public class MainPage extends BasePage {
@@ -114,9 +113,9 @@ public class MainPage extends BasePage {
         return new PlaceholderPage(getDriver());
     }
 
-    public BoardPage clickMenuBoard(){
+    public BoardBoardPage clickMenuBoard(){
         clickMenu(menuBoard);
-        return new BoardPage(getDriver());
+        return new BoardBoardPage(getDriver());
     }
 
     public PlatformFuncPage clickMenuPlatformFunctions() {
