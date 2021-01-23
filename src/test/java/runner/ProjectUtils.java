@@ -3,10 +3,8 @@ package runner;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 import runner.type.ProfileType;
 
-import java.util.List;
 import java.util.UUID;
 
 public abstract class ProjectUtils {
@@ -98,4 +96,3 @@ public abstract class ProjectUtils {
     }
 
 }
-
