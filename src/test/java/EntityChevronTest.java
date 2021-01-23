@@ -25,7 +25,18 @@ public class EntityChevronTest extends BaseTest {
     SimpleDateFormat Time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     public String DataTime = Time.format(new Date());
 
-    List <String> expectedResults = Arrays.asList("Fulfillment", "TEST", "11", "0.1", Data, DataTime);
+    List<String> expectedResults = Arrays.asList("Fulfillment", "TEST", "11", "0.1", Data, DataTime);
+
+    @Test
+    public void createNewRecord() {
+        ChevronPage chevronPage = new MainPage(getDriver())
+                .clickMenuChevron()
+                .clickNewFolder()
+                .chooseRecordStatus()
+                .sendKeys(comments, int_, decimal, DataTime, Data)
+                .clickSaveButton();
+        Assert.assertEquals(chevronPage.getRow(0), expectedResults);
+    }
 
     @Test
     public void findChevron() throws InterruptedException {
@@ -76,16 +87,6 @@ public class EntityChevronTest extends BaseTest {
         WebElement recheckFulfillment = driver.findElement(By.xpath("//a[@class = 'pa-chev-active']"));
         String ExpectedSign = "Fulfillment";
         Assert.assertEquals(ExpectedSign, recheckFulfillment.getText());
-    }
-    @Test
-    public void createNewRecord() {
-        ChevronPage chevronPage = new MainPage(getDriver())
-                .clickMenuChevron()
-                .clickNewFolder()
-                .chooseRecordStatus()
-                .sendKeys(comments, int_, decimal, DataTime, Data)
-                .clickSaveButton();
-        Assert.assertEquals(chevronPage.getRow(0), expectedResults);
     }
 }
 
