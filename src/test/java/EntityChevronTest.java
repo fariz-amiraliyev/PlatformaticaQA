@@ -1,16 +1,19 @@
-import model.BaseViewPage;
-import model.ChevronEditPage;
-import model.ChevronPage;
-import model.MainPage;
+import model.*;
+import org.testng.annotations.Ignore;
 import runner.BaseTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import runner.ProjectUtils;
+import runner.type.Run;
+import runner.type.RunType;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+@Run(run = RunType.Multiple)
 public class EntityChevronTest extends BaseTest {
 
     final String comments = "TEST";
@@ -22,6 +25,8 @@ public class EntityChevronTest extends BaseTest {
 
     SimpleDateFormat Time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     public String DataTime = Time.format(new Date());
+
+    List <String> expectedResults = Arrays.asList("Fulfillment", "TEST", "11", "0.1", Data, DataTime);
 
     @Test
     public void findChevron() throws InterruptedException {
@@ -73,16 +78,15 @@ public class EntityChevronTest extends BaseTest {
         String ExpectedSign = "Fulfillment";
         Assert.assertEquals(ExpectedSign, recheckFulfillment.getText());
     }
-
     @Test
-    public void newRecord() {
+    public void createNewRecord() {
         ChevronPage chevronPage = new MainPage(getDriver())
                 .clickMenuChevron()
                 .clickNewFolder()
                 .chooseRecordStatus()
                 .sendKeys(comments, int_, decimal, DataTime, Data)
-                .clickSaveButton()
-                .getRowValues();
+                .clickSaveButton();
+        Assert.assertEquals(chevronPage.getRow(0), expectedResults);
     }
 }
 
