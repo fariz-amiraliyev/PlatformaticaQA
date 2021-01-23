@@ -1,21 +1,24 @@
-import model.ChevronPage;
-import model.MainPage;
+import model.*;
 import runner.BaseTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import runner.ProjectUtils;
+import runner.type.Run;
+import runner.type.RunType;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@Run(run = RunType.Multiple)
 public class EntityChevronTest extends BaseTest {
 
     final String comments = "TEST";
     final String int_ = "11";
     final String decimal = "0.1";
+    final  String xpath = "//tbody/tr[1]/td[10]/div[1]/ul[1]/li[1]/a[1]";
 
     SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
     public String Data = data.format(new Date());
@@ -36,6 +39,13 @@ public class EntityChevronTest extends BaseTest {
         Assert.assertEquals(chevronPage.getRow(0), expectedResults);
     }
 
+    @Test(dependsOnMethods = "createNewRecord")
+    public void viewRecord() {
+        ChevronPage page = new MainPage(getDriver())
+                .clickMenuChevron()
+                .clickViewButton(xpath)
+                .getColumn();
+    }
     @Test
     public void findChevron() throws InterruptedException {
 
@@ -87,6 +97,7 @@ public class EntityChevronTest extends BaseTest {
         Assert.assertEquals(ExpectedSign, recheckFulfillment.getText());
     }
 }
+
 
 
 

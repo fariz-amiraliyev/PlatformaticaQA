@@ -48,7 +48,7 @@ public class MainPage extends BasePage {
 
     @FindBy(xpath = "//p[contains(text(), 'Chevron')]")
     private WebElement menuChevron;
-
+    
     @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
     private WebElement menuArithmeticInline;
 
@@ -122,7 +122,6 @@ public class MainPage extends BasePage {
         clickMenu(menuPlatformFunctions);
         return new PlatformFuncPage(getDriver());
     }
-
 
     public ChevronPage clickMenuChevron() {
         clickMenu(menuChevron);
