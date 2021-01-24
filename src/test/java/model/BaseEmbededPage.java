@@ -51,9 +51,9 @@ public abstract class BaseEmbededPage<TablePage> extends MainPage {
         List<String> result = new ArrayList<>();
         List<WebElement> cells = getRows().get(rowNumber).findElements(BY_XPATH_TDS);
 
-        result.add(cells.get(0).getAttribute(DATA_ROW));
-        for (int i = 1; i < cells.size()-1; i++ ) {
-           result.add(cells.get(i).getText());
+        result.add(cells.get(1).findElement(By.tagName("input")).getAttribute(DATA_ROW));
+        for (int i = 2; i < cells.size()-2; i++ ) {
+            result.add(cells.get(i).getText());
         }
 
         return result;
