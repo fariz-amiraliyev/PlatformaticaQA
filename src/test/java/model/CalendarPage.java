@@ -20,7 +20,7 @@ public class CalendarPage extends BoardEditPage{
         super(driver);
     }
 
-     public  void clickOnCalendarDate(WebDriver driver) {
+     public void clickOnCalendarDate(WebDriver driver) {
 
          ProjectUtils.click(getDriver(),  driver.findElement(By.xpath(String.format
          ("//td[@data-day = '%1$s%2$s%3$s%2$s%4$s']", CURRENT_MONTH, "/", RANDOM_DAY, CURRENT_YEAR))));

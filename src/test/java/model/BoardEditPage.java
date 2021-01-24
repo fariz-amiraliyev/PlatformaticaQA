@@ -69,12 +69,14 @@ public class BoardEditPage extends BaseEditPage<BoardBoardPage> {
         ProjectUtils.sendKeys(textPlaceholder, text);
         ProjectUtils.sendKeys(intPlaceholder, number);
         ProjectUtils.sendKeys(decimalPlaceholder, decimal);
-        datePlaceholder.click();
-        CalendarPage calendarPage = new CalendarPage(getDriver());
-        calendarPage.clickOnCalendarDate(getDriver());
+
+        CalendarPage calendar = new CalendarPage(getDriver());
         dateTimePlaceholder.click();
-        calendarPage.clickOnCalendarDate(getDriver());
-        new CalendarPage(getDriver()).clickOnCalendarDate(getDriver());
+        calendar.clickOnCalendarDate(getDriver());
+
+        datePlaceholder.click();
+        calendar.clickOnCalendarDate(getDriver());
+
         ProjectUtils.scroll(getDriver(), dropdownUser);
         ProjectUtils.click(getDriver(),dropdownUser);
         Select dropUser = new Select(appTester1);
