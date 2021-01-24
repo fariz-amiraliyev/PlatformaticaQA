@@ -6,7 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 import runner.ProjectUtils;
 
-public final class BoardEditPage extends BaseEditPage<BoardBoardPage> {
+public class BoardEditPage extends BaseEditPage<BoardBoardPage> {
 
     @FindBy(id = "string")
     private WebElement dropDownStatus;
@@ -19,6 +19,12 @@ public final class BoardEditPage extends BaseEditPage<BoardBoardPage> {
 
     @FindBy(id = "decimal")
     private WebElement decimalPlaceholder;
+
+    @FindBy(id = "date")
+    private WebElement datePlaceholder;
+
+    @FindBy(id = "datetime")
+    private WebElement dateTimePlaceholder;
 
     @FindBy(xpath = "//button[@data-id='user']/div/div")
     private WebElement dropdownUser;
@@ -63,6 +69,12 @@ public final class BoardEditPage extends BaseEditPage<BoardBoardPage> {
         ProjectUtils.sendKeys(textPlaceholder, text);
         ProjectUtils.sendKeys(intPlaceholder, number);
         ProjectUtils.sendKeys(decimalPlaceholder, decimal);
+        datePlaceholder.click();
+        CalendarPage calendarPage = new CalendarPage(getDriver());
+        calendarPage.clickOnCalendarDate(getDriver());
+        dateTimePlaceholder.click();
+        calendarPage.clickOnCalendarDate(getDriver());
+        new CalendarPage(getDriver()).clickOnCalendarDate(getDriver());
         ProjectUtils.scroll(getDriver(), dropdownUser);
         ProjectUtils.click(getDriver(),dropdownUser);
         Select dropUser = new Select(appTester1);
