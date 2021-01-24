@@ -3,7 +3,6 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 
 public class MainPage extends BasePage {
@@ -29,7 +28,7 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(), 'Export')]")
     private WebElement menuExport;
 
-    @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62")
+    @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62']")
     private WebElement menuEventsChain2;
 
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
@@ -49,6 +48,9 @@ public class MainPage extends BasePage {
 
     @FindBy(xpath = "//p[contains (text(), 'Init')]/parent::a")
     private WebElement init;
+
+    @FindBy(xpath = "//p[contains(text(), 'Chevron')]")
+    private WebElement menuChevron;
 
     @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
     private WebElement menuArithmeticInline;
@@ -114,9 +116,9 @@ public class MainPage extends BasePage {
         return new PlaceholderPage(getDriver());
     }
 
-    public BoardPage clickMenuBoard(){
+    public BoardBoardPage clickMenuBoard(){
         clickMenu(menuBoard);
-        return new BoardPage(getDriver());
+        return new BoardBoardPage(getDriver());
     }
 
     public PlatformFuncPage clickMenuPlatformFunctions() {
@@ -127,6 +129,10 @@ public class MainPage extends BasePage {
     public InitPage clickMenuInit() {
         clickMenu(init);
         return new InitPage(getDriver());
+    }
+    public ChevronPage clickMenuChevron() {
+        clickMenu(menuChevron);
+        return new ChevronPage(getDriver());
     }
     public ArithmeticInlinePage clickMenuArithmeticInline() {
         clickMenu(menuArithmeticInline);
