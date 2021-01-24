@@ -1,4 +1,9 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
+
+import model.CalendarEditPage;
+import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,8 +20,10 @@ import runner.type.RunType;
 public class EntityCalendarTest extends BaseTest {
 
     private static final String STRING = UUID.randomUUID().toString();
-    private static final int NUMBER = 25;
-    private static final double NUMBER1 = 56.23;
+    private static final String NUMBER = "25";
+    private static final String NUMBER1 = "56.23";
+    private static final String DATE = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+    private static final String DATE_TIME = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
     private static final String TEXT_COMMENTS = "DON'T WAOORY, BE HAPPY!";
     private static final String TITLE_FIELD = UUID.randomUUID().toString();
     private static final String TITLE_FIELD_NEW = UUID.randomUUID().toString();
@@ -24,41 +31,18 @@ public class EntityCalendarTest extends BaseTest {
     @Test
     public void newCalendar() throws InterruptedException {
 
-        WebDriver driver = getDriver();
+        MainPage mainPage = new MainPage(getDriver());
 
-        WebElement calendar = driver.findElement(By.xpath("//p[contains(text(),'Calendar')]"));
-        ProjectUtils.click(driver, calendar);
+        CalendarEditPage calendarEditPage = mainPage.clickMenuCalendar().clickNewFolder();
 
-        WebElement newCalendar = driver.findElement(By.xpath("//div[@class='card-icon']/i"));
-        newCalendar.click();
+        calendarEditPage
+                .sendKeys(STRING, NUMBER, NUMBER1, DATE)
+                .clickDataTime()
+                .clickSaveButton()
+                .clickThisList();
 
-        WebElement titleElement = driver.findElement(By.xpath("//input[contains(@name, 'string')]"));
-        titleElement.sendKeys(STRING);
-
-        WebElement numberElement = driver.findElement(By.xpath("//input[contains(@name, 'int')]"));
-        numberElement.sendKeys(String.valueOf(NUMBER));
-
-        WebElement number1Element = driver.findElement(By.xpath("//input[contains(@name, 'decimal')]"));
-        number1Element.sendKeys(String.valueOf(NUMBER1));
-
-        WebElement dateElement = driver.findElement(By.xpath("//input[contains(@name, 'date')]"));
-        dateElement.click();
-        Actions actions = new Actions(driver);
-        actions.moveToElement(dateElement).build().perform();
-
-        WebElement dateTimeElement = driver.findElement(By.xpath("//input[contains(@name, 'datetime')]"));
-        dateTimeElement.click();
-        Actions actions1 = new Actions(driver);
-        actions1.moveToElement(dateTimeElement).build().perform();
-
-        WebElement submit = driver.findElement(By.xpath("//button[text() = 'Save']"));
-        ProjectUtils.click(driver, submit);
-
-        WebElement listElement =
-                getWebDriverWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//div[2]/div[1]//div[1]/div/ul/li[2]/a")));
-        listElement.click();
-
-        driver.findElement(By.xpath("//div[contains(text(), '" + STRING + "')]"));
+        Assert.assertTrue(getDriver().findElement(By.xpath("//div[contains(text(), '" + STRING + "')]")).isDisplayed());
+        Assert.assertTrue(getDriver().findElement(By.xpath("//tr[@data-index='0']//i[contains(@class, 'fa fa-check-square-o')]")).isDisplayed());
     }
 
     @Test(dependsOnMethods = "newCalendar")

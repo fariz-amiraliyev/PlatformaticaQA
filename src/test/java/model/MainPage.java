@@ -55,6 +55,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
     private WebElement menuArithmeticInline;
 
+    @FindBy(xpath = "//p[contains(text(),'Calendar')]")
+    private WebElement menuCalendar;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -138,4 +141,9 @@ public class MainPage extends BasePage {
         clickMenu(menuArithmeticInline);
         return new ArithmeticInlinePage(getDriver());
     }
+    public CalendarPage clickMenuCalendar() {
+        clickMenu(menuCalendar);
+        return new CalendarPage(getDriver());
+    }
+
 }
