@@ -46,9 +46,12 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Board')]")
     private WebElement menuBoard;
 
+    @FindBy(xpath = "//p[contains (text(), 'Init')]/parent::a")
+    private WebElement init;
+
     @FindBy(xpath = "//p[contains(text(), 'Chevron')]")
     private WebElement menuChevron;
-    
+
     @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
     private WebElement menuArithmeticInline;
 
@@ -123,6 +126,10 @@ public class MainPage extends BasePage {
         return new PlatformFuncPage(getDriver());
     }
 
+    public InitPage clickMenuInit() {
+        clickMenu(init);
+        return new InitPage(getDriver());
+    }
     public ChevronPage clickMenuChevron() {
         clickMenu(menuChevron);
         return new ChevronPage(getDriver());
