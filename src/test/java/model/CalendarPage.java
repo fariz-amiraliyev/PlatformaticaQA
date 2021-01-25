@@ -8,7 +8,7 @@ import runner.ProjectUtils;
 import java.time.LocalDate;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class CalendarPage extends MainPage{
+public class CalendarPage extends BasePage{
 
     public static final String RANDOM_DAY = String.format("%02d", ThreadLocalRandom.current().nextInt(1, 27 + 1));
     private static final LocalDate TODAY = LocalDate.now();

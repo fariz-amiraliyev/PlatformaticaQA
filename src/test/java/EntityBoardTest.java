@@ -21,9 +21,9 @@ public class EntityBoardTest extends BaseTest {
     private static final String DONE = "Done";
     private static final String ON_TRACK = "On track";
     private static final String APP_USER = "apptester1@tester.com";
-    String dateForValidation;
-    String dateTimeForValidation;
-    String time;
+    private String dateForValidation;
+    private String dateTimeForValidation;
+    private String time;
     CalendarPage calendar = new CalendarPage(getDriver());
 
     @Test
