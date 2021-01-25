@@ -5,8 +5,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 import runner.ProjectUtils;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class BoardEditPage extends BaseEditPage<BoardPage> {
 
@@ -72,8 +70,8 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
     }
 
     public String[] getCreatedTime() {
-        String[] b;
-        return b = time.getText().split(" ");
+      //  String[] b;
+        return  time.getText().split(" ");
     }
 
     public BoardEditPage fillform(String status, String text,String number,String decimal,String user) {
@@ -83,7 +81,7 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
         ProjectUtils.fill(getWait(), intInput, number);
         ProjectUtils.fill(getWait(), decimalInput, decimal);
 
-        CalendarPage calendar = new CalendarPage(getDriver());
+        CalendarEntityPage calendar = new CalendarEntityPage(getDriver());
         dateTimePlaceholder.click();
         calendar.clickOnCalendarDate(getDriver());
 

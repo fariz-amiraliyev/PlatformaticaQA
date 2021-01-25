@@ -8,7 +8,7 @@ import runner.ProjectUtils;
 import java.time.LocalDate;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class CalendarPage extends BasePage{
+public class CalendarEntityPage extends BasePage{
 
     public static final String RANDOM_DAY = String.format("%02d", ThreadLocalRandom.current().nextInt(1, 27 + 1));
     private static final LocalDate TODAY = LocalDate.now();
@@ -17,7 +17,7 @@ public class CalendarPage extends BasePage{
     private static final String CURRENT_YEAR = ARR_OF_DATA[0];
     private static final String CURRENT_MONTH = ARR_OF_DATA[1];
 
-    public CalendarPage (WebDriver driver) {
+    public CalendarEntityPage(WebDriver driver) {
         super(driver);
     }
 
@@ -27,7 +27,7 @@ public class CalendarPage extends BasePage{
          ProjectUtils.click(getDriver(),  driver.findElement(By.xpath(String.format
          ("//td[@data-day = '%1$s%2$s%3$s%2$s%4$s']", CURRENT_MONTH, "/", RANDOM_DAY, CURRENT_YEAR))));
 
-         };
+         }
 
     public  String getRandomDay() {
         return RANDOM_DAY;

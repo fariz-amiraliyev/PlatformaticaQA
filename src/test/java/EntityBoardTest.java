@@ -26,7 +26,7 @@ public class EntityBoardTest extends BaseTest {
     private String dateForValidation;
     private String dateTimeForValidation;
     private String time;
-    CalendarPage calendar = new CalendarPage(getDriver());
+    CalendarEntityPage calendar = new CalendarEntityPage(getDriver());
 
     @Test
     public void inputValidationTest() {
