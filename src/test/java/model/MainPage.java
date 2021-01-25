@@ -58,6 +58,10 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(), 'Reference values')]")
     private WebElement menuReferenceValues;
 
+    @FindBy(xpath = "//p[contains(text(),'Calendar')]")
+    private WebElement menuCalendar;
+
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -145,5 +149,9 @@ public class MainPage extends BasePage {
     public ReferenceValuesPage clickMenuReferenceValues() {
         clickMenu(menuReferenceValues);
         return new ReferenceValuesPage(getDriver());
+    }
+    public CalendarPage clickMenuCalendar() {
+        clickMenu(menuCalendar);
+        return new CalendarPage(getDriver());
     }
 }
