@@ -1,7 +1,4 @@
-import model.BoardListPage;
-import model.BoardPage;
-import model.MainPage;
-
+import model.*;
 
 
 import org.testng.Assert;
@@ -88,7 +85,7 @@ public class EntityBoardTest extends BaseTest {
     @Test(dependsOnMethods = {"manipulateTest1"})
     public void manipulateTest2() {
 
-        List<String> expectedValues = Arrays.asList(DONE, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
+        List<String> expectedValues = Arrays.asList(DONE, TEXT_EDIT, NUMBER_EDIT, DECIMAL_EDIT, dateForValidation, dateTimeForValidation, "", APP_USER);
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickMenuBoard()
