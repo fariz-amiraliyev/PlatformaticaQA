@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public abstract class BaseEmbededPage<TablePage> extends MainPage {
     private static final String TBODY_XPATH = "//table[@class='pa-entity-table']/tbody";
     private static final String DATA_ROW = "data-row";
 
-    private static final By BY_XPATH_TDS = By.xpath("//td");
+    private static final By BY_XPATH_TDS = By.tagName("td");
     private static final By BY_XPATH_DELETE_X = By.xpath("//td[@class='pa-row-delete-btn-col']/div/i");
 
     @FindBy (xpath = TBODY_XPATH)

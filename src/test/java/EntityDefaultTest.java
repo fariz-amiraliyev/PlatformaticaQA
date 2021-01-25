@@ -3,10 +3,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import model.DefaultEditPage;
-import model.DefaultPage;
-import model.MainPage;
-import model.RecycleBinPage;
+import model.*;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.Test;
 import org.testng.Assert;
@@ -45,16 +42,7 @@ public class EntityDefaultTest extends BaseTest {
         }
     }
 
-    private static final By BY_EMBEDD_STRING = By.xpath("//td/textarea[@id='t-11-r-1-string']");
-    private static final By BY_EMBEDD_TEXT = By.xpath("//td/textarea[@id='t-11-r-1-text']");
-    private static final By BY_EMBEDD_INT = By.xpath("//td/textarea[@id='t-11-r-1-int']");
-    private static final By BY_EMBEDD_DECIMAL = By.xpath("//td/textarea[@id='t-11-r-1-decimal']");
-    private static final By BY_EMBEDD_DATE = By.id("t-11-r-1-date");
-    private static final By BY_EMBEDD_DATETIME = By.id("t-11-r-1-datetime");
-    private static final By BY_EMBEDD_USER = By.xpath("//select[@id='t-11-r-1-user']/option[@value='0']");
-    private static final By BY_SAVE_BUTTON = By.xpath("//button[.='Save']");
     private static final By BY_RECORD_HAMBURGER_MENU = By.xpath("//button[contains(@data-toggle, 'dropdown')] ");
-    private static final By BY_EMBEDD_DROPDOWN = By.xpath("//select[@id='t-11-r-1-user']");
     private static final By BY_VIEW = By.xpath("//a[text() = 'view']");
 
     private final FieldValues defaultValues = new FieldValues(
@@ -120,28 +108,13 @@ public class EntityDefaultTest extends BaseTest {
                    changedDefaultValues.fieldDate, changedDefaultValues.fieldDateTime};
 
     private final String[] CHANGED_EMBEDD_VALUES = {changedEmbedDValues.lineNumber, changedEmbedDValues.fieldString,
-                   changedEmbedDValues.fieldText, changedEmbedDValues.fieldInt, changedEmbedDValues.fieldDecimal,
-                   changedEmbedDValues.fieldDate, changedEmbedDValues.fieldDateTime, null, null, changedEmbedDValues.fieldUser};
+            changedEmbedDValues.fieldText, changedEmbedDValues.fieldInt, changedEmbedDValues.fieldDecimal,
+            changedEmbedDValues.fieldDate, changedEmbedDValues.fieldDateTime, null, null, changedEmbedDValues.fieldUser};
 
-    private void assertAndReplace(WebDriver driver, By by, String oldValue, String newValue, boolean isEmbedD ) {
-        WebElement element = driver.findElement(by);
-        if (isEmbedD) {
-            Assert.assertEquals(element.getText(), oldValue);
-            element.click();
-        } else {
-            Assert.assertEquals(element.getAttribute("value"), oldValue);
-        }
-        element.clear();
-        element.sendKeys(newValue);
-        element.sendKeys("\t");
-    }
-
-    private void assertAndReplaceFieldUser(WebDriver driver, String oldValue, String newValue, By byUser, By bySelect ){
-        WebElement fieldUser = driver.findElement(byUser);
-        Assert.assertEquals(fieldUser.getText(), oldValue);
-        Select userSelect = new Select(driver.findElement(bySelect));
-        userSelect.selectByVisibleText(newValue);
-    }
+    private final List<String> DEFAULT_EMBEDED_VALUES =
+            new ArrayList<>(Arrays.asList(defaultEmbeDValues.lineNumber, defaultEmbeDValues.fieldString,
+            defaultEmbeDValues.fieldText, defaultEmbeDValues.fieldInt, defaultEmbeDValues.fieldDecimal,
+            defaultEmbeDValues.fieldDate, defaultEmbeDValues.fieldDateTime, defaultEmbeDValues.fieldUser));
 
     private void selectFromRecordMenu (WebDriver driver, By byFunction) {
 
@@ -172,26 +145,23 @@ public class EntityDefaultTest extends BaseTest {
 
         Assert.assertEquals(defaultEditPage.toList(), DEFAULT_VALUES);
 
-
         defaultEditPage.sendKeys(changedDefaultValues.fieldString, changedDefaultValues.fieldText, changedDefaultValues.fieldInt,
                 changedDefaultValues.fieldDecimal, changedDefaultValues.fieldDate, changedDefaultValues.fieldDateTime, changedDefaultValues.fieldUser);
 
-        WebElement createEmbedD = driver.findElement(By.xpath("//button[@data-table_id='11']"));
-        ProjectUtils.click(driver, createEmbedD);
+        DefaultEmbededPage embededTable = defaultEditPage
+                .getEmbededTable()
+                .clickNewEmbededRow();
 
-        WebElement lineNumber = driver.findElement(By.xpath("//input[@id='t-undefined-r-1-_line_number']"));
-        Assert.assertEquals(lineNumber.getAttribute("data-row"), changedEmbedDValues.lineNumber);
+        Assert.assertEquals(embededTable.getLineNumber(0), changedEmbedDValues.lineNumber);
+        Assert.assertEquals(embededTable.getRow(0), DEFAULT_EMBEDED_VALUES);
 
-        assertAndReplace(driver, BY_EMBEDD_STRING, defaultEmbeDValues.fieldString, changedEmbedDValues.fieldString, false);
-        assertAndReplace(driver, BY_EMBEDD_TEXT, defaultEmbeDValues.fieldText, changedEmbedDValues.fieldText, false);
-        assertAndReplace(driver, BY_EMBEDD_INT, defaultEmbeDValues.fieldInt, changedEmbedDValues.fieldInt, false);
-        assertAndReplace(driver, BY_EMBEDD_DECIMAL, defaultEmbeDValues.fieldDecimal, changedEmbedDValues.fieldDecimal, false);
-        assertAndReplace(driver, BY_EMBEDD_DATE, defaultEmbeDValues.fieldDate, changedEmbedDValues.fieldDate, true);
-        assertAndReplace(driver, BY_EMBEDD_DATETIME, defaultEmbeDValues.fieldDateTime, changedEmbedDValues.fieldDateTime, true);
-        assertAndReplaceFieldUser(driver,  defaultEmbeDValues.fieldUser,changedEmbedDValues.fieldUser, BY_EMBEDD_USER, BY_EMBEDD_DROPDOWN);
+        embededTable.sendKeys(0, changedEmbedDValues.fieldString,
+                changedEmbedDValues.fieldText, changedEmbedDValues.fieldInt, changedEmbedDValues.fieldDecimal,
+                changedEmbedDValues.fieldDate, changedEmbedDValues.fieldDateTime, changedEmbedDValues.fieldUser);
 
-        WebElement saveBtn = driver.findElement(BY_SAVE_BUTTON);
-        ProjectUtils.click(driver, saveBtn);
+        defaultEditPage.clickSaveButton();
+
+//-----------------------------------------------------------------
 
         selectFromRecordMenu(driver, BY_VIEW);
 
