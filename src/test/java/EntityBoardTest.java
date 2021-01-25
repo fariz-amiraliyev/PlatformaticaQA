@@ -53,7 +53,7 @@ public class EntityBoardTest extends BaseTest {
                 .clickMenuBoard();
 
         Assert.assertEquals(boardBoardPage.getPendingItemsCount(), 1);
-        Assert.assertEquals(boardBoardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
+        Assert.assertEquals(boardBoardPage.getPendingText(), String.format("1%s4%s1%s4%s2%s", CURRENT_MONTH, CURRENT_YEAR, RANDOM_DAY, '/'));
     }
 
     @Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})
