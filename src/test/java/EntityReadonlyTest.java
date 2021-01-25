@@ -9,6 +9,7 @@ import runner.ProjectUtils;
 
 public class EntityReadonlyTest extends BaseTest {
 
+    @Ignore
     @Test
     public void verifylyListView() {
         WebDriver driver = getDriver();
