@@ -32,7 +32,7 @@ public class EntityBoardTest extends BaseTest {
     @Test
     public void inputValidationTest() {
 
-        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
+        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, String.format("%1$s%4$s%4$s%1$s%4$s%2$s", CURRENT_MONTH, CURRENT_YEAR, RANDOM_DAY, '/'), "", "", APP_USER);
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickMenuBoard()
@@ -53,7 +53,7 @@ public class EntityBoardTest extends BaseTest {
                 .clickMenuBoard();
 
         Assert.assertEquals(boardBoardPage.getPendingItemsCount(), 1);
-        Assert.assertEquals(boardBoardPage.getPendingText(), String.format("1%s4%s1%s4%s2%s", CURRENT_MONTH, CURRENT_YEAR, RANDOM_DAY, '/'));
+        Assert.assertEquals(boardBoardPage.getPendingText(), String.format("%1$s%4$s%4$s%1$s%4$s%2$s", CURRENT_MONTH, CURRENT_YEAR, RANDOM_DAY, '/'));
     }
 
     @Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})
