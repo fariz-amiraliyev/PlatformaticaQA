@@ -1,7 +1,8 @@
 import model.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import runner.BaseTest;
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import runner.ProjectUtils;
@@ -46,10 +47,24 @@ public class EntityChevronTest extends BaseTest {
                 .clickViewButton(xpath)
                 .getColumn();
     }
-    @Test
-    public void findChevron() throws InterruptedException {
 
-        WebDriver driver = ProjectUtils.loginProcedure(getDriver());
+    @Test(dependsOnMethods = "createNewRecord")
+    public void deleteRecord() {
+
+        Assert.assertEquals(new MainPage(getDriver())
+                .clickMenuChevron()
+                .deleteRow()
+                .getRowCount(), 0);
+
+        Assert.assertEquals(new MainPage(getDriver())
+                .clickRecycleBin()
+                .getCellValue(0, 2), expectedResults.get(1));
+    }
+
+    @Test
+    public void findChevron() {
+
+        WebDriver driver = getDriver();
 
         WebElement clickChevron = driver.findElement(By.xpath("//p[contains(text(),'Chevron')]"));
         ProjectUtils.click(driver, clickChevron);
@@ -86,8 +101,6 @@ public class EntityChevronTest extends BaseTest {
 
         Assert.assertEquals(driver.findElement(By.xpath("//div[contains(text(),'Fulfillment')]")).getText(),
                 "Fulfillment");
-
-        WebDriverWait wait = new WebDriverWait(driver, 6);
 
         WebElement findFulfillmentAgain = driver.findElement(By.xpath("//td//div[contains(text(), 'Fulfillment')]"));
         ProjectUtils.click(driver, findFulfillmentAgain);
