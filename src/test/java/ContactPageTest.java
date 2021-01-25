@@ -23,7 +23,7 @@ import java.util.List;
 @Run(run = RunType.Multiple)
 public class ContactPageTest extends BaseTest {
 
-    private static final String CURRENT_DATE = String.valueOf(LocalDate.now(ZoneId.of("Europe/Warsaw")));
+    private static final String CURRENT_DATE = String.valueOf(LocalDate.now(ZoneId.of("Europe/London")));
     private static final String MESSAGE = RandomStringUtils.randomAlphanumeric(20);
     private static final String[] FIELD_INPUTS = {"", "Help", "John Johnson", "john@gmail.com", MESSAGE, CURRENT_DATE, "Submitted"};
     private static final By SUBJECT_LINE = By.xpath("//input[@id='subject']");
