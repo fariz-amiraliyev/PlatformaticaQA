@@ -57,8 +57,7 @@ public class EntityArithmeticInTest extends BaseTest {
 
         Assert.assertEquals(arithmeticInlinePage.getRowCount(), 1);
         Assert.assertEquals(arithmeticInlinePage.getRow(0), expectedValues);
-        Assert.assertEquals(arithmeticInlinePage.getRowEntityIcon(0).getAttribute("class"),
-                "fa fa-check-square-o");
+        Assert.assertEquals(arithmeticInlinePage.getRowIconClass(0), AppConstant.RECORD_ICON_CLASS);
     }
 
     @Test(dependsOnMethods = "createRecordTest")
