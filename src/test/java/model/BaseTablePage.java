@@ -53,8 +53,8 @@ public abstract class BaseTablePage<TablePage, EditPage> extends MainPage {
         }
     }
 
-    public WebElement getRowEntityIcon(int rowNumber) {
-        return getRows().get(rowNumber).findElement(By.cssSelector("td > i"));
+    public String getRowIconClass(int rowNumber) {
+        return getRows().get(rowNumber).findElement(By.cssSelector("td > i")).getAttribute("class");
     }
 
     public List<String> getRow(int rowNumber) {

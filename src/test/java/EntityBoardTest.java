@@ -1,12 +1,20 @@
-import java.util.*;
+import model.BoardListPage;
+import model.BoardPage;
+import model.MainPage;
 
-import model.*;
+
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.type.Run;
 import runner.type.RunType;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @Run(run = RunType.Multiple)
 public class EntityBoardTest extends BaseTest {
@@ -58,7 +66,7 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(boardPage.getPendingText(), String.format("%s %s %s %s %5$s %6$s 8", PENDING, TEXT, NUMBER, DECIMAL, dateForValidation, dateTimeForValidation));
     }
 
-    @Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})
+    @Test(dependsOnMethods = {"viewRecords"})
     public void manipulateTest1() {
 
 
@@ -78,6 +86,48 @@ public class EntityBoardTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = {"manipulateTest1"})
+    public void manipulateTest2() {
+
+        List<String> expectedValues = Arrays.asList(DONE, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
+
+        BoardListPage boardListPage = new MainPage(getDriver())
+                .clickMenuBoard()
+                .moveFromOntrackToDone()
+                .clickListButton();
+
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getRow(0), expectedValues);
+    }
+
+    @Test(dependsOnMethods = {"manipulateTest2"})
+    public void manipulateTest3() {
+
+        List<String> expectedValues = Arrays.asList(ON_TRACK, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
+
+        BoardListPage boardListPage = new MainPage(getDriver())
+                .clickMenuBoard()
+                .moveFromDoneToOnTrack()
+                .clickListButton();
+
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getRow(0), expectedValues);
+    }
+
+    @Test(dependsOnMethods = {"manipulateTest3"})
+    public void manipulateTest4() {
+
+        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
+
+        BoardListPage boardListPage = new MainPage(getDriver())
+                .clickMenuBoard()
+                .moveFromOnTrackToPending()
+                .clickListButton();
+
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getRow(0), expectedValues);
+    }
+
+    @Test(dependsOnMethods = {"manipulateTest4"})
     public void editBoard() {
 
         List<String> expectedValues = Arrays.asList(ON_TRACK, TEXT_EDIT, NUMBER_EDIT, DECIMAL_EDIT, dateForValidation, dateTimeForValidation, "", APP_USER);

@@ -42,8 +42,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
 
         Assert.assertEquals(platformFuncPage.getRowCount(), 1);
         Assert.assertEquals(platformFuncPage.getRow(0), expectedValues);
-        Assert.assertEquals(platformFuncPage.getRowEntityIcon(0).getAttribute("class"),
-                "fa fa-check-square-o");
+        Assert.assertEquals(platformFuncPage.getRowIconClass(0), AppConstant.RECORD_ICON_CLASS);
     }
 
     @Test(dependsOnMethods = "createRecordTest")
@@ -59,8 +58,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
 
         Assert.assertEquals(platformFuncPage.getRowCount(), 1);
         Assert.assertEquals(platformFuncPage.getRow(0), expectedValues);
-        Assert.assertEquals(platformFuncPage.getRowEntityIcon(0).getAttribute("class"),
-                "fa fa-check-square-o");
+        Assert.assertEquals(platformFuncPage.getRowIconClass(0), AppConstant.RECORD_ICON_CLASS);
     }
 
     @Test(dependsOnMethods = "editRecordTest")
@@ -154,7 +152,7 @@ public class EntityPlatformFunctionsTest extends BaseTest {
 
         Assert.assertEquals(platformFuncPage.getRowCount(), 1);
         Assert.assertEquals(platformFuncPage.getRow(0), expectedValues);
-        Assert.assertEquals(platformFuncPage.getRowEntityIcon(0).getAttribute("class"), "fa fa-pencil");
+        Assert.assertEquals(platformFuncPage.getRowIconClass(0), AppConstant.DRAFT_ICON_CLASS);
 
         platformFuncPage.deleteRow();
     }
