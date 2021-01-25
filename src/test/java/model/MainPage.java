@@ -55,6 +55,9 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(), 'Arithmetic Inline')]")
     private WebElement menuArithmeticInline;
 
+    @FindBy(xpath = "//p[contains(text(), 'Reference values')]")
+    private WebElement menuReferenceValues;
+
     @FindBy(xpath = "//p[contains(text(),'Calendar')]")
     private WebElement menuCalendar;
 
@@ -103,11 +106,9 @@ public class MainPage extends BasePage {
         return new ExportPage(getDriver());
     }
 
-    public Chain1Page clickMenuEventsChain1(){
-        WebDriver driver = getDriver();
-        ProjectUtils.scroll(driver,menuEventsChain1);
-        ProjectUtils.click(driver,menuEventsChain1);
-        return new Chain1Page(driver);
+    public Chain1Page clickMenuEventsChain1() {
+        clickMenu(menuEventsChain1);
+        return new Chain1Page(getDriver());
     }
 
     public DefaultPage clickMenuDefault() {
@@ -115,14 +116,14 @@ public class MainPage extends BasePage {
         return new DefaultPage(getDriver());
     }
 
-    public PlaceholderPage clickMenuPlaceholder(){
+    public PlaceholderPage clickMenuPlaceholder() {
         clickMenu(menuPlaceholder);
         return new PlaceholderPage(getDriver());
     }
 
-    public BoardBoardPage clickMenuBoard(){
+    public BoardPage clickMenuBoard() {
         clickMenu(menuBoard);
-        return new BoardBoardPage(getDriver());
+        return new BoardPage(getDriver());
     }
 
     public PlatformFuncPage clickMenuPlatformFunctions() {
@@ -134,13 +135,20 @@ public class MainPage extends BasePage {
         clickMenu(init);
         return new InitPage(getDriver());
     }
+
     public ChevronPage clickMenuChevron() {
         clickMenu(menuChevron);
         return new ChevronPage(getDriver());
     }
+
     public ArithmeticInlinePage clickMenuArithmeticInline() {
         clickMenu(menuArithmeticInline);
         return new ArithmeticInlinePage(getDriver());
+    }
+
+    public ReferenceValuesPage clickMenuReferenceValues() {
+        clickMenu(menuReferenceValues);
+        return new ReferenceValuesPage(getDriver());
     }
     public CalendarPage clickMenuCalendar() {
         clickMenu(menuCalendar);
