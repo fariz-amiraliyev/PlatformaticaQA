@@ -1,15 +1,13 @@
 import java.util.*;
 
-import model.BoardBoardPage;
-import model.BoardListPage;
-import model.MainPage;
+
+import model.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.type.Run;
 import runner.type.RunType;
 
-import java.time.LocalDate;
 
 @Run(run = RunType.Multiple)
 public class EntityBoardTest extends BaseTest {
@@ -21,18 +19,9 @@ public class EntityBoardTest extends BaseTest {
     private static final String DONE = "Done";
     private static final String ON_TRACK = "On track";
     private static final String APP_USER = "apptester1@tester.com";
-    private static final LocalDate TODAY = LocalDate.now();
-    private static final String OUTPUT = TODAY.toString();
-    private static final String[] ARR_OF_DATA = OUTPUT.split("-", 3);
-    private static final String CURRENT_YEAR = ARR_OF_DATA[0];
-    private static final String CURRENT_MONTH = ARR_OF_DATA[1];
-    Random generator = new Random();
-    private final String RANDOM_DAY = String.format("%02d", generator.nextInt(27) + 1);
 
     @Test
     public void inputValidationTest() {
-
-        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, String.format("%1$s%4$s%4$s%1$s%4$s%2$s", CURRENT_MONTH, CURRENT_YEAR, RANDOM_DAY, '/'), "", "", APP_USER);
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickMenuBoard()
@@ -40,6 +29,11 @@ public class EntityBoardTest extends BaseTest {
                 .fillform(PENDING, TEXT, NUMBER, DECIMAL, APP_USER)
                 .clickSaveDraftButton()
                 .clickListButton();
+
+        CalendarPage calendar = new CalendarPage(getDriver());
+        String dateForValidation = String.format("%1$s%4$s%3$s%4$s%2$s", calendar.getRandomDay() , calendar.getCurrentYear(), calendar.getCurrentMonth(), '/');
+        String dateTimeForValidation= String.format("%1$s %2$s", dateForValidation, new BoardEditPage(getDriver()).getCreatedTime()[1]);
+        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, dateForValidation, dateTimeForValidation,"",  APP_USER);
 
         Assert.assertEquals(boardListPage.getRowCount(), 1);
         Assert.assertEquals(boardListPage.getRow(0), expectedValues);
@@ -53,7 +47,7 @@ public class EntityBoardTest extends BaseTest {
                 .clickMenuBoard();
 
         Assert.assertEquals(boardBoardPage.getPendingItemsCount(), 1);
-        Assert.assertEquals(boardBoardPage.getPendingText(), String.format("%1$s%4$s%4$s%1$s%4$s%2$s", CURRENT_MONTH, CURRENT_YEAR, RANDOM_DAY, '/'));
+        Assert.assertEquals(boardBoardPage.getPendingText(), String.format("%s %s %s %s 8", PENDING, TEXT, NUMBER, DECIMAL));
     }
 
     @Test(dependsOnMethods = {"inputValidationTest", "viewRecords"})

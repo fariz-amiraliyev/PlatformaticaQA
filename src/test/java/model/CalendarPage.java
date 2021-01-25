@@ -2,6 +2,8 @@ package model;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import runner.ProjectUtils;
 
 import java.time.LocalDate;
@@ -9,12 +11,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CalendarPage extends BoardEditPage{
 
-    private static final String RANDOM_DAY = String.format("%02d", ThreadLocalRandom.current().nextInt(1, 27 + 1));
+    public static final String RANDOM_DAY = String.format("%02d", ThreadLocalRandom.current().nextInt(1, 27 + 1));
     private static final LocalDate TODAY = LocalDate.now();
     private static final String OUTPUT = TODAY.toString();
     private static final String[] ARR_OF_DATA = OUTPUT.split("-", 3);
     private static final String CURRENT_YEAR = ARR_OF_DATA[0];
     private static final String CURRENT_MONTH = ARR_OF_DATA[1];
+  //  private static final String CREATED_TIME = .findElement(By.xpath())
 
     public CalendarPage (WebDriver driver) {
         super(driver);
@@ -27,15 +30,16 @@ public class CalendarPage extends BoardEditPage{
 
          };
 
-    private  String getRandomDay() {
+    public  String getRandomDay() {
         return RANDOM_DAY;
     }
 
-    private  String getCurrentYear() {
+    public  String getCurrentYear() {
         return CURRENT_YEAR;
     }
 
-    private  String getCurrentMonth() {
+    public  String getCurrentMonth() {
         return CURRENT_MONTH;
     }
+
 }
