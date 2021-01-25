@@ -174,7 +174,7 @@ public class MarketplaceInstanceTest extends BaseTest {
                 (By.xpath("//div[contains(@class,'card-body')]//h4[2]/b"))).getText(), "[[notfound]]");
         resetAccount(driver);
     }
-
+    @Ignore
     @Test(dependsOnMethods = {"instanceUniquenessTest", "instancePasswordTest"})
     public void instanceCreateTest() throws InterruptedException {
         WebDriver driver = getDriver();
@@ -184,7 +184,7 @@ public class MarketplaceInstanceTest extends BaseTest {
         String congrats = driver.findElement(By.xpath("//div[@class='card-body ']/child::div/child::h3[1]")).getText();
         Assert.assertEquals(congrats, "Congratulations! Your instance was successfully created");
     }
-
+    @Ignore
     @Test (dependsOnMethods = "instanceCreateTest")
     public void instanceViewTest() {
         WebDriver driver = getDriver();
@@ -196,7 +196,7 @@ public class MarketplaceInstanceTest extends BaseTest {
             Assert.assertEquals(instance_elements.get(i).getText(), app_values[i]);
         }
     }
-
+    @Ignore
     @Test (dependsOnMethods = "instanceViewTest")
     public void instanceTemplateCancelTest() {
         WebDriver driver = getDriver();
@@ -206,7 +206,7 @@ public class MarketplaceInstanceTest extends BaseTest {
         WebElement record_table = getWebDriverWait().until(ExpectedConditions.presenceOfElementLocated(TABLE));
         Assert.assertTrue(record_table.getText().isEmpty());
     }
-
+    @Ignore
     @Test (dependsOnMethods = "instanceTemplateCancelTest")
     public void instanceTemplateDraftTest() {
         WebDriver driver = getDriver();
@@ -218,7 +218,7 @@ public class MarketplaceInstanceTest extends BaseTest {
         WebElement record_table = getWebDriverWait().until(ExpectedConditions.presenceOfElementLocated(TABLE));
         Assert.assertTrue(record_table.getText().isEmpty());
     }
-
+    @Ignore
     @Test (dependsOnMethods = "instanceTemplateDraftTest")
     public void instanceTemplateSaveTest() {
         WebDriver driver = getDriver();
@@ -230,7 +230,7 @@ public class MarketplaceInstanceTest extends BaseTest {
         WebElement record_table = getWebDriverWait().until(ExpectedConditions.presenceOfElementLocated(TABLE));
         Assert.assertTrue(record_table.getText().isEmpty());
     }
-
+    @Ignore
     @Test (dependsOnMethods = "instanceTemplateSaveTest")
     public void instanceDeleteTest() {
         WebDriver driver = getDriver();
