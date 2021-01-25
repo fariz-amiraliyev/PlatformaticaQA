@@ -68,7 +68,8 @@ public class MarketplaceInstanceTest extends BaseTest {
         String[] template_values =
                 {ProjectUtils.createUUID(), ProjectUtils.createUUID(), time, ProjectUtils.createUUID(), "Own", "0"};
 
-        List<WebElement> template_edit_fields = driver.findElements(By.xpath("//input[@id='title']|//input[@id='author']"));
+        List<WebElement> template_edit_fields = driver.findElements
+                (By.xpath("//input[@id='title']|//input[@id='author']"));
         for (int i = 0; i < 2; i++) {
             template_edit_fields.get(i).clear();
             template_edit_fields.get(i).sendKeys(template_values[i]);
