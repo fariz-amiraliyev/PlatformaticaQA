@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 import runner.ProjectUtils;
 
+public final class BoardEditPage extends BaseEditPage<BoardPage> {
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +16,13 @@ public class BoardEditPage extends BaseEditPage<BoardBoardPage> {
     private WebElement dropDownStatus;
 
     @FindBy(id = "text")
-    private WebElement textPlaceholder;
+    private WebElement textInput;
 
     @FindBy(xpath = "//input[@name='entity_form_data[int]']")
-    private WebElement intPlaceholder;
+    private WebElement intInput;
 
     @FindBy(id = "decimal")
-    private WebElement decimalPlaceholder;
+    private WebElement decimalInput;
 
     @FindBy(id = "date")
     private WebElement datePlaceholder;
@@ -49,17 +50,17 @@ public class BoardEditPage extends BaseEditPage<BoardBoardPage> {
     }
 
     public BoardEditPage fillText (String text) {
-        ProjectUtils.sendKeys(textPlaceholder, text);
+        ProjectUtils.sendKeys(textInput, text);
         return  this;
     }
 
     public BoardEditPage fillInt (String number)  {
-        ProjectUtils.sendKeys(intPlaceholder, number);
+        ProjectUtils.sendKeys(intInput, number);
         return this;
     }
 
     public BoardEditPage fillDecimal (String decimal)  {
-        ProjectUtils.sendKeys(decimalPlaceholder, decimal);
+        ProjectUtils.sendKeys(decimalInput, decimal);
         return this;
     }
 
@@ -78,9 +79,9 @@ public class BoardEditPage extends BaseEditPage<BoardBoardPage> {
     public BoardEditPage fillform(String status, String text,String number,String decimal,String user) {
         Select drop = new Select(dropDownStatus);
         drop.selectByVisibleText(status);
-        ProjectUtils.sendKeys(textPlaceholder, text);
-        ProjectUtils.sendKeys(intPlaceholder, number);
-        ProjectUtils.sendKeys(decimalPlaceholder, decimal);
+        ProjectUtils.fill(getWait(), textInput, text);
+        ProjectUtils.fill(getWait(), intInput, number);
+        ProjectUtils.fill(getWait(), decimalInput, decimal);
 
         CalendarPage calendar = new CalendarPage(getDriver());
         dateTimePlaceholder.click();
@@ -90,14 +91,14 @@ public class BoardEditPage extends BaseEditPage<BoardBoardPage> {
         calendar.clickOnCalendarDate(getDriver());
 
         ProjectUtils.scroll(getDriver(), dropdownUser);
-        ProjectUtils.click(getDriver(),dropdownUser);
+        ProjectUtils.click(getDriver(), dropdownUser);
         Select dropUser = new Select(appTester1);
         dropUser.selectByVisibleText(user);
         return this;
     }
 
     @Override
-    protected BoardBoardPage createPage(){
-        return new BoardBoardPage(getDriver());
+    protected BoardPage createPage() {
+        return new BoardPage(getDriver());
     }
 }
