@@ -43,8 +43,7 @@ public class ContactPageTest extends BaseTest {
         driver.findElement(MESSAGE_LINE).sendKeys(message);
     }
 
-    private void navigateToContactAndCreateNewRecord() {
-        WebDriver driver = getDriver();
+    private void navigateToContactAndCreateNewRecord(WebDriver driver) {
         ProjectUtils.click(driver, getWebDriverWait().until(ExpectedConditions.visibilityOfElementLocated
                 (CONTACT_SUPPORT)));
         ProjectUtils.click(driver, getWebDriverWait().until(ExpectedConditions.visibilityOfElementLocated
@@ -60,9 +59,9 @@ public class ContactPageTest extends BaseTest {
     }
 
     @Test
-    public void successfulContact() throws ParseException, InterruptedException {
+    public void successfulContact() throws ParseException {
         WebDriver driver = getDriver();
-        navigateToContactAndCreateNewRecord();
+        navigateToContactAndCreateNewRecord(driver);
 
         fillContactForm(FIELD_INPUTS[0], FIELD_INPUTS[1], FIELD_INPUTS[2], FIELD_INPUTS[3]);
         ProjectUtils.click(driver, driver.findElement(SAVE_BTN));
