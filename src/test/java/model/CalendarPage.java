@@ -1,6 +1,5 @@
 package model;
 
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
@@ -9,7 +8,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 public final class CalendarPage extends BaseTablePage<CalendarPage, CalendarEditPage> {
 
@@ -30,6 +28,7 @@ public final class CalendarPage extends BaseTablePage<CalendarPage, CalendarEdit
     protected CalendarEditPage createEditPage() {
         return new CalendarEditPage(getDriver());
     }
+
     @Override
     public List<String> getRow(int rowNumber) {
         return getRows().get(rowNumber).findElements(By.tagName("td")).stream()
@@ -42,6 +41,7 @@ public final class CalendarPage extends BaseTablePage<CalendarPage, CalendarEdit
         clickList.click();
         return new CalendarPage(getDriver());
     }
+
     public int getRowCount(){
         return rowList.size();
     }
@@ -53,9 +53,11 @@ public final class CalendarPage extends BaseTablePage<CalendarPage, CalendarEdit
     public String getNumberText(){
         return table.findElement(By.xpath("//tr/td[4]/a/div")).getText();
     }
+
     public String getNumber1Text(){
         return table.findElement(By.xpath("//tr/td[5]/a/div")).getText();
     }
+
     public String getDataText(){
         return table.findElement(By.xpath("//tr/td[6]/a/div")).getText();
     }

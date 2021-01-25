@@ -1,7 +1,6 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
-import model.CalendarEditPage;
 import model.CalendarPage;
 import model.MainPage;
 import org.openqa.selenium.By;
@@ -30,13 +29,9 @@ public class EntityCalendarTest extends BaseTest {
     @Test
     public void newCalendar() {
 
-        MainPage mainPage = new MainPage(getDriver());
-
-        CalendarPage calendarPage = new CalendarPage(getDriver());
-
-        CalendarEditPage calendarEditPage = mainPage.clickMenuCalendar().clickNewFolder();
-
-        calendarEditPage
+        CalendarPage calendarPage = new MainPage(getDriver())
+                .clickMenuCalendar()
+                .clickNewFolder()
                 .sendKeys(STRING, NUMBER, NUMBER1, DATE)
                 .clickDataTime()
                 .clickSaveButton()
@@ -70,7 +65,7 @@ public class EntityCalendarTest extends BaseTest {
         WebElement str =
                 getWebDriverWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='string']")));
         str.clear();
-        ProjectUtils.sendKeys(str,"New Record");
+        ProjectUtils.sendKeys(str, "New Record");
 
         WebElement text = driver.findElement(By.xpath("//textarea[@id='text']"));
         text.clear();
@@ -112,7 +107,7 @@ public class EntityCalendarTest extends BaseTest {
     }
 
     @Test
-    public void newRecord(){
+    public void newRecord() {
         WebDriver driver = getDriver();
 
         WebElement tab = driver.findElement(By.xpath("//p[contains(text(),'Calendar')]"));
@@ -144,7 +139,7 @@ public class EntityCalendarTest extends BaseTest {
 
         setValue(driver, TITLE_FIELD_NEW, "test test test", 256, 0.1);
 
-        WebElement nameString = driver.findElement(By.xpath(String.format("//div[contains(text(),'%s')]" , TITLE_FIELD_NEW)));
+        WebElement nameString = driver.findElement(By.xpath(String.format("//div[contains(text(),'%s')]", TITLE_FIELD_NEW)));
         Assert.assertEquals(nameString.getText(), TITLE_FIELD_NEW);
 
         WebElement nameText = driver.findElement(By.xpath("//div[contains(text(),'test test test')]"));
@@ -157,7 +152,7 @@ public class EntityCalendarTest extends BaseTest {
         Assert.assertEquals(decimalField.getText(), "0.1");
     }
 
-    @Test(dependsOnMethods = {"newRecord" , "editRecord"})
+    @Test(dependsOnMethods = {"newRecord", "editRecord"})
     public void deleteRecord() {
         WebDriver driver = getDriver();
 
@@ -171,7 +166,7 @@ public class EntityCalendarTest extends BaseTest {
         dropdownDelete.click();
 
         WebElement deleteBtn = driver.findElement(By.xpath("//a[contains(text(),'delete')]"));
-        ProjectUtils.click(driver,deleteBtn);
+        ProjectUtils.click(driver, deleteBtn);
 
         WebElement RecycleBin = driver.findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
         RecycleBin.click();
