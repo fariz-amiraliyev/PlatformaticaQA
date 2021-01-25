@@ -85,7 +85,7 @@ public class EntityBoardTest extends BaseTest {
     @Test(dependsOnMethods = {"manipulateTest1"})
     public void manipulateTest2() {
 
-        List<String> expectedValues = Arrays.asList(DONE, TEXT_EDIT, NUMBER_EDIT, DECIMAL_EDIT, dateForValidation, dateTimeForValidation, "", APP_USER);
+        List<String> expectedValues = Arrays.asList(DONE, TEXT, NUMBER, DECIMAL, dateForValidation, dateTimeForValidation, "", APP_USER);
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickMenuBoard()
@@ -99,7 +99,7 @@ public class EntityBoardTest extends BaseTest {
     @Test(dependsOnMethods = {"manipulateTest2"})
     public void manipulateTest3() {
 
-        List<String> expectedValues = Arrays.asList(ON_TRACK, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
+        List<String> expectedValues = Arrays.asList(ON_TRACK, TEXT, NUMBER, DECIMAL, dateForValidation, dateTimeForValidation, "", APP_USER);
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickMenuBoard()
@@ -113,7 +113,7 @@ public class EntityBoardTest extends BaseTest {
     @Test(dependsOnMethods = {"manipulateTest3"})
     public void manipulateTest4() {
 
-        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, "", "", "", APP_USER);
+        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, dateForValidation, dateTimeForValidation, "", APP_USER);
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickMenuBoard()
