@@ -162,8 +162,7 @@ public class MarketplaceInstanceTest extends BaseTest {
         WebDriver driver = getDriver();
 
         createInstance(driver);
-        String congrats = getWebDriverWait().until(ExpectedConditions.visibilityOfElementLocated
-                (By.xpath("//div[contains(@class,'card-body')]//h3[1]"))).getText();
+        String congrats = driver.findElement(By.xpath("//div[@class='card-body ']/child::div/child::h3[1]")).getText();
         Assert.assertEquals(congrats, "Congratulations! Your instance was successfully created");
 
         Assert.assertFalse(getWebDriverWait().until(ExpectedConditions.visibilityOfElementLocated
@@ -180,8 +179,7 @@ public class MarketplaceInstanceTest extends BaseTest {
 
         app_values = createInstance(driver);
         assertInstanceValues(app_values);
-        String congrats = getWebDriverWait().until(ExpectedConditions.visibilityOfElementLocated
-                (By.xpath("//div[contains(@class,'card-body')]//h3[1]"))).getText();
+        String congrats = driver.findElement(By.xpath("//div[@class='card-body ']/child::div/child::h3[1]")).getText();
         Assert.assertEquals(congrats, "Congratulations! Your instance was successfully created");
     }
 
