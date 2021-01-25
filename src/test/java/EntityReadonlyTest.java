@@ -9,9 +9,8 @@ import runner.ProjectUtils;
 
 public class EntityReadonlyTest extends BaseTest {
 
-    @Ignore
     @Test
-    public void verifylyListView() {
+    public void verifyListIsEmptyTest() {
         WebDriver driver = getDriver();
 
         driver.findElement(By.xpath("//p[contains(text(), 'Readonly')]")).click();
