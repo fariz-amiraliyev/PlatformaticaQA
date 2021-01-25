@@ -25,7 +25,6 @@ public final class CalendarEditPage extends BasePage {
     @FindBy(xpath = ("//button[text() = 'Save']"))
     private WebElement buttonSave;
 
-
     public CalendarEditPage(WebDriver driver) {
         super(driver);
     }

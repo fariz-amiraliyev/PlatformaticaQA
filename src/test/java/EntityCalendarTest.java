@@ -47,7 +47,6 @@ public class EntityCalendarTest extends BaseTest {
         Assert.assertEquals(calendarPage.getNumber1Text(), NUMBER1);
         Assert.assertEquals(calendarPage.getDataText(), DATE);
         Assert.assertEquals(calendarPage.getRowCount(), 1);
-        Assert.assertEquals(calendarPage.getRowEntityIcon(0).getAttribute("class"), "fa fa-check-square-o");
     }
 
     @Test(dependsOnMethods = "newCalendar")

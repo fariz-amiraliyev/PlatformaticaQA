@@ -154,5 +154,4 @@ public class MainPage extends BasePage {
         clickMenu(menuCalendar);
         return new CalendarPage(getDriver());
     }
-
 }
