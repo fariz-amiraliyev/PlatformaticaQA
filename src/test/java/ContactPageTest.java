@@ -73,7 +73,7 @@ public class ContactPageTest extends BaseTest {
         List<WebElement> allLines = getDriver().findElements(By.xpath("//td"));
         for (int i = 1; i < allLines.size() - 1; i++) {
             if (i == 5) {
-                Assert.assertEquals(formatDate(FIELD_INPUTS[i]), allLines.get(i).getText());
+                Assert.assertEquals(allLines.get(i).getText(), formatDate(FIELD_INPUTS[i]));
             } else {
                 Assert.assertEquals(allLines.get(i).getText(), FIELD_INPUTS[i]);
             }
