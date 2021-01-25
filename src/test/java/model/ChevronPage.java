@@ -3,7 +3,7 @@ package model;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,10 +31,9 @@ public final class ChevronPage extends BaseTablePage<ChevronPage, ChevronEditPag
         return new ChevronPage(getDriver());
     }
 
-    public ChevronPage getColumn() {
+    public List<String> getColumn() {
         List<WebElement> list = getDriver().findElements(By.xpath("//span[@class='pa-view-field']"));
-        Assert.assertEquals(list.size(), 6 );
-        return this;
-     }
-
+        return list.stream()
+                .map(WebElement::getText).collect(Collectors.toList());
+    }
 }

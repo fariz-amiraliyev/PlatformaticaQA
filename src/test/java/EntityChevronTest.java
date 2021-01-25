@@ -17,7 +17,7 @@ public class EntityChevronTest extends BaseTest {
 
     final String comments = "TEST";
     final String int_ = "11";
-    final String decimal = "0.1";
+    final String decimal = "0.11";
     final  String xpath = "//tbody/tr[1]/td[10]/div[1]/ul[1]/li[1]/a[1]";
 
     SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
@@ -26,7 +26,7 @@ public class EntityChevronTest extends BaseTest {
     SimpleDateFormat Time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     public String DataTime = Time.format(new Date());
 
-    List<String> expectedResults = Arrays.asList("Fulfillment", "TEST", "11", "0.1", Data, DataTime);
+    List<String> expectedResults = Arrays.asList("Fulfillment", "TEST", "11", "0.11", Data, DataTime);
 
     @Test
     public void createNewRecord() {
@@ -41,10 +41,11 @@ public class EntityChevronTest extends BaseTest {
 
     @Test(dependsOnMethods = "createNewRecord")
     public void viewRecord() {
-        ChevronPage page = new MainPage(getDriver())
+        List<String> page = new MainPage(getDriver())
                 .clickMenuChevron()
                 .clickViewButton(xpath)
                 .getColumn();
+        Assert.assertEquals(page, expectedResults);
     }
     @Test
     public void findChevron() throws InterruptedException {
