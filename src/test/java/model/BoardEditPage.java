@@ -5,12 +5,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 import runner.ProjectUtils;
-
-public final class BoardEditPage extends BaseEditPage<BoardPage> {
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardEditPage extends BaseEditPage<BoardBoardPage> {
+public final class BoardEditPage extends BaseEditPage<BoardPage> {
+
+
 
     @FindBy(id = "string")
     private WebElement dropDownStatus;
