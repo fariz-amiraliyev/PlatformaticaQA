@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import runner.BaseTest;
 import runner.ProjectUtils;
@@ -139,7 +140,7 @@ public class MarketplaceInstanceTest extends BaseTest {
         Assert.assertEquals(driver.findElement(By.xpath("//tr/td/i")).getAttribute("class"), "fa fa-pencil");
         resetAccount(driver);
     }
-
+    @Ignore
     @Test
     public void instanceUniquenessTest() throws InterruptedException {
         WebDriver driver = getDriver();
