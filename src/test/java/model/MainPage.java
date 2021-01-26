@@ -3,6 +3,7 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import runner.ProjectUtils;
 
 public class MainPage extends BasePage {
@@ -28,11 +29,17 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(), 'Export')]")
     private WebElement menuExport;
 
-    @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62']")
+    @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=62")
     private WebElement menuEventsChain2;
 
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
     private WebElement menuEventsChain1;
+
+    @FindBy(xpath = "//a[contains(@href, 'id=37')]")
+    private WebElement menuAssign;
+
+    @FindBy(xpath = "//li[@id='pa-menu-item-41']")
+    private WebElement menuMyAssignments;
 
     @FindBy(xpath = "//p[contains (text(), 'Default')]")
     private WebElement menuDefault;
@@ -45,6 +52,9 @@ public class MainPage extends BasePage {
 
     @FindBy(xpath = "//p[contains(text(),'Board')]")
     private WebElement menuBoard;
+
+    @FindBy(xpath = "//p[contains(text(),'Arithmetic Function')]")
+    private WebElement menuArithmeticFunction;
 
     @FindBy(xpath = "//p[contains (text(), 'Init')]/parent::a")
     private WebElement init;
@@ -61,7 +71,6 @@ public class MainPage extends BasePage {
     @FindBy(xpath = "//p[contains(text(),'Calendar')]")
     private WebElement menuCalendar;
 
-
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -72,7 +81,8 @@ public class MainPage extends BasePage {
     }
 
     public String getCurrentUser() {
-        return userProfileButton.getAttribute("textContent").split("\n")[3].trim();
+        String profileButtonText = getWait().until(ExpectedConditions.visibilityOf(userProfileButton)).getText();
+        return profileButtonText.substring(profileButtonText.indexOf(' ') + 1).toLowerCase();
     }
 
     public MainPage resetUserData() {
@@ -81,7 +91,7 @@ public class MainPage extends BasePage {
         return this;
     }
 
-    public RecycleBinPage clickRecycleBin() {
+    public RecycleBinPage clickRecycleBin () {
         ProjectUtils.click(getWait(), recycleBinIcon);
         return new RecycleBinPage(getDriver());
     }
@@ -95,7 +105,7 @@ public class MainPage extends BasePage {
         clickMenu(menuImportValues);
         return new ImportValuesPage(getDriver());
     }
-
+  
     public Chain2Page clickMenuEventsChain2() {
         clickMenu(menuEventsChain2);
         return new Chain2Page(getDriver());
@@ -109,6 +119,16 @@ public class MainPage extends BasePage {
     public Chain1Page clickMenuEventsChain1() {
         clickMenu(menuEventsChain1);
         return new Chain1Page(getDriver());
+    }
+
+    public AssignPage clickMenuAssign() {
+        clickMenu(menuAssign);
+        return new AssignPage(getDriver());
+    }
+
+    public MyAssignmentsPage clickMenuMyAssignments() {
+        clickMenu(menuMyAssignments);
+        return new MyAssignmentsPage(getDriver());
     }
 
     public DefaultPage clickMenuDefault() {
@@ -131,6 +151,11 @@ public class MainPage extends BasePage {
         return new PlatformFuncPage(getDriver());
     }
 
+    public ArithmeticFunctionPage clickMenuArithmeticFunction() {
+        clickMenu(menuArithmeticFunction);
+        return new ArithmeticFunctionPage(getDriver());
+    }
+
     public InitPage clickMenuInit() {
         clickMenu(init);
         return new InitPage(getDriver());
@@ -150,6 +175,7 @@ public class MainPage extends BasePage {
         clickMenu(menuReferenceValues);
         return new ReferenceValuesPage(getDriver());
     }
+
     public CalendarPage clickMenuCalendar() {
         clickMenu(menuCalendar);
         return new CalendarPage(getDriver());
