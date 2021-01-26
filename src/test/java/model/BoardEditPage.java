@@ -85,7 +85,8 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
         ProjectUtils.fill(getWait(), intInput, number);
         ProjectUtils.fill(getWait(), decimalInput, decimal);
 
-        image.sendKeys(System.getProperty("user.home")+ File.separator + "README.md");
+
+        image.sendKeys(System.getProperty("user.dir")+ File.separator + "hqdefault.jpg");
 
         CalendarEntityPage calendar = new CalendarEntityPage(getDriver());
         dateTimePlaceholder.click();
