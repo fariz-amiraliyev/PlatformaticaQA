@@ -6,6 +6,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 import runner.ProjectUtils;
 
+import java.io.File;
+
 public final class BoardEditPage extends BaseEditPage<BoardPage> {
 
 
@@ -83,7 +85,7 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
         ProjectUtils.fill(getWait(), intInput, number);
         ProjectUtils.fill(getWait(), decimalInput, decimal);
 
-        image.sendKeys(System.getProperty("/home/travis/build/SergeiDemyanenko/PlatformaticaQA")+  "/README.md" );
+        image.sendKeys(System.getProperty("user.home")+ File.separator + "README.md");
 
         CalendarEntityPage calendar = new CalendarEntityPage(getDriver());
         dateTimePlaceholder.click();
