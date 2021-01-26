@@ -51,12 +51,13 @@ public class EntityChevronTest extends BaseTest {
     @Test(dependsOnMethods = "createNewRecord")
     public void deleteRecord() {
 
-        Assert.assertEquals(new MainPage(getDriver())
+        ChevronPage chevronPage = new ChevronPage(getDriver());
+        Assert.assertEquals(chevronPage
                 .clickMenuChevron()
                 .deleteRow()
                 .getRowCount(), 0);
 
-        Assert.assertEquals(new MainPage(getDriver())
+        Assert.assertEquals(chevronPage
                 .clickRecycleBin()
                 .getCellValue(0, 2), expectedResults.get(1));
     }
