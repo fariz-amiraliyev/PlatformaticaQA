@@ -83,7 +83,8 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
         ProjectUtils.fill(getWait(), intInput, number);
         ProjectUtils.fill(getWait(), decimalInput, decimal);
 
-        image.sendKeys("C:\\Users\\Dima\\IdeaProjects\\PlatformaticaQARepos\\README.md");
+        image.sendKeys(System.getProperty("user.dir")+  "/README.md" );
+
 
         CalendarEntityPage calendar = new CalendarEntityPage(getDriver());
         dateTimePlaceholder.click();
