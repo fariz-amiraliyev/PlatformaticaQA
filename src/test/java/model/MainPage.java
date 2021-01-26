@@ -34,6 +34,12 @@ public class MainPage extends BasePage {
     @FindBy(css = "#menu-list-parent>ul>li>a[href*='id=61']")
     private WebElement menuEventsChain1;
 
+    @FindBy(xpath = "//a[contains(@href, 'id=37')]")
+    private WebElement menuAssign;
+
+    @FindBy(xpath = "//li[@id='pa-menu-item-41']")
+    private WebElement menuMyAssignments;
+
     @FindBy(xpath = "//p[contains (text(), 'Default')]")
     private WebElement menuDefault;
 
@@ -111,6 +117,16 @@ public class MainPage extends BasePage {
     public Chain1Page clickMenuEventsChain1() {
         clickMenu(menuEventsChain1);
         return new Chain1Page(getDriver());
+    }
+
+    public AssignPage clickMenuAssign() {
+        clickMenu(menuAssign);
+        return new AssignPage(getDriver());
+    }
+
+    public MyAssignmentsPage clickMenuMyAssignments() {
+        clickMenu(menuMyAssignments);
+        return new MyAssignmentsPage(getDriver());
     }
 
     public DefaultPage clickMenuDefault() {
