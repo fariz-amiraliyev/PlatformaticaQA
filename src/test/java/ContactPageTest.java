@@ -1,4 +1,3 @@
-import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,35 +11,33 @@ import runner.type.ProfileType;
 import runner.type.Run;
 import runner.type.RunType;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 
 @Profile(profile = ProfileType.MARKETPLACE)
 @Run(run = RunType.Multiple)
 public class ContactPageTest extends BaseTest {
 
-    private static final String CURRENT_DATE = String.valueOf(LocalDate.now(ZoneId.of("Europe/London")));
+    private static String getDate() {
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd/MM/yyyy");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return dateFormatGmt.format(new Date());
+    }
+
     private static final String MESSAGE = ProjectUtils.createUUID();
-    private static final String[] FIELD_INPUTS = {"Help", "John Johnson", "john@gmail.com", MESSAGE, CURRENT_DATE, "Submitted"};
-    private static final By SUBJECT_LINE = By.xpath("//input[@id='subject']");
-    private static final By FULL_NAME_LINE = By.xpath("//input[@id='contact_full_name']");
-    private static final By EMAIL_LINE = By.xpath("//input[@id='contact_email']");
-    private static final By MESSAGE_LINE = By.xpath("//textarea[@id='message']");
+    private static final String[] FIELD_INPUTS = {"Help", "John Johnson", "john@gmail.com", MESSAGE, getDate(), "Submitted"};
     private static final By CONTACT_SUPPORT = By.xpath("//i[.='contact_support']");
     private static final By CREATE_NEW_RECORD = By.xpath("//i[.='create_new_folder']");
     private static final By SAVE_BTN = By.xpath("//button[.='Save']");
 
-    private void fillContactForm(String subject, String name, String email, String message) {
-        WebDriver driver = getDriver();
-        driver.findElement(SUBJECT_LINE).sendKeys(subject);
-        driver.findElement(FULL_NAME_LINE).sendKeys(name);
-        driver.findElement(EMAIL_LINE).sendKeys(email);
-        driver.findElement(MESSAGE_LINE).sendKeys(message);
+    private void fillContactForm(WebDriver driver) {
+        List<WebElement> allFields = driver.findElements(By.xpath("//input[@type='text']|//textarea[@id='message']"));
+        for (int i = 0; i < FIELD_INPUTS.length - 2; i++) {
+            allFields.get(i).sendKeys(FIELD_INPUTS[i]);
+        }
     }
 
     private void navigateToContactAndCreateNewRecord(WebDriver driver) {
@@ -50,20 +47,13 @@ public class ContactPageTest extends BaseTest {
                 (CREATE_NEW_RECORD)));
     }
 
-    private String formatDate(String input) throws ParseException {
-        SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = oldFormat.parse(String.valueOf(input));
-        SimpleDateFormat newFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String output = newFormat.format(date);
-        return output;
-    }
 
     @Test
-    public void successfulContact() throws ParseException {
+    public void successfulContact() {
         WebDriver driver = getDriver();
         navigateToContactAndCreateNewRecord(driver);
 
-        fillContactForm(FIELD_INPUTS[0], FIELD_INPUTS[1], FIELD_INPUTS[2], FIELD_INPUTS[3]);
+        fillContactForm(driver);
         ProjectUtils.click(driver, driver.findElement(SAVE_BTN));
 
         List<WebElement> trs = driver.findElements(By.xpath("//table[@id='pa-all-entities-table']/tbody/tr"));
@@ -71,11 +61,7 @@ public class ContactPageTest extends BaseTest {
 
         List<WebElement> allLines = driver.findElements(By.xpath("//tbody//a/div"));
         for (int i = 0; i < allLines.size(); i++) {
-            if (i == 4) {
-                Assert.assertEquals(allLines.get(i).getText(), formatDate(FIELD_INPUTS[i]));
-            } else {
-                Assert.assertEquals(allLines.get(i).getText(), FIELD_INPUTS[i]);
-            }
-        }
+                  Assert.assertEquals(allLines.get(i).getText(), FIELD_INPUTS[i]);
+       }
     }
 }
