@@ -5,7 +5,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import runner.ProjectUtils;
 
-public class ArithmeticInlineEditPage extends BaseEditPage<ArithmeticInlinePage>{
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ArithmeticInlineEditPage extends BaseEditPage<ArithmeticInlinePage> {
 
     @FindBy(css = "input#f1")
     private WebElement f1;
@@ -25,6 +28,9 @@ public class ArithmeticInlineEditPage extends BaseEditPage<ArithmeticInlinePage>
     @FindBy(css = "input#div")
     private WebElement division;
 
+    @FindBy(css = "input[type=text]")
+    private List<WebElement> inputFields;
+
     public ArithmeticInlineEditPage(WebDriver driver) {
         super(driver);
     }
@@ -36,7 +42,8 @@ public class ArithmeticInlineEditPage extends BaseEditPage<ArithmeticInlinePage>
 
     public ArithmeticInlineEditPage fillF1F2(String f1Value, String f2Value) {
         ProjectUtils.fill(getWait(), f1, f1Value);
-        ProjectUtils.sendKeys(f2, f2Value);
+        ProjectUtils.fill(getWait(), f2, f2Value);
+        f2.click();
         return this;
     }
 
@@ -58,5 +65,9 @@ public class ArithmeticInlineEditPage extends BaseEditPage<ArithmeticInlinePage>
     public ArithmeticInlineEditPage waitDivToBe(String value) {
         getWait().until(f -> division.getAttribute("value").equals(value));
         return this;
+    }
+
+    public List<String> getEditValues() {
+        return inputFields.stream().map(e -> e.getAttribute("value")).collect(Collectors.toList());
     }
 }
