@@ -41,7 +41,7 @@ public class EntityBoardTest extends BaseTest {
         time = new BoardEditPage(getDriver()).getCreatedTime()[1];
         dateForValidation = String.format("%1$s%4$s%3$s%4$s%2$s", calendar.getRandomDay() , calendar.getCurrentYear(), calendar.getCurrentMonth(), '/');
         dateTimeForValidation= String.format("%1$s %2$s", dateForValidation, time);
-        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, dateForValidation, dateTimeForValidation,"",  APP_USER);
+        List<String> expectedValues = Arrays.asList(PENDING, TEXT, NUMBER, DECIMAL, dateForValidation, dateTimeForValidation,"README.md",  APP_USER);
 
         Assert.assertEquals(boardListPage.getRowCount(), 1);
         Assert.assertEquals(boardListPage.getRow(0), expectedValues);

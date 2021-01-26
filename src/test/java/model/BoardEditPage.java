@@ -37,6 +37,9 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
     @FindBy(id = "user")
     private WebElement appTester1;
 
+    @FindBy(id = "file")
+    private WebElement image;
+
     public BoardEditPage(WebDriver driver) {
         super(driver);
     }
@@ -70,8 +73,7 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
     }
 
     public String[] getCreatedTime() {
-      //  String[] b;
-        return  time.getText().split(" ");
+       return  time.getText().split(" ");
     }
 
     public BoardEditPage fillform(String status, String text,String number,String decimal,String user) {
@@ -80,6 +82,8 @@ public final class BoardEditPage extends BaseEditPage<BoardPage> {
         ProjectUtils.fill(getWait(), textInput, text);
         ProjectUtils.fill(getWait(), intInput, number);
         ProjectUtils.fill(getWait(), decimalInput, decimal);
+
+        image.sendKeys("C:\\Users\\Dima\\IdeaProjects\\PlatformaticaQARepos\\README.md");
 
         CalendarEntityPage calendar = new CalendarEntityPage(getDriver());
         dateTimePlaceholder.click();
