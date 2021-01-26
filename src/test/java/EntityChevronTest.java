@@ -1,8 +1,11 @@
 import model.*;
+import org.testng.annotations.DataProvider;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import runner.BaseTest;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import runner.ProjectUtils;
@@ -16,10 +19,10 @@ import java.util.List;
 @Run(run = RunType.Multiple)
 public class EntityChevronTest extends BaseTest {
 
-    final String comments = "TEST";
+    final String comments = "TEST1";
     final String int_ = "11";
     final String decimal = "0.11";
-    final  String xpath = "//tbody/tr[1]/td[10]/div[1]/ul[1]/li[1]/a[1]";
+    final String xpath = "//tr[@data-index='4']";
 
     SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
     public String Data = data.format(new Date());
@@ -27,9 +30,21 @@ public class EntityChevronTest extends BaseTest {
     SimpleDateFormat Time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     public String DataTime = Time.format(new Date());
 
-    List<String> expectedResults = Arrays.asList("Fulfillment", "TEST", "11", "0.11", Data, DataTime);
+    List<String> expectedResults = Arrays.asList("Fulfillment", "TEST1", "11", "0.11", Data, DataTime);
 
-    @Test
+    final String secondEntity = "//tbody/tr[2]/td[3]";
+
+    @DataProvider(name = "testData")
+    private Object[][] testData1() {
+        return new Object[][]{
+                {"TEST2", "11", "0.11", Data, DataTime},
+                {"TEST3", "11", "0.11", Data, DataTime},
+                {"TEST4", "11", "0.11", Data, DataTime},
+                {"TEST5", "11", "0.11", Data, DataTime}
+        };
+    }
+
+    @Test()
     public void createNewRecord() {
         ChevronPage chevronPage = new MainPage(getDriver())
                 .clickMenuChevron()
@@ -37,36 +52,48 @@ public class EntityChevronTest extends BaseTest {
                 .chooseRecordStatus()
                 .sendKeys(comments, int_, decimal, DataTime, Data)
                 .clickSaveButton();
-        Assert.assertEquals(chevronPage.getRow(0), expectedResults);
+        Assert.assertEquals(chevronPage.getRow(4), expectedResults);
     }
 
     @Test(dependsOnMethods = "createNewRecord")
     public void viewRecord() {
         List<String> page = new MainPage(getDriver())
                 .clickMenuChevron()
-                .clickViewButton(xpath)
+                .clickRowToView(xpath)
                 .getColumn();
-        Assert.assertEquals(page, expectedResults);
+        Assert.assertEquals(page,expectedResults);
     }
 
-    @Test(dependsOnMethods = "createNewRecord")
-    public void deleteRecord() {
 
-        ChevronPage chevronPage = new ChevronPage(getDriver());
-        Assert.assertEquals(chevronPage
+    @Test(dataProvider = "testData")// dependsOnMethods="viewRecord" )
+    public void createMultipleEntities(String title, String int_, String decimal, String data, String time) {
+
+        final List<String> expectedValues = Arrays.asList(title, int_, decimal, data, time);
+
+        ChevronPage chevronPage = new MainPage(getDriver())
+                .clickMenuChevron();
+        int rowCount = chevronPage.getRowCount();
+       chevronPage.clickNewFolder()
+                .chooseRecordStatus()
+                .sendKeys(title, int_, decimal, data, time)
+                .clickSaveButton();
+        Assert.assertEquals(chevronPage.getRowCount(), rowCount + 1);
+
+    }
+    @Test(dependsOnMethods = "createMultipleEntities")
+    public void dragTheRowUp() throws InterruptedException {
+        new MainPage(getDriver())
                 .clickMenuChevron()
-                .deleteRow()
-                .getRowCount(), 0);
+                .orderBy()
+                .drugUp()
+                .getCellData();
+        Assert.assertEquals(getDriver().findElement(By.xpath(secondEntity)).getText(), "TEST5");
 
-        Assert.assertEquals(chevronPage
-                .clickRecycleBin()
-                .getCellValue(0, 2), expectedResults.get(1));
     }
+    @Test()
+    public void findChevron() throws InterruptedException {
 
-    @Test
-    public void findChevron() {
-
-        WebDriver driver = getDriver();
+        WebDriver driver = ProjectUtils.loginProcedure(getDriver());
 
         WebElement clickChevron = driver.findElement(By.xpath("//p[contains(text(),'Chevron')]"));
         ProjectUtils.click(driver, clickChevron);
