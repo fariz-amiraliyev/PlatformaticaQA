@@ -24,7 +24,7 @@ public abstract class BaseEditPage<TablePage> extends BasePage {
     protected abstract TablePage createPage();
 
     public TablePage clickSaveButton() {
-        WebElement saveButton = getDriver().findElement(By.cssSelector("button[id*='save']"));
+        WebElement saveButton = getDriver().findElement(By.id("pa-entity-form-save-btn"));
         ProjectUtils.scroll(getDriver(), saveButton);
         ProjectUtils.click(getWait(), saveButton);
         return createPage();
