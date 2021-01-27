@@ -161,8 +161,6 @@ public class EntityDefaultTest extends BaseTest {
 
         defaultEditPage.clickSaveButton();
 
-//-----------------------------------------------------------------
-
         selectFromRecordMenu(driver, BY_VIEW);
 
         assertRecordValues(driver, "//span[@class='pa-view-field']", CHANGED_DEFAULT_VALUES);

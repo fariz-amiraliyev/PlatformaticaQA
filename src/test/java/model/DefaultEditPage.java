@@ -74,7 +74,7 @@ public class DefaultEditPage extends BaseEditPage<DefaultPage>{
 
     public DefaultEditPage(WebDriver driver) {
         super(driver);
-        embededTable = new DefaultEmbededPage(getDriver());
+        embededTable = new DefaultEmbededPage(driver);
     }
 
     public void sendKeys(String string, String text, String int_, String decimal, String date,

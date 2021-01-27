@@ -47,7 +47,6 @@ public class DefaultEmbededPage extends BaseEmbededPage<DefaultEmbededPage>{
         return result;
     }
 
-
     public void sendKeys(int rowNumber, String string_, String text, String int_,
                          String decimal, String date, String dateTime, String user) {
         WebElement row = getRows().get(rowNumber);
